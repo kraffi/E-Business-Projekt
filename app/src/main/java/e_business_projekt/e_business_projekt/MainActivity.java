@@ -35,6 +35,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         //display tabs in the actionbar
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
+        //viewpager that displays the different views
         mViewPager = (ViewPager)findViewById(R.id.pager);
         mViewPager.setAdapter(mAppSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
@@ -96,7 +97,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         @Override
         public CharSequence getPageTitle(int position){
-            return "Section " + (position + 1);
+            String title = "";
+            if (position + 1 == 1) {
+                title = "Sights in reach";
+            }
+            else if (position + 1 == 2) {
+                title = "Scanner";
+                }
+            return title;
         }
 
         public static class FirstSectionFragment extends Fragment {
@@ -104,7 +112,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             @Override
             public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState){
 
-                View rootView = inflater.inflate(R.layout.fragment_listView_section, container, false);
+                View rootView = inflater.inflate(R.layout.fragment_listview_section, container, false);
                 return rootView;
             }
         }
