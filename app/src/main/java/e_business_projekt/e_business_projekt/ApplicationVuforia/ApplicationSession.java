@@ -21,7 +21,8 @@ import com.qualcomm.vuforia.VideoMode;
 import com.qualcomm.vuforia.Vuforia;
 import com.qualcomm.vuforia.Vuforia.UpdateCallbackInterface;
 
-import laforgegroup_ar_project.beuthws15mobileapplication.R;
+import e_business_projekt.e_business_projekt.R;
+
 
 /**
  * Created by kr on 16.10.2015.
