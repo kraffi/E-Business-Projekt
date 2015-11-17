@@ -103,7 +103,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             @Override
             public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState){
 
-                View rootView = inflater.inflate(R.layout.fragment_first_section, container, false);
+                View rootView = inflater.inflate(R.layout.fragment_listView_section, container, false);
                 return rootView;
             }
         }
@@ -114,7 +114,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
             @Override
             public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState){
-                View rootView = inflater.inflate(R.layout.fragment_other_section, container, false);
+                View rootView = inflater.inflate(R.layout.fragment_scan_section, container, false);
                 //Bundle args = getArguments();
                 return rootView;
             }
