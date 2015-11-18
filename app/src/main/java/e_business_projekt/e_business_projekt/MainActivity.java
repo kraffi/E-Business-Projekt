@@ -1,5 +1,4 @@
 package e_business_projekt.e_business_projekt;
-//test
 
 import android.app.ActionBar;
 import android.support.v4.app.FragmentManager;
@@ -9,9 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener{
 
@@ -85,11 +82,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                     return new ScanSection();
 
                 default:
-                    Fragment fragment = new MapSection();
+                    return new MapSection();
+                    //kr: removed because not necessary
+                    /*Fragment fragment = new MapSection();
                     Bundle args = new Bundle();
                     args.putInt(MapSection.ARG_SECTION_NUMBER, i + 1);
                     fragment.setArguments(args);
-                    return fragment;
+                    return fragment;*/
             }
         }
 
@@ -111,37 +110,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 title = "Map";
             }
             return title;
-        }
-
-        public static class ListViewSection extends Fragment {
-
-            @Override
-            public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState){
-
-                View rootView = inflater.inflate(R.layout.fragment_listview_section, container, false);
-                return rootView;
-            }
-        }
-
-        public static class ScanSection extends Fragment {
-
-            @Override
-            public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState){
-                View rootView = inflater.inflate(R.layout.fragment_scan_section, container, false);
-                //Bundle args = getArguments();
-                return rootView;
-            }
-        }
-
-        public static class MapSection extends Fragment{
-
-            public static final String ARG_SECTION_NUMBER = "map number";
-
-            @Override
-            public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState){
-                View rootView = inflater.inflate(R.layout.fragment_map_section, container, false);
-                return rootView;
-            }
         }
     }
 }
