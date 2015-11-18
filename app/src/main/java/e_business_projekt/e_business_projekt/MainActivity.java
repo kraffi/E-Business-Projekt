@@ -82,16 +82,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                     return new ListViewSection();
 
                 case 1:
-                    Fragment fragment = new ScanSection();
-                    Bundle args = new Bundle();
-                    args.putInt(ScanSection.ARG_SECTION_NUMBER, i + 1);
-                    fragment.setArguments(args);
-                    return fragment;
+                    return new ScanSection();
 
                 default:
-                    fragment = new MapSection();
-                    args = new Bundle();
-                    args.putInt(MapSection.ARG_SECTION_NUMBER, i+1);
+                    Fragment fragment = new MapSection();
+                    Bundle args = new Bundle();
+                    args.putInt(MapSection.ARG_SECTION_NUMBER, i + 1);
                     fragment.setArguments(args);
                     return fragment;
             }
@@ -129,8 +125,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         public static class ScanSection extends Fragment {
 
-            public static final String ARG_SECTION_NUMBER = "section number";
-
             @Override
             public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState){
                 View rootView = inflater.inflate(R.layout.fragment_scan_section, container, false);
@@ -142,6 +136,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public static class MapSection extends Fragment{
 
             public static final String ARG_SECTION_NUMBER = "map number";
+
             @Override
             public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState){
                 View rootView = inflater.inflate(R.layout.fragment_map_section, container, false);
