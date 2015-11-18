@@ -79,12 +79,19 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public Fragment getItem(int i) {
             switch (i){
                 case 0:
-                    return new FirstSectionFragment();
+                    return new ListViewSection();
+
+                case 1:
+                    Fragment fragment = new ScanSection();
+                    Bundle args = new Bundle();
+                    args.putInt(ScanSection.ARG_SECTION_NUMBER, i + 1);
+                    fragment.setArguments(args);
+                    return fragment;
 
                 default:
-                    Fragment fragment = new OtherSection();
-                    Bundle args = new Bundle();
-                    args.putInt(OtherSection.ARG_SECTION_NUMBER, i + 1);
+                    fragment = new MapSection();
+                    args = new Bundle();
+                    args.putInt(MapSection.ARG_SECTION_NUMBER, i+1);
                     fragment.setArguments(args);
                     return fragment;
             }
@@ -92,7 +99,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -104,10 +111,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             else if (position + 1 == 2) {
                 title = "Scanner";
                 }
+            else if (position + 1 == 3){
+                title = "Map";
+            }
             return title;
         }
 
-        public static class FirstSectionFragment extends Fragment {
+        public static class ListViewSection extends Fragment {
 
             @Override
             public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState){
@@ -117,7 +127,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             }
         }
 
-        public static class OtherSection extends Fragment {
+        public static class ScanSection extends Fragment {
 
             public static final String ARG_SECTION_NUMBER = "section number";
 
@@ -127,8 +137,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 //Bundle args = getArguments();
                 return rootView;
             }
+        }
 
+        public static class MapSection extends Fragment{
 
+            public static final String ARG_SECTION_NUMBER = "map number";
+            @Override
+            public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState){
+                View rootView = inflater.inflate(R.layout.fragment_map_section, container, false);
+                return rootView;
+            }
         }
     }
 }
