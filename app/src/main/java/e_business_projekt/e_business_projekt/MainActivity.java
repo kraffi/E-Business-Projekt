@@ -1,5 +1,4 @@
 package e_business_projekt.e_business_projekt;
-//test
 
 import android.app.ActionBar;
 import android.support.v4.app.FragmentManager;
@@ -9,9 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener{
 
@@ -79,20 +76,25 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public Fragment getItem(int i) {
             switch (i){
                 case 0:
-                    return new FirstSectionFragment();
+                    return new ListViewSection();
+
+                case 1:
+                    return new ScanSection();
 
                 default:
-                    Fragment fragment = new OtherSection();
+                    return new MapSection();
+                    //kr: removed because not necessary
+                    /*Fragment fragment = new MapSection();
                     Bundle args = new Bundle();
-                    args.putInt(OtherSection.ARG_SECTION_NUMBER, i + 1);
+                    args.putInt(MapSection.ARG_SECTION_NUMBER, i + 1);
                     fragment.setArguments(args);
-                    return fragment;
+                    return fragment;*/
             }
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -104,31 +106,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             else if (position + 1 == 2) {
                 title = "Scanner";
                 }
+            else if (position + 1 == 3){
+                title = "Map";
+            }
             return title;
-        }
-
-        public static class FirstSectionFragment extends Fragment {
-
-            @Override
-            public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState){
-
-                View rootView = inflater.inflate(R.layout.fragment_listview_section, container, false);
-                return rootView;
-            }
-        }
-
-        public static class OtherSection extends Fragment {
-
-            public static final String ARG_SECTION_NUMBER = "section number";
-
-            @Override
-            public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState){
-                View rootView = inflater.inflate(R.layout.fragment_scan_section, container, false);
-                //Bundle args = getArguments();
-                return rootView;
-            }
-
-
         }
     }
 }

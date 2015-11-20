@@ -24,6 +24,7 @@
         <item name="android:popupMenuStyle">@style/PopupMenu.Darkred</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Darkred</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Darkred</item>
+        <item name="android:actionBarTabTextStyle">@style/TabTextColor</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.Darkred</item>
         <item name="android:actionBarStyle">@style/ActionBar.Solid.Darkred</item>
         <item name="android:actionModeBackground">@drawable/cab_background_top_darkred</item>
@@ -38,6 +39,11 @@
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_darkred</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_darkred</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Darkred</item>
+        <item name="android:titleTextStyle">@style/Actionbar.TitleTextStyle</item>
+    </style>
+
+    <style name="Actionbar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="ActionBar.Transparent.Darkred" parent="@android:style/Widget.Holo.Light.ActionBar">
@@ -55,6 +61,10 @@
 
     <style name="ActionBarTabStyle.Darkred" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
         <item name="android:background">@drawable/tab_indicator_ab_darkred</item>
+    </style>
+
+    <style name="TabTextColor" parent="@android:style/Widget.Holo.Light.ActionBar.TabText">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="DropDownNav.Darkred" parent="@android:style/Widget.Holo.Light.Spinner">

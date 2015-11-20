@@ -7,7 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Section 1"
-        android:id="@+id/textView"
+        android:text="Section 3"
+        android:id="@+id/textView3"
         android:layout_gravity="center_horizontal" />
 </LinearLayout>

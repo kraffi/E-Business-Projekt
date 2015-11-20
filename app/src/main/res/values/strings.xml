@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">E-Business Project</string>
+    <string name="app_name">XploCity</string>
     <string name="app_description">City Guide for Berlin</string>
     
     <string name="button_start">Start</string>
