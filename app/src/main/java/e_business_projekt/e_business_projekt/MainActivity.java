@@ -12,7 +12,7 @@ import android.support.v4.view.ViewPager;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener{
 
-    AppSectionsPagerAdapter mAppSectionsPagerAdapter;
+    public static AppSectionsPagerAdapter mAppSectionsPagerAdapter;
     public static FragmentManager fragmentManager;
 
     // Viewpager that will display the several sections of the app, one at a time
