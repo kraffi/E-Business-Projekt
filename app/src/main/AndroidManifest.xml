@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="e_business_projekt.e_business_projekt">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -10,7 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- Creating Permission to receive Google Maps -->
     <permission
-        android:name="android.map.permission.MAPS_RECEIVE"
+        android:name="e_business_projekt.e_business_projekt.MapSection.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
     <!-- Permission to receive Google Maps -->
