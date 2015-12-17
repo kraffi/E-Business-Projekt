@@ -40,19 +40,29 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
             @Override
             public void onPageSelected(int position){
+                // When swiping between different app sections, select the corresponding tab.
+                // We can also use ActionBar.Tab#select() to do this if we have a reference to the
+                // Tab.
                 actionbar.setSelectedNavigationItem(position);
             }
         });
 
+        // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < mAppSectionsPagerAdapter.getCount(); i++) {
+            // Create a tab with text corresponding to the page title defined by the adapter.
+            // Also specify this Activity object, which implements the TabListener interface, as the
+            // listener for when this tab is selected.
             actionbar.addTab(
-                    actionbar.newTab().setText(mAppSectionsPagerAdapter.getPageTitle(i)).setTabListener(this)
+                    actionbar.newTab()
+                            .setText(mAppSectionsPagerAdapter.getPageTitle(i))
+                            .setTabListener(this)
             );
         }
     }
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+        // When the given tab is selected, switch to the corresponding page in the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
     }
 
@@ -85,12 +95,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
                 default:
                     return new MapSection();
-                    //kr: removed because not necessary
-                    /*Fragment fragment = new MapSection();
-                    Bundle args = new Bundle();
-                    args.putInt(MapSection.ARG_SECTION_NUMBER, i + 1);
-                    fragment.setArguments(args);
-                    return fragment;*/
             }
         }
 
