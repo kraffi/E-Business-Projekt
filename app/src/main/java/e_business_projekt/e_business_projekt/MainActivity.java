@@ -8,12 +8,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.location.places.Places;
 
 
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener{
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
     public static AppSectionsPagerAdapter mAppSectionsPagerAdapter;
     public static FragmentManager fragmentManager;
+    private GoogleApiClient mGoogleApiClient;
 
     // Viewpager that will display the several sections of the app, one at a time
     ViewPager mViewPager;
@@ -22,6 +32,39 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //rn: google places stuff --------------------------------------------------------------------------------------
+
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
+        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
+                .getCurrentPlace(mGoogleApiClient, null);
+
+        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+            @Override
+            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+                Log.d("EBP", "onResult called");
+                Log.d("EBP", "Buffer: " + likelyPlaces.toString());
+                for (PlaceLikelihood placeLikelihood : likelyPlaces){
+                    Log.d("EBP", "Places: " + placeLikelihood.getPlace().getName());
+                    Log.i("EBP", String.format("Place '%s' has likelihood: %g",
+                            placeLikelihood.getPlace().getName(),
+                            placeLikelihood.getLikelihood()));
+                }
+                likelyPlaces.release();
+            }
+
+        });
+
+        Log.d("EBP", mGoogleApiClient.toString());
+
+        //rn: end google places stuff ----------------------------------------------------------------------------------
 
         mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
         fragmentManager = getSupportFragmentManager();
@@ -72,6 +115,33 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d("EBP", "GoogleApiClient: Connected!");
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d("EBP", "GoogleApiClient: Connection failed!");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
     }
 
     /**
