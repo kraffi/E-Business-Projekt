@@ -1,6 +1,8 @@
 package e_business_projekt.e_business_projekt;
 
 import android.app.ActionBar;
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -8,7 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -18,15 +25,15 @@ import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 
 
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
+public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener{
 
-    public static AppSectionsPagerAdapter mAppSectionsPagerAdapter;
-    public static FragmentManager fragmentManager;
+    /*public static AppSectionsPagerAdapter mAppSectionsPagerAdapter;
+    public static FragmentManager fragmentManager;*/
     private GoogleApiClient mGoogleApiClient;
 
     // Viewpager that will display the several sections of the app, one at a time
-    ViewPager mViewPager;
+    //ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +58,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
                 Log.d("EBP", "onResult called");
                 Log.d("EBP", "Buffer: " + likelyPlaces.toString());
-                for (PlaceLikelihood placeLikelihood : likelyPlaces){
+                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                     Log.d("EBP", "Places: " + placeLikelihood.getPlace().getName());
                     Log.i("EBP", String.format("Place '%s' has likelihood: %g",
                             placeLikelihood.getPlace().getName(),
@@ -63,10 +70,38 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         });
 
         Log.d("EBP", mGoogleApiClient.toString());
-
         //rn: end google places stuff ----------------------------------------------------------------------------------
+    }
 
-        mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        Intent intent;
+        //kr: handle presses on the action menu items
+        switch (item.getItemId()) {
+            case R.id.action_map:
+                intent = new Intent(this, MapActivity.class);
+                break;
+            case R.id.action_cam:
+                intent = new Intent(this, CamActivity.class);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        startActivity(intent);
+        return true;
+    }
+
+        /*mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
         fragmentManager = getSupportFragmentManager();
 
         final ActionBar actionbar = getActionBar();
@@ -101,9 +136,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                             .setTabListener(this)
             );
         }
-    }
+    }*/
 
-    @Override
+   /* @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
         // When the given tab is selected, switch to the corresponding page in the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
@@ -115,7 +150,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-    }
+    }*/
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -144,11 +179,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         super.onStop();
     }
 
-    /**
+    /*
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary
      * sections of the app.
      */
-    public static class AppSectionsPagerAdapter extends FragmentPagerAdapter{
+    /*public static class AppSectionsPagerAdapter extends FragmentPagerAdapter{
 
         public AppSectionsPagerAdapter(FragmentManager fm){
             super(fm);
@@ -187,5 +222,5 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             }
             return title;
         }
-    }
+    }*/
 }
