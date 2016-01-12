@@ -64,6 +64,10 @@
     <string name="menu_button_yellow">Yellow</string>
     <string name="menu_button_green">Green</string>
 
+    <string name="activity_main">Main</string>
+    <string name="activity_map">Google Map</string>
+    <string name="activity_cam">Camera View</string>
+
     <string name="splash_screen_description">Vuforia Splash</string>
     <string name="title_activity_maps">Map</string>
 
