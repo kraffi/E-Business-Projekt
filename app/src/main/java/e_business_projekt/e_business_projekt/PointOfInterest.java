@@ -85,4 +85,8 @@ public class PointOfInterest {
     public void setWebsiteUri(Uri websiteUri) {
         this.websiteUri = websiteUri;
     }
+
+    public String toString() {
+        return "name: " + name;
+    }
 }
