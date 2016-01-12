@@ -2,7 +2,10 @@ package e_business_projekt.e_business_projekt;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -10,12 +13,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -24,53 +33,34 @@ import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
 
-    /*public static AppSectionsPagerAdapter mAppSectionsPagerAdapter;
-    public static FragmentManager fragmentManager;*/
     private GoogleApiClient mGoogleApiClient;
-
-    // Viewpager that will display the several sections of the app, one at a time
-    //ViewPager mViewPager;
+    private static final String TAG = "EBP.MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //rn: google places stuff --------------------------------------------------------------------------------------
+        ArrayList<PointOfInterest> poiList = getPoiList();
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+        ListView lv = (ListView) findViewById(R.id.poiListView);
+        lv.setAdapter(new ListViewItemAdapter(this, poiList));
 
-        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-                .getCurrentPlace(mGoogleApiClient, null);
-
-        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             @Override
-            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-                Log.d("EBP", "onResult called");
-                Log.d("EBP", "Buffer: " + likelyPlaces.toString());
-                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                    Log.d("EBP", "Places: " + placeLikelihood.getPlace().getName());
-                    Log.i("EBP", String.format("Place '%s' has likelihood: %g",
-                            placeLikelihood.getPlace().getName(),
-                            placeLikelihood.getLikelihood()));
-                }
-                likelyPlaces.release();
+            public void onItemClick(AdapterView<?> a, View v,int position, long id)
+            {
+                Log.i(TAG, "Called: onItemClick()");
+                Toast.makeText(getBaseContext(), "Click", Toast.LENGTH_LONG).show();
             }
-
         });
-
-        Log.d("EBP", mGoogleApiClient.toString());
-        //rn: end google places stuff ----------------------------------------------------------------------------------
     }
 
     @Override
@@ -99,6 +89,45 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         }
         startActivity(intent);
         return true;
+    }
+
+    private ArrayList<PointOfInterest> getPoiList(){
+
+        final ArrayList<PointOfInterest> list = new ArrayList<>();
+
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
+        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mGoogleApiClient, null);
+        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+            @Override
+            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+                Log.i(TAG, "onResult called: GooglePlacesBuffer: " + likelyPlaces.toString());
+
+                int i = 0;
+                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+                    i++;
+                    list.add(new PointOfInterest(placeLikelihood.getPlace()));
+                    Log.i(TAG, "Place: " + placeLikelihood.getPlace().getName() + " as number " + i + " added!");
+                }
+                likelyPlaces.release();
+            }
+
+        });
+        
+        Log.d(TAG, "ListSize: " + list.size());
+
+        list.add(new PointOfInterest("Fernsehturm", "Bullshit Teil!"));
+        list.add(new PointOfInterest("Beuth Hochschule für Technik", "Beuth ftw!"));
+        list.add(new PointOfInterest("Funkturm", "Geiles Teil!"));
+        list.add(new PointOfInterest("Mercedes Benz Arena", "O2 Arena RIP"));
+
+        return list;
     }
 
         /*mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
@@ -159,12 +188,12 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d("EBP", "GoogleApiClient: Connected!");
+        Log.d(TAG, "GoogleApiClient: Connected!");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d("EBP", "GoogleApiClient: Connection failed!");
+        Log.d(TAG, "GoogleApiClient: Connection failed!");
     }
 
     @Override

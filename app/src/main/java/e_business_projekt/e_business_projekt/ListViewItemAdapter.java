@@ -55,8 +55,8 @@ public class ListViewItemAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.title.setText(poiList.get(position).getTitle());
-        holder.info.setText(poiList.get(position).getInfo());
+        holder.title.setText(poiList.get(position).getName());
+        holder.info.setText(poiList.get(position).getId());
         //rn: TODO replace with Placeholder
         holder.img.setImageResource(poiList.get(position).getImg());
 
