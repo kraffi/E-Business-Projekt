@@ -37,30 +37,49 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
     private static final String TAG = "EBP.MainActivity";
+    private ArrayList<PointOfInterest> poiList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ArrayList<PointOfInterest> poiList = getPoiList();
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
 
+        getPoiList();
+    }
+
+    public void buildPOIList(ArrayList<PointOfInterest> placesPOIList) {
         ListView lv = (ListView) findViewById(R.id.poiListView);
-        lv.setAdapter(new ListViewItemAdapter(this, poiList));
+        lv.setAdapter(new ListViewItemAdapter(this, placesPOIList));
 
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> a, View v,int position, long id)
-            {
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
                 Log.i(TAG, "Called: onItemClick()");
-                Toast.makeText(getBaseContext(), "Click", Toast.LENGTH_LONG).show();
+                // Toast.makeText(getBaseContext(), "Click", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    public void showCallbackToast(ArrayList<PointOfInterest> poiList) {
+        String listString = "";
+
+        for (PointOfInterest s : poiList) {
+            listString += s.toString() + "\n";
+        }
+
+        Toast.makeText(getBaseContext(), listString, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -91,56 +110,49 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         return true;
     }
 
-    private ArrayList<PointOfInterest> getPoiList(){
+    private void getPoiList() {
+        if (mGoogleApiClient != null) {
 
-        final ArrayList<PointOfInterest> list = new ArrayList<>();
+            PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mGoogleApiClient, null);
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+            result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+                @Override
+                public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+                    Log.i(TAG, "onResult called: GooglePlacesBuffer: " + likelyPlaces.toString());
 
-        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mGoogleApiClient, null);
-        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-            @Override
-            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-                Log.i(TAG, "onResult called: GooglePlacesBuffer: " + likelyPlaces.toString());
+                    ArrayList<PointOfInterest> placesPOIList = new ArrayList<>();
+                    int i = 0;
+                    for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+                        i++;
+                        placesPOIList.add(new PointOfInterest(placeLikelihood.getPlace()));
+                        Log.i(TAG, "Place: " + placeLikelihood.getPlace().getName() + " as number " + i + " added!");
+                    }
+                    likelyPlaces.release();
 
-                int i = 0;
-                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                    i++;
-                    list.add(new PointOfInterest(placeLikelihood.getPlace()));
-                    Log.i(TAG, "Place: " + placeLikelihood.getPlace().getName() + " as number " + i + " added!");
+                    // TODO remove when places works
+                    if (placesPOIList.isEmpty()) {
+                        placesPOIList.add(new PointOfInterest("Fernsehturm", "Bullshit Teil!"));
+                        placesPOIList.add(new PointOfInterest("Beuth Hochschule für Technik", "Beuth ftw!"));
+                        placesPOIList.add(new PointOfInterest("Funkturm", "Geiles Teil!"));
+                        placesPOIList.add(new PointOfInterest("Mercedes Benz Arena", "O2 Arena RIP"));
+                    }
+
+                    showCallbackToast(placesPOIList);
+                    buildPOIList(placesPOIList);
                 }
-                likelyPlaces.release();
-            }
-
-        });
-        
-        Log.d(TAG, "ListSize: " + list.size());
-
-        list.add(new PointOfInterest("Fernsehturm", "Bullshit Teil!"));
-        list.add(new PointOfInterest("Beuth Hochschule für Technik", "Beuth ftw!"));
-        list.add(new PointOfInterest("Funkturm", "Geiles Teil!"));
-        list.add(new PointOfInterest("Mercedes Benz Arena", "O2 Arena RIP"));
-
-        return list;
+            });
+        } else {
+            Toast.makeText(getBaseContext(), "No GoogleApiClient", Toast.LENGTH_SHORT).show();
+        }
     }
 
         /*mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
         fragmentManager = getSupportFragmentManager();
-
         final ActionBar actionbar = getActionBar();
-
         //deactivate home button since there is no parent
         actionbar.setHomeButtonEnabled(false);
-
         //display tabs in the actionbar
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
         //viewpager that displays the different views
         mViewPager = (ViewPager)findViewById(R.id.pager);
         mViewPager.setAdapter(mAppSectionsPagerAdapter);
@@ -153,7 +165,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 actionbar.setSelectedNavigationItem(position);
             }
         });
-
         // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < mAppSectionsPagerAdapter.getCount(); i++) {
             // Create a tab with text corresponding to the page title defined by the adapter.
@@ -172,11 +183,9 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         // When the given tab is selected, switch to the corresponding page in the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
     }
-
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
     }
-
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
     }*/
@@ -213,30 +222,24 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
      * sections of the app.
      */
     /*public static class AppSectionsPagerAdapter extends FragmentPagerAdapter{
-
         public AppSectionsPagerAdapter(FragmentManager fm){
             super(fm);
         }
-
         @Override
         public Fragment getItem(int i) {
             switch (i){
                 case 0:
                     return new ListViewSection();
-
                 case 1:
                     return new ScanSection();
-
                 default:
                     return new MapSection();
             }
         }
-
         @Override
         public int getCount() {
             return 3;
         }
-
         @Override
         public CharSequence getPageTitle(int position){
             String title = "";

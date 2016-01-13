@@ -85,4 +85,15 @@ public class PointOfInterest {
     public void setWebsiteUri(Uri websiteUri) {
         this.websiteUri = websiteUri;
     }
+
+    @Override
+    public String toString() {
+        return "PointOfInterest{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", latLng=" + latLng +
+                ", websiteUri=" + websiteUri +
+                ", placeTypes=" + placeTypes +
+                '}';
+    }
 }
