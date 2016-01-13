@@ -37,30 +37,49 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
     private static final String TAG = "EBP.MainActivity";
+    private ArrayList<PointOfInterest> poiList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ArrayList<PointOfInterest> poiList = getPoiList();
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
 
+        getPoiList();
+    }
+
+    public void buildPOIList(ArrayList<PointOfInterest> placesPOIList) {
         ListView lv = (ListView) findViewById(R.id.poiListView);
-        lv.setAdapter(new ListViewItemAdapter(this, poiList));
+        lv.setAdapter(new ListViewItemAdapter(this, placesPOIList));
 
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> a, View v,int position, long id)
-            {
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
                 Log.i(TAG, "Called: onItemClick()");
-                Toast.makeText(getBaseContext(), "Click", Toast.LENGTH_LONG).show();
+                // Toast.makeText(getBaseContext(), "Click", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    public void showCallbackToast(ArrayList<PointOfInterest> poiList) {
+        String listString = "";
+
+        for (PointOfInterest s : poiList) {
+            listString += s.toString() + "\n";
+        }
+
+        Toast.makeText(getBaseContext(), listString, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -91,43 +110,40 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         return true;
     }
 
-    private ArrayList<PointOfInterest> getPoiList(){
+    private void getPoiList() {
+        if (mGoogleApiClient != null) {
 
-        final ArrayList<PointOfInterest> list = new ArrayList<>();
+            PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mGoogleApiClient, null);
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+            result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+                @Override
+                public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+                    Log.i(TAG, "onResult called: GooglePlacesBuffer: " + likelyPlaces.toString());
 
-        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mGoogleApiClient, null);
-        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-            @Override
-            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-                Log.i(TAG, "onResult called: GooglePlacesBuffer: " + likelyPlaces.toString());
+                    ArrayList<PointOfInterest> placesPOIList = new ArrayList<>();
+                    int i = 0;
+                    for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+                        i++;
+                        placesPOIList.add(new PointOfInterest(placeLikelihood.getPlace()));
+                        Log.i(TAG, "Place: " + placeLikelihood.getPlace().getName() + " as number " + i + " added!");
+                    }
+                    likelyPlaces.release();
 
-                int i = 0;
-                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                    i++;
-                    list.add(new PointOfInterest(placeLikelihood.getPlace()));
-                    Log.i(TAG, "Place: " + placeLikelihood.getPlace().getName() + " as number " + i + " added!");
+                    // TODO remove when places works
+                    if (placesPOIList.isEmpty()) {
+                        placesPOIList.add(new PointOfInterest("Fernsehturm", "Bullshit Teil!"));
+                        placesPOIList.add(new PointOfInterest("Beuth Hochschule für Technik", "Beuth ftw!"));
+                        placesPOIList.add(new PointOfInterest("Funkturm", "Geiles Teil!"));
+                        placesPOIList.add(new PointOfInterest("Mercedes Benz Arena", "O2 Arena RIP"));
+                    }
+
+                    showCallbackToast(placesPOIList);
+                    buildPOIList(placesPOIList);
                 }
-                likelyPlaces.release();
-            }
-
-        });
-        
-        Log.d(TAG, "ListSize: " + list.size());
-
-        list.add(new PointOfInterest("Fernsehturm", "Bullshit Teil!"));
-        list.add(new PointOfInterest("Beuth Hochschule für Technik", "Beuth ftw!"));
-        list.add(new PointOfInterest("Funkturm", "Geiles Teil!"));
-        list.add(new PointOfInterest("Mercedes Benz Arena", "O2 Arena RIP"));
-
-        return list;
+            });
+        } else {
+            Toast.makeText(getBaseContext(), "No GoogleApiClient", Toast.LENGTH_SHORT).show();
+        }
     }
 
         /*mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
