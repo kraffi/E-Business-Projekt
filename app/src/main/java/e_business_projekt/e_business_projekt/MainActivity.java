@@ -19,10 +19,7 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.location.places.*;
 
 import java.util.ArrayList;
 
@@ -48,12 +45,61 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 .addOnConnectionFailedListener(this)
                 .build();
 
+        SearchPlacesService test = new SearchPlacesService();
+        test.getIDs();
+
         getPoiList();
     }
 
     private void getPoiList() {
         if (mGoogleApiClient != null) {
 
+//            create filter for results
+//            List<Integer> filterTypes = new ArrayList<>();
+//            filterTypes.add(Place.TYPE_ART_GALLERY);
+//            filterTypes.add(Place.TYPE_MUSEUM);
+//
+//            List<String> test = new ArrayList<>();
+//            test.add("ChIJre7qb9YjZUERKUDdeKxvZDI");
+//            PlaceFilter placeFilter = new PlaceFilter(false, test);
+//
+//            Test
+//            AutocompleteFilter autocompleteFilter = AutocompleteFilter.create(filterTypes);
+//            LatLng a = new LatLng(55.196354, 14.451385);
+//            LatLng b = new LatLng(46.866110, 4.409882);
+//            PendingResult<AutocompletePredictionBuffer> pendingResult = Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, "Brandenburger Tor", new LatLngBounds(b,a),autocompleteFilter );
+//            test END
+//
+//############AUTO COMPLETE PREDICTION##################################################################################
+//            pendingResult.setResultCallback(new ResultCallback<AutocompletePredictionBuffer>() {
+//                @Override
+//                public void onResult(AutocompletePredictionBuffer autocompletePredictions) {
+//
+//                    ArrayList<String> x = new ArrayList<>();
+//                    for (AutocompletePrediction predictions : autocompletePredictions){
+//                        x.add(predictions.getPlaceId());
+//                    }
+//                    String[] y = new String[x.size()];
+//                    y = x.toArray(y);
+//                    PendingResult<PlaceBuffer> z = Places.GeoDataApi.getPlaceById(mGoogleApiClient, y);
+//                    z.setResultCallback(new ResultCallback<PlaceBuffer>() {
+//                        @Override
+//                        public void onResult(PlaceBuffer places) {
+//                            for (Place p : places){
+//                                Log.d(TAG, "TESTI: " + p.getName());
+//                                Log.d(TAG, "TESTI: " + p.getId());
+//                            }
+//                        }
+//                    });
+//                }
+//            });
+//######################################################################################################################
+
+
+            // HTTP Request Test
+
+
+            // HTTP Request Test end
             PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mGoogleApiClient, null);
             result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
                 @Override
@@ -63,7 +109,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                     Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
                     Log.i(TAG, "Getting results from GooglePlacesBuffer: " + likelyPlaces.toString());
-
                     int i = 0;
                     for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                         i++;
@@ -78,7 +123,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
                         // add POI to POI-List
                         poiList.add(poi);
-                        Log.i(TAG, "Place: " + placeLikelihood.getPlace().getName() + " as number " + i + " added!");
+                        //Log.i(TAG, "Place: " + placeLikelihood.getPlace().getName() + " as number " + i + " added!");
                     }
                     likelyPlaces.release();
 
