@@ -1,6 +1,7 @@
 package e_business_projekt.e_business_projekt.Maps_Navigation;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -40,6 +42,9 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import e_business_projekt.e_business_projekt.CamActivity;
+import e_business_projekt.e_business_projekt.MainActivity;
+import e_business_projekt.e_business_projekt.PoiListActivity;
 import e_business_projekt.e_business_projekt.R;
 
 public class MapActivity extends AppCompatActivity implements RoutingListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
@@ -440,5 +445,29 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
     @Override
     public void onConnectionSuspended(int i) {
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        Intent intent;
+        //kr: handle presses on the action menu items
+        switch (item.getItemId()) {
+            case R.id.action_main:
+                intent = new Intent(this, MainActivity.class);
+                break;
+            case R.id.action_poi_list:
+                intent = new Intent(this, PoiListActivity.class);
+                break;
+            case R.id.action_cam:
+                intent = new Intent(this, CamActivity.class);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        startActivity(intent);
+        return true;
     }
 }
