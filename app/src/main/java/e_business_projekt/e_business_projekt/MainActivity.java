@@ -2,7 +2,9 @@ package e_business_projekt.e_business_projekt;
 
 import android.app.Activity;
 import android.content.Intent;
+
 import android.location.Location;
+
 import android.os.Bundle;
 import android.util.Log;
 
@@ -22,6 +24,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.*;
 
 import java.util.ArrayList;
+import e_business_projekt.e_business_projekt.Maps_Navigation.MapActivity;
+
 
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {

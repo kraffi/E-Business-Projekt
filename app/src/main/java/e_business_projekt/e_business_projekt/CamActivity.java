@@ -3,14 +3,10 @@ package e_business_projekt.e_business_projekt;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
-import e_business_projekt.e_business_projekt.R;
+import e_business_projekt.e_business_projekt.Maps_Navigation.MapActivity;
 
 /**
  * Created by Sebastian on 18.11.2015.
