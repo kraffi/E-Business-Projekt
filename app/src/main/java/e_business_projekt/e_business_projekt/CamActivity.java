@@ -1,8 +1,8 @@
 package e_business_projekt.e_business_projekt;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -11,11 +11,11 @@ import e_business_projekt.e_business_projekt.Maps_Navigation.MapActivity;
 /**
  * Created by Sebastian on 18.11.2015.
  */
-public class CamActivity extends Activity {
+public class CamActivity extends AppCompatActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cam_view);
+        setContentView(R.layout.activity_cam);
     }
 
     @Override
@@ -35,6 +35,9 @@ public class CamActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.action_main:
                 intent = new Intent(this, MainActivity.class);
+                break;
+            case R.id.action_poi_list:
+                intent = new Intent(this, PoiListActivity.class);
                 break;
             case R.id.action_map:
                 intent = new Intent(this, MapActivity.class);

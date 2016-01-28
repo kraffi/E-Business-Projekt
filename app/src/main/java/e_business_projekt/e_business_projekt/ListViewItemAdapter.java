@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import org.w3c.dom.Text;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -55,8 +57,13 @@ public class ListViewItemAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.title.setText(poiList.get(position).getTitle());
-        holder.info.setText(poiList.get(position).getInfo());
+        //convert distance to km
+        DecimalFormat df = new DecimalFormat("#.###");
+        df.setRoundingMode(RoundingMode.CEILING);
+        double dist = poiList.get(position).getDistance()/1000;
+
+        holder.title.setText(poiList.get(position).getName());
+        holder.info.setText("Distanz: " + df.format(dist) + " km");
         //rn: TODO replace with Placeholder
         holder.img.setImageResource(poiList.get(position).getImg());
 
