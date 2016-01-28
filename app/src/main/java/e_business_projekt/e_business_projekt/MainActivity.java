@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import e_business_projekt.e_business_projekt.Maps_Navigation.MapActivity;
-
 
 public class MainActivity extends AppCompatActivity {
 

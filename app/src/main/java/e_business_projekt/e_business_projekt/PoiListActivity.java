@@ -19,7 +19,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
-import e_business_projekt.e_business_projekt.Maps_Navigation.MapActivity;
 
 import java.util.ArrayList;
 
