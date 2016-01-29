@@ -12,17 +12,18 @@ import org.w3c.dom.Text;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by RaulVinhKhoa on 10.12.2015.
  */
 public class ListViewItemAdapter extends BaseAdapter {
 
-    private static ArrayList<PointOfInterest> poiList;
+    private static List<PointOfInterest> poiList;
 
     private LayoutInflater mInflater;
 
-    public ListViewItemAdapter(Context ListViewSection, ArrayList<PointOfInterest> results){
+    public ListViewItemAdapter(Context ListViewSection, List<PointOfInterest> results){
         this.poiList = results;
         this.mInflater = LayoutInflater.from(ListViewSection);
     }

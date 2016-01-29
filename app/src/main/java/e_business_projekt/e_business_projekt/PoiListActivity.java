@@ -2,8 +2,10 @@ package e_business_projekt.e_business_projekt;
 
 import android.content.Intent;
 import android.location.Location;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,13 +24,15 @@ import com.google.android.gms.location.places.Places;
 import e_business_projekt.e_business_projekt.Maps_Navigation.MapActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PoiListActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, PlacesProviderCallback {
 
     private static final String TAG = "EBP.PoiListActivity";
     private GoogleApiClient mGoogleApiClient;
     private ArrayList<PointOfInterest> poiList = new ArrayList<>();
+    Location lastLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +48,9 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
-        SearchPlacesService test = new SearchPlacesService();
-        test.getIDs();
-
-        getPoiList();
     }
 
+    //TODO: DEPRECATED
     private void getPoiList() {
         if (mGoogleApiClient != null) {
 
@@ -123,7 +123,7 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
 
                         // add POI to POI-List
                         poiList.add(poi);
-                        //Log.i(TAG, "Place: " + placeLikelihood.getPlace().getName() + " as number " + i + " added!");
+                        Log.i(TAG, "Place: " + placeLikelihood.getPlace().getName() + " as number " + i + " added!");
                     }
                     likelyPlaces.release();
 
@@ -140,9 +140,10 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         }
     }
 
-    public void buildPOIList(ArrayList<PointOfInterest> placesPOIList) {
+    public void buildPOIList(List<PointOfInterest> placesPOIList) {
         ListView lv = (ListView) findViewById(R.id.poiListView);
         lv.setAdapter(new ListViewItemAdapter(this, placesPOIList));
+
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -155,7 +156,7 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         });
     }
 
-    public void showCallbackToast(ArrayList<PointOfInterest> poiList) {
+    public void showCallbackToast(List<PointOfInterest> poiList) {
         String text = poiList.size() + " POIs added to List";
         Toast.makeText(getBaseContext(), text, Toast.LENGTH_LONG).show();
     }
@@ -191,8 +192,6 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         return true;
     }
 
-
-
     @Override
     public void onConnectionSuspended(int i) {
         Log.d(TAG, "GoogleApiClient: Connection suspended!");
@@ -201,6 +200,9 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
     @Override
     public void onConnected(Bundle bundle) {
         Log.d(TAG, "GoogleApiClient: Connected!");
+        lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        PlacesProvider placesProvider = new PlacesProvider(this, mGoogleApiClient, lastLocation);
+        placesProvider.start();
     }
 
     @Override
@@ -219,4 +221,11 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         mGoogleApiClient.disconnect();
         super.onStop();
     }
+
+    @Override
+    public void placesProviderCallback(List<PointOfInterest> pois) {
+        Log.i(TAG,"Callback: " + pois.size());
+        buildPOIList(pois);
+    }
+
 }
