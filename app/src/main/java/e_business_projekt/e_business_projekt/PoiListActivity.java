@@ -2,9 +2,7 @@ package e_business_projekt.e_business_projekt;
 
 import android.content.Intent;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -22,6 +20,11 @@ import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import e_business_projekt.e_business_projekt.Maps_Navigation.MapActivity;
+import e_business_projekt.e_business_projekt.poi_list.POIListViewItemAdapter;
+import e_business_projekt.e_business_projekt.poi_list.POIDialog;
+import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
+import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProvider;
+import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProviderCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,18 +143,30 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         }
     }
 
-    public void buildPOIList(List<PointOfInterest> placesPOIList) {
+    public void buildPOIList(final List<PointOfInterest> placesPOIList) {
         ListView lv = (ListView) findViewById(R.id.poiListView);
-        lv.setAdapter(new ListViewItemAdapter(this, placesPOIList));
+        lv.setAdapter(new POIListViewItemAdapter(this, placesPOIList));
 
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 
-                String info = poiList.get(position).toString();
+                PointOfInterest poi = placesPOIList.get(position);
+
+                String name = poi.getName();
+                String info = poi.toString();
+
+                Bundle args = new Bundle();
+
+                args.putString("name", name);
+                args.putString("info", info);
+
+                POIDialog dialog = new POIDialog();
+                dialog.setArguments(args);
+                dialog.show(getFragmentManager(), "POI Dialog");
+                
                 Log.i(TAG, "Called: onItemClick(): Item number " + position);
-                Toast.makeText(getBaseContext(), info, Toast.LENGTH_LONG).show();
             }
         });
     }

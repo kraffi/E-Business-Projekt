@@ -1,4 +1,4 @@
-package e_business_projekt.e_business_projekt;
+package e_business_projekt.e_business_projekt.poi_list.provider;
 
 import android.location.Location;
 import android.os.AsyncTask;
@@ -7,10 +7,10 @@ import android.util.Log;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
+import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,4 +1,6 @@
-package e_business_projekt.e_business_projekt;
+package e_business_projekt.e_business_projekt.poi_list.provider;
+
+import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 
 import java.util.List;
 
