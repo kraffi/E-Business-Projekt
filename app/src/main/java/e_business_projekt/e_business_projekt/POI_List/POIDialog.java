@@ -4,13 +4,18 @@ import android.app.*;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import e_business_projekt.e_business_projekt.R;
+import org.w3c.dom.Text;
 
 public class POIDialog extends DialogFragment {
 
@@ -22,19 +27,61 @@ public class POIDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Log.i(TAG, "Creating POI Dialog ");
 
         Bundle args = getArguments();
         String name = args.getString("name", "");
         String info = args.getString("info", "");
 
+        String address = args.getString("address", "");
+        String phone = args.getString("phone", "");
+        String website = args.getString("website", "");
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_poi, null);
+
+        TextView addressText = (TextView) dialogView.findViewById(R.id.addressTextView);
+        if (address.length() == 0){
+            addressText.setVisibility(View.GONE);
+            dialogView.findViewById(R.id.addressImageView).setVisibility(View.GONE);
+        } else {
+            addressText.setText(address);
+        }
+
+        TextView phoneText = (TextView) dialogView.findViewById(R.id.phoneTextView);
+        if (phone.length() == 0){
+            phoneText.setVisibility(View.GONE);
+            dialogView.findViewById(R.id.phoneImageView).setVisibility(View.GONE);
+        } else {
+            phoneText.setText(phone);
+        }
+
+        TextView websiteText = (TextView) dialogView.findViewById(R.id.websiteTextView);
+        if (website.length() == 0){
+            websiteText.setVisibility(View.GONE);
+            dialogView.findViewById(R.id.websiteImageView).setVisibility(View.GONE);
+        } else {
+            //websiteText.setText(website);
+            websiteText.setText(Html.fromHtml("<a href=\"" + website + "\">" + website + "</a>"));
+            websiteText.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+
+        builder.setView(dialogView);
         builder.setTitle(name);
-        builder.setMessage(info);
-        builder.setPositiveButton("Drück mich!", new DialogInterface.OnClickListener() {
+        //builder.setMessage(info);
+
+        builder.setPositiveButton("Wikipedia?", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.i(TAG, "OK");
+                Log.i(TAG, "Wikipediabutton clicked!");
+            }
+        });
+        builder.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.i(TAG, "Backbutton clicked");
             }
         });
 

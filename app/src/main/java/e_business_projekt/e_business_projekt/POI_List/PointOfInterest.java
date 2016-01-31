@@ -157,6 +157,22 @@ public class PointOfInterest {
         this.distance = distance;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
     /**
      * to string method of POI-Object
      * @return string
@@ -168,6 +184,7 @@ public class PointOfInterest {
                 ", id='" + id + '\'' +
                 ", latLng=" + latLng +
                 ", distance=" + distance +
+                ", phone=" + phonenumber +
                 ", websiteUri=" + websiteUri +
                 ", placeTypes=" + placeTypes +
                 '}';

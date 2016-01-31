@@ -157,15 +157,32 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
                 String name = poi.getName();
                 String info = poi.toString();
 
-                Bundle args = new Bundle();
+                String address  = "";
+                if (poi.getAddress() != null){
+                    address = poi.getAddress();
+                }
 
+                String phone = "";
+                if(poi.getPhonenumber() != null){
+                    phone = poi.getPhonenumber();
+                }
+
+                String website = "";
+                if (poi.getWebsiteUri() != null){
+                     website = poi.getWebsiteUri().toString();
+                }
+
+                Bundle args = new Bundle();
                 args.putString("name", name);
                 args.putString("info", info);
+                args.putString("address", address);
+                args.putString("phone", phone);
+                args.putString("website", website);
 
                 POIDialog dialog = new POIDialog();
                 dialog.setArguments(args);
                 dialog.show(getFragmentManager(), "POI Dialog");
-                
+
                 Log.i(TAG, "Called: onItemClick(): Item number " + position);
             }
         });
