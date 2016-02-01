@@ -13,6 +13,14 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "EBP.MainActivity";
 
+    //Wikitude variables
+    public static final String EXTRAS_KEY_ACTIVITY_ARCHITECT_WORLD_URL = "activityArchitectWorldUrl";
+    public static final String EXTRAS_KEY_ACTIVITY_TITLE_STRING = "activityTitle";
+    public static final String EXTRAS_KEY_ACTIVITIES_TILES_ARRAY = "activitiesTitles";
+
+    public static final String EXTRAS_KEY_ACTIVITY_IR = "activityIr";
+    public static final String EXTRAS_KEY_ACTIVITY_GEO = "activityGeo";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
