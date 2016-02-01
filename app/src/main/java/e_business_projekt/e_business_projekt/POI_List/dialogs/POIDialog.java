@@ -1,21 +1,17 @@
-package e_business_projekt.e_business_projekt.poi_list;
+package e_business_projekt.e_business_projekt.poi_list.dialogs;
 
 import android.app.*;
 import android.content.DialogInterface;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import e_business_projekt.e_business_projekt.R;
-import org.w3c.dom.Text;
+import e_business_projekt.e_business_projekt.WebViewActivity;
 
 public class POIDialog extends DialogFragment {
 
@@ -35,7 +31,7 @@ public class POIDialog extends DialogFragment {
 
         String address = args.getString("address", "");
         String phone = args.getString("phone", "");
-        String website = args.getString("website", "");
+        final String website = args.getString("website", "");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -65,8 +61,20 @@ public class POIDialog extends DialogFragment {
         } else {
             //websiteText.setText(website);
             websiteText.setText(Html.fromHtml("<a href=\"" + website + "\">" + website + "</a>"));
-            websiteText.setMovementMethod(LinkMovementMethod.getInstance());
+            //websiteText.setMovementMethod(LinkMovementMethod.getInstance());
+
         }
+
+        websiteText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Text geklickt!");
+
+                Intent intent = new Intent(getActivity().getApplicationContext(), WebViewActivity.class);
+                intent.putExtra("url", website);
+                startActivity(intent);
+            }
+        });
 
         builder.setView(dialogView);
         builder.setTitle(name);

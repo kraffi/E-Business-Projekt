@@ -1,4 +1,4 @@
-package e_business_projekt.e_business_projekt.poi_list.provider;
+package e_business_projekt.e_business_projekt.poi_list.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -46,10 +46,10 @@ public class POIListViewItemAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null){
-            convertView = mInflater.inflate(R.layout.listview_item, null);
+            convertView = mInflater.inflate(R.layout.listview_item_poi, null);
             holder = new ViewHolder();
-            holder.title = (TextView) convertView.findViewById(R.id.itemTitle);
-            holder.info = (TextView) convertView.findViewById(R.id.itemInfo);
+            holder.title = (TextView) convertView.findViewById(R.id.textViewItemTitle);
+            holder.info = (TextView) convertView.findViewById(R.id.textViewItemInfo);
             holder.img = (ImageView) convertView.findViewById(R.id.itemImage);
 
             convertView.setTag(holder);

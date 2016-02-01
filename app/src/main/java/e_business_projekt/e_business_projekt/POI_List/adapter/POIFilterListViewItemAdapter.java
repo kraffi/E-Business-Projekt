@@ -1,11 +1,10 @@
-package e_business_projekt.e_business_projekt.poi_list.provider;
+package e_business_projekt.e_business_projekt.poi_list.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import e_business_projekt.e_business_projekt.R;
 
@@ -46,7 +45,7 @@ public class POIFilterListViewItemAdapter extends BaseAdapter {
 
         if (convertView == null){
 
-            convertView = mInflater.inflate(R.layout.listview_types, null);
+            convertView = mInflater.inflate(R.layout.listview_item_filter_type, null);
 
             holder = new ViewHolder();
             holder.filterName = (TextView) convertView.findViewById(R.id.textViewFilterType);
