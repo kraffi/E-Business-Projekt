@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
@@ -20,9 +21,10 @@ import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import e_business_projekt.e_business_projekt.Maps_Navigation.MapActivity;
-import e_business_projekt.e_business_projekt.poi_list.POIListViewItemAdapter;
+import e_business_projekt.e_business_projekt.poi_list.provider.POIListViewItemAdapter;
 import e_business_projekt.e_business_projekt.poi_list.POIDialog;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
+import e_business_projekt.e_business_projekt.poi_list.provider.POIFilterDialog;
 import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProvider;
 import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProviderCallback;
 
@@ -51,7 +53,22 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+//        SearchView s = (SearchView) findViewById(R.id.poiSearchView);
+//        s.clearFocus();
+
+        ImageButton b = (ImageButton) findViewById(R.id.poiFilterButton);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "POI Filter Button clicked");
+                POIFilterDialog dialog = new POIFilterDialog();
+                dialog.show(getFragmentManager(), "POI Filter Dialog");
+            }
+        });
+
     }
+
 
     //TODO: DEPRECATED
     private void getPoiList() {
@@ -147,7 +164,6 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         ListView lv = (ListView) findViewById(R.id.poiListView);
         lv.setAdapter(new POIListViewItemAdapter(this, placesPOIList));
 
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
@@ -196,7 +212,7 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_poi_list, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -233,8 +249,7 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
     public void onConnected(Bundle bundle) {
         Log.d(TAG, "GoogleApiClient: Connected!");
         lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        PlacesProvider placesProvider = new PlacesProvider(this, mGoogleApiClient, lastLocation);
-        placesProvider.start();
+        startProvider();
     }
 
     @Override
@@ -258,6 +273,15 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
     public void placesProviderCallback(List<PointOfInterest> pois) {
         Log.i(TAG,"Callback: " + pois.size());
         buildPOIList(pois);
+    }
+
+    public void startProvider(){
+        Location newLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (newLocation != null){
+            lastLocation = newLocation;
+        }
+        PlacesProvider placesProvider = new PlacesProvider(this, mGoogleApiClient, lastLocation);
+        placesProvider.start();
     }
 
 }

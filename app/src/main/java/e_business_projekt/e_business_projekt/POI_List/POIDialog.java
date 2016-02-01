@@ -75,7 +75,7 @@ public class POIDialog extends DialogFragment {
         builder.setPositiveButton("Wikipedia?", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.i(TAG, "Wikipediabutton clicked!");
+                Log.i(TAG, "Wikipediabutton clicked");
             }
         });
         builder.setNegativeButton("Back", new DialogInterface.OnClickListener() {

@@ -2,17 +2,35 @@
               android:orientation="vertical" android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="List of POIs"
-            android:id="@+id/textView"
-            android:layout_gravity="center_horizontal" />
+            android:layout_height="wrap_content">
+
+        <SearchView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/poiSearchView"
+                android:queryHint="Search"
+                android:iconifiedByDefault="false"/>
+
+        <ImageButton
+                android:src="@drawable/ic_filter_list_black_48dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/poiFilterButton"
+                android:background="#00ffffff"
+                android:layout_marginRight="4dp"
+                android:adjustViewBounds="true"
+                android:clickable="true"/>
+    </LinearLayout>
+
     <ListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/poiListView"/>
+            android:id="@+id/poiListView"
+            />
+
 </LinearLayout>
 
 

@@ -1,4 +1,4 @@
-package e_business_projekt.e_business_projekt.poi_list;
+package e_business_projekt.e_business_projekt.poi_list.provider;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import e_business_projekt.e_business_projekt.R;
+import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -18,8 +19,7 @@ import java.util.List;
  */
 public class POIListViewItemAdapter extends BaseAdapter {
 
-    private static List<PointOfInterest> poiList;
-
+    private List<PointOfInterest> poiList;
     private LayoutInflater mInflater;
 
     public POIListViewItemAdapter(Context ListViewSection, List<PointOfInterest> results){
