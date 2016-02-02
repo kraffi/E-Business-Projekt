@@ -1,4 +1,4 @@
-package e_business_projekt.e_business_projekt;
+package e_business_projekt.e_business_projekt.poi_list.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,22 +7,22 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import org.w3c.dom.Text;
+import e_business_projekt.e_business_projekt.R;
+import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by RaulVinhKhoa on 10.12.2015.
  */
-public class ListViewItemAdapter extends BaseAdapter {
+public class POIListViewItemAdapter extends BaseAdapter {
 
-    private static ArrayList<PointOfInterest> poiList;
-
+    private List<PointOfInterest> poiList;
     private LayoutInflater mInflater;
 
-    public ListViewItemAdapter(Context ListViewSection, ArrayList<PointOfInterest> results){
+    public POIListViewItemAdapter(Context ListViewSection, List<PointOfInterest> results){
         this.poiList = results;
         this.mInflater = LayoutInflater.from(ListViewSection);
     }
@@ -46,10 +46,10 @@ public class ListViewItemAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null){
-            convertView = mInflater.inflate(R.layout.listview_item, null);
+            convertView = mInflater.inflate(R.layout.listview_item_poi, null);
             holder = new ViewHolder();
-            holder.title = (TextView) convertView.findViewById(R.id.itemTitle);
-            holder.info = (TextView) convertView.findViewById(R.id.itemInfo);
+            holder.title = (TextView) convertView.findViewById(R.id.textViewItemTitle);
+            holder.info = (TextView) convertView.findViewById(R.id.textViewItemInfo);
             holder.img = (ImageView) convertView.findViewById(R.id.itemImage);
 
             convertView.setTag(holder);

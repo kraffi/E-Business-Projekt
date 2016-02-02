@@ -1,8 +1,9 @@
-package e_business_projekt.e_business_projekt;
+package e_business_projekt.e_business_projekt.poi_list;
 
 import android.net.Uri;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
+import e_business_projekt.e_business_projekt.R;
 
 import java.util.List;
 
@@ -14,9 +15,14 @@ public class PointOfInterest {
 
     private String name;
     private String id;
+
     private LatLng latLng;
     private float distance;
+
+    private String address;
+    private String phonenumber;
     private Uri websiteUri;
+
     private List<Integer> placeTypes;
     private int img;
 
@@ -30,6 +36,9 @@ public class PointOfInterest {
         this.distance = -1;
         this.name = place.getName().toString();
         this.placeTypes = place.getPlaceTypes();
+
+        this.address = place.getAddress().toString();
+        this.phonenumber = place.getPhoneNumber().toString();
         this.websiteUri = place.getWebsiteUri();
 
         //TODO: Replace Placeholder img
@@ -148,6 +157,22 @@ public class PointOfInterest {
         this.distance = distance;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
     /**
      * to string method of POI-Object
      * @return string
@@ -159,6 +184,7 @@ public class PointOfInterest {
                 ", id='" + id + '\'' +
                 ", latLng=" + latLng +
                 ", distance=" + distance +
+                ", phone=" + phonenumber +
                 ", websiteUri=" + websiteUri +
                 ", placeTypes=" + placeTypes +
                 '}';

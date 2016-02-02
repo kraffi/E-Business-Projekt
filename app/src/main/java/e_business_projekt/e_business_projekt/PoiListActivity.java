@@ -2,13 +2,14 @@ package e_business_projekt.e_business_projekt;
 
 import android.content.Intent;
 import android.location.Location;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
@@ -19,15 +20,24 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
+import e_business_projekt.e_business_projekt.Maps_Navigation.MapActivity;
+import e_business_projekt.e_business_projekt.poi_list.adapter.POIListViewItemAdapter;
+import e_business_projekt.e_business_projekt.poi_list.dialogs.POIDialog;
+import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
+import e_business_projekt.e_business_projekt.poi_list.dialogs.POIFilterDialog;
+import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProvider;
+import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProviderCallback;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PoiListActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, PlacesProviderCallback {
 
     private static final String TAG = "EBP.PoiListActivity";
     private GoogleApiClient mGoogleApiClient;
     private ArrayList<PointOfInterest> poiList = new ArrayList<>();
+    Location lastLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +54,23 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        SearchPlacesService test = new SearchPlacesService();
-        test.getIDs();
+//        SearchView s = (SearchView) findViewById(R.id.poiSearchView);
+//        s.clearFocus();
 
-        getPoiList();
+        ImageButton b = (ImageButton) findViewById(R.id.poiFilterButton);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "POI Filter Button clicked");
+                POIFilterDialog dialog = new POIFilterDialog();
+                dialog.show(getFragmentManager(), "POI Filter Dialog");
+            }
+        });
+
     }
 
+
+    //TODO: DEPRECATED
     private void getPoiList() {
         if (mGoogleApiClient != null) {
 
@@ -122,7 +143,7 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
 
                         // add POI to POI-List
                         poiList.add(poi);
-                        //Log.i(TAG, "Place: " + placeLikelihood.getPlace().getName() + " as number " + i + " added!");
+                        Log.i(TAG, "Place: " + placeLikelihood.getPlace().getName() + " as number " + i + " added!");
                     }
                     likelyPlaces.release();
 
@@ -139,22 +160,51 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         }
     }
 
-    public void buildPOIList(ArrayList<PointOfInterest> placesPOIList) {
+    public void buildPOIList(final List<PointOfInterest> placesPOIList) {
         ListView lv = (ListView) findViewById(R.id.poiListView);
-        lv.setAdapter(new ListViewItemAdapter(this, placesPOIList));
+        lv.setAdapter(new POIListViewItemAdapter(this, placesPOIList));
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 
-                String info = poiList.get(position).toString();
+                PointOfInterest poi = placesPOIList.get(position);
+
+                String name = poi.getName();
+                String info = poi.toString();
+
+                String address  = "";
+                if (poi.getAddress() != null){
+                    address = poi.getAddress();
+                }
+
+                String phone = "";
+                if(poi.getPhonenumber() != null){
+                    phone = poi.getPhonenumber();
+                }
+
+                String website = "";
+                if (poi.getWebsiteUri() != null){
+                     website = poi.getWebsiteUri().toString();
+                }
+
+                Bundle args = new Bundle();
+                args.putString("name", name);
+                args.putString("info", info);
+                args.putString("address", address);
+                args.putString("phone", phone);
+                args.putString("website", website);
+
+                POIDialog dialog = new POIDialog();
+                dialog.setArguments(args);
+                dialog.show(getFragmentManager(), "POI Dialog");
+
                 Log.i(TAG, "Called: onItemClick(): Item number " + position);
-                Toast.makeText(getBaseContext(), info, Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    public void showCallbackToast(ArrayList<PointOfInterest> poiList) {
+    public void showCallbackToast(List<PointOfInterest> poiList) {
         String text = poiList.size() + " POIs added to List";
         Toast.makeText(getBaseContext(), text, Toast.LENGTH_LONG).show();
     }
@@ -162,7 +212,7 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_poi_list, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -190,8 +240,6 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         return true;
     }
 
-
-
     @Override
     public void onConnectionSuspended(int i) {
         Log.d(TAG, "GoogleApiClient: Connection suspended!");
@@ -200,6 +248,8 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
     @Override
     public void onConnected(Bundle bundle) {
         Log.d(TAG, "GoogleApiClient: Connected!");
+        lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        startProvider();
     }
 
     @Override
@@ -218,4 +268,20 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         mGoogleApiClient.disconnect();
         super.onStop();
     }
+
+    @Override
+    public void placesProviderCallback(List<PointOfInterest> pois) {
+        Log.i(TAG,"Callback: " + pois.size());
+        buildPOIList(pois);
+    }
+
+    public void startProvider(){
+        Location newLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (newLocation != null){
+            lastLocation = newLocation;
+        }
+        PlacesProvider placesProvider = new PlacesProvider(this, mGoogleApiClient, lastLocation);
+        placesProvider.start();
+    }
+
 }
