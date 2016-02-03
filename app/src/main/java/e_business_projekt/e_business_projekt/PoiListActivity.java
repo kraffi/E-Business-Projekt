@@ -1,17 +1,18 @@
 package e_business_projekt.e_business_projekt;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Looper;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.*;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -25,6 +26,8 @@ import e_business_projekt.e_business_projekt.poi_list.adapter.POIListViewItemAda
 import e_business_projekt.e_business_projekt.poi_list.dialogs.POIDialog;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 import e_business_projekt.e_business_projekt.poi_list.dialogs.POIFilterDialog;
+import e_business_projekt.e_business_projekt.poi_list.dialogs.POIFilterDialogCallback;
+import e_business_projekt.e_business_projekt.poi_list.provider.POIFilter;
 import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProvider;
 import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProviderCallback;
 
@@ -32,11 +35,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PoiListActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, PlacesProviderCallback {
+        GoogleApiClient.OnConnectionFailedListener, PlacesProviderCallback, POIFilterDialogCallback {
 
     private static final String TAG = "EBP.PoiListActivity";
     private GoogleApiClient mGoogleApiClient;
     private ArrayList<PointOfInterest> poiList = new ArrayList<>();
+
+    POIFilter filter;
     Location lastLocation;
 
     @Override
@@ -54,19 +59,26 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
                 .addOnConnectionFailedListener(this)
                 .build();
 
-//        SearchView s = (SearchView) findViewById(R.id.poiSearchView);
-//        s.clearFocus();
+        final SearchView s = (SearchView) findViewById(R.id.poiSearchView);
+        s.setFocusable(false);
+        s.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                s.setFocusableInTouchMode(true);
+                return false;
+            }
+        });
 
-        ImageButton b = (ImageButton) findViewById(R.id.poiFilterButton);
-        b.setOnClickListener(new View.OnClickListener() {
+        ImageButton filterButton = (ImageButton) findViewById(R.id.poiFilterButton);
+        filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "POI Filter Button clicked");
                 POIFilterDialog dialog = new POIFilterDialog();
+                dialog.onAttach(PoiListActivity.this);
                 dialog.show(getFragmentManager(), "POI Filter Dialog");
             }
         });
-
     }
 
 
@@ -161,47 +173,58 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
     }
 
     public void buildPOIList(final List<PointOfInterest> placesPOIList) {
-        ListView lv = (ListView) findViewById(R.id.poiListView);
-        lv.setAdapter(new POIListViewItemAdapter(this, placesPOIList));
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+            public void run() {
+                ListView lv = (ListView) findViewById(R.id.poiListView);
+                if(!placesPOIList.isEmpty()){
+                    lv.setAdapter(new POIListViewItemAdapter(PoiListActivity.this, placesPOIList));
+                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 
-                PointOfInterest poi = placesPOIList.get(position);
+                            PointOfInterest poi = placesPOIList.get(position);
 
-                String name = poi.getName();
-                String info = poi.toString();
+                            String name = poi.getName();
+                            String info = poi.toString();
 
-                String address  = "";
-                if (poi.getAddress() != null){
-                    address = poi.getAddress();
+                            String address  = "";
+                            if (poi.getAddress() != null){
+                                address = poi.getAddress();
+                            }
+
+                            String phone = "";
+                            if(poi.getPhonenumber() != null){
+                                phone = poi.getPhonenumber();
+                            }
+
+                            String website = "";
+                            if (poi.getWebsiteUri() != null){
+                                website = poi.getWebsiteUri().toString();
+                            }
+
+                            Bundle args = new Bundle();
+                            args.putString("name", name);
+                            args.putString("info", info);
+                            args.putString("address", address);
+                            args.putString("phone", phone);
+                            args.putString("website", website);
+
+                            POIDialog dialog = new POIDialog();
+                            dialog.setArguments(args);
+                            dialog.show(getFragmentManager(), "POI Dialog");
+
+                            Log.i(TAG, "Called: onItemClick(): Item number " + position);
+                        }
+                    });
+                } else {
+                    Log.i(TAG, "Show No Results");
                 }
-
-                String phone = "";
-                if(poi.getPhonenumber() != null){
-                    phone = poi.getPhonenumber();
-                }
-
-                String website = "";
-                if (poi.getWebsiteUri() != null){
-                     website = poi.getWebsiteUri().toString();
-                }
-
-                Bundle args = new Bundle();
-                args.putString("name", name);
-                args.putString("info", info);
-                args.putString("address", address);
-                args.putString("phone", phone);
-                args.putString("website", website);
-
-                POIDialog dialog = new POIDialog();
-                dialog.setArguments(args);
-                dialog.show(getFragmentManager(), "POI Dialog");
-
-                Log.i(TAG, "Called: onItemClick(): Item number " + position);
             }
         });
+
+
+
     }
 
     public void showCallbackToast(List<PointOfInterest> poiList) {
@@ -249,7 +272,8 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
     public void onConnected(Bundle bundle) {
         Log.d(TAG, "GoogleApiClient: Connected!");
         lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        startProvider();
+        filter = new POIFilter();
+        startProvider(filter);
     }
 
     @Override
@@ -275,13 +299,21 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         buildPOIList(pois);
     }
 
-    public void startProvider(){
+
+
+    @Override
+    public void poiFilterDialogCallback(List<String> filterTypes, int radius) {
+        Log.i(TAG,"Callback Filter: " + filterTypes.toString() + " | Radius: " + radius);
+        filter = new POIFilter("", filterTypes, radius);
+        startProvider(filter);
+    }
+
+    public void startProvider(POIFilter filter){
         Location newLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (newLocation != null){
             lastLocation = newLocation;
         }
-        PlacesProvider placesProvider = new PlacesProvider(this, mGoogleApiClient, lastLocation);
+        PlacesProvider placesProvider = new PlacesProvider(this, mGoogleApiClient, filter, lastLocation);
         placesProvider.start();
     }
-
 }

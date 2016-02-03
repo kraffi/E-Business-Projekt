@@ -64,6 +64,11 @@
                 android:value="e_business_projekt.e_business_projekt.MainActivity" />
         </activity>
 
+        <activity
+                android:name=".WebViewActivity"
+                android:label="@string/title_activity_web_view" >
+        </activity>
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -77,12 +82,9 @@
             android:value="@string/google_maps_key" />
         <meta-data
             android:name="com.google.android.places.API_KEY"
-            android:value="AIzaSyAwNzfpWJnTxtOVlqkKT3M1P9f9-pTqGuw" />
+            android:value="@string/google_places_key" />
 
-        <activity
-            android:name=".WebViewActivity"
-            android:label="@string/title_activity_web_view" >
-        </activity>
+
     </application>
 
 </manifest>

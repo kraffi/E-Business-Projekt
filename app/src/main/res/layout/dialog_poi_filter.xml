@@ -15,13 +15,16 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@android:style/TextAppearance.Medium"
                 android:text="Radius"
-                android:id="@+id/labelRadius"/>
+                android:id="@+id/labelRadius"
+                android:layout_marginLeft="16dp"/>
 
         <SeekBar
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:id="@+id/seekBarRadius"
-                android:layout_weight="0.93"/>
+                android:layout_weight="0.93"
+                android:minHeight="50dp"
+                android:maxHeight="50dp"/>
 
         <EditText
                 android:layout_width="67dp"

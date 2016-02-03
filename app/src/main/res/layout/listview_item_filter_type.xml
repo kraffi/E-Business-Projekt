@@ -1,18 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
+              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:paddingTop="16dp"
+              android:paddingBottom="16dp">
 
-    <TextView
-            android:layout_width="wrap_content"
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="FilterType"
-            android:id="@+id/textViewFilterType"/>
+            android:weightSum="1">
 
-    <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/checkBoxFilterType"/>
+        <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkBoxFilterType"
+                android:layout_gravity="center_vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:layout_marginLeft="8dp"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="FilterType"
+                android:id="@+id/textViewFilterType"
+                android:layout_weight="0.90"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"/>
+
+    </LinearLayout>
+
+
 </LinearLayout>
