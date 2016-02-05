@@ -13,14 +13,18 @@ public class POIRouteProvider {
 
     private static final String TAG = "EBP.POIRouteProvider";
     private ArrayList<POIRoute> POIRouteList;
+    private int activated;
 
     public POIRouteProvider() {
         this.POIRouteList = new ArrayList<>();
         createTestData();
+        activated = 1;
+        POIRouteList.get(activated).setActivated(true);
     }
 
-    public POIRouteProvider(ArrayList<POIRoute> POIRouteList) {
+    public POIRouteProvider(ArrayList<POIRoute> POIRouteList, int activated) {
         this.POIRouteList = POIRouteList;
+        this.activated = activated;
     }
 
     public ArrayList<POIRoute> getPOIRouteList() {
@@ -38,6 +42,21 @@ public class POIRouteProvider {
         this.POIRouteList.add(new POIRoute());
     }
 
+    public int getActivated() {
+        return activated;
+    }
+
+    public void setActivated(int activated) {
+        this.activated = activated;
+        for (int i = 0; i < this.POIRouteList.size(); i++){
+            if (i == activated) {
+                this.POIRouteList.get(i).setActivated(true);
+            } else {
+                this.POIRouteList.get(i).setActivated(false);
+            }
+        }
+
+    }
 
     public void createTestData(){
         //----------------------- Creating Test Data -----------------------

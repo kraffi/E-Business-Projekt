@@ -8,6 +8,7 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
+            android:descendantFocusability="blocksDescendants"
             android:layout_height="wrap_content">
 
         <TextView
@@ -31,8 +32,7 @@
                 android:src="@drawable/ic_mode_edit_black_48dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/editRouteButton"
-                />
+                android:id="@+id/editRouteButton"/>
     </LinearLayout>
 
 </LinearLayout>

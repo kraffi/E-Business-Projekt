@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import android.widget.TextView;
 import e_business_projekt.e_business_projekt.route_list.POIRoute;
 import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 import e_business_projekt.e_business_projekt.route_list.adapter.RouteListViewItemAdapter;
@@ -26,13 +27,14 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "EBP.MainActivity";
     private ArrayList<POIRoute> POIRouteList = new ArrayList<>();
+    private POIRouteProvider routeManager = new POIRouteProvider();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final POIRouteProvider routeManager = new POIRouteProvider();
+
         POIRouteList = routeManager.getPOIRouteList();
 
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.addRouteButton);
@@ -51,14 +53,23 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ListView lv = (ListView) findViewById(R.id.routeListView);
+                final ListView lv = (ListView) findViewById(R.id.routeListView);
                 if (!poiRouteList.isEmpty()){
                     lv.setAdapter(new RouteListViewItemAdapter(MainActivity.this, poiRouteList));
                     lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Log.i(TAG, "Item " + position + " clicked");
+                            Log.i(TAG, "Item " + position + " clicked and activated");
                             view.setBackgroundResource(R.color.routeSelected);
+                            routeManager.setActivated(position);
+
+                            int listLength = lv.getCount();
+                            for (int i = 0; i < listLength; i++){
+                                if (!(i == position)){
+                                    View v = getViewByPosition(i, lv);
+                                    v.setBackgroundResource(R.color.routeUnselected);
+                                }
+                            }
                         }
                     });
                 }  else {
@@ -66,6 +77,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
     }
 
     @Override

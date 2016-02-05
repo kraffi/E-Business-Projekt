@@ -53,6 +53,10 @@ public class RouteListViewItemAdapter extends BaseAdapter {
         }
 
         holder.routeName.setText(listOfPOIRoutes.get(position).getRouteName());
+        if (listOfPOIRoutes.get(position).isActivated()){
+            convertView.setBackgroundResource(R.color.routeSelected);
+        }
+
         return convertView;
     }
 
