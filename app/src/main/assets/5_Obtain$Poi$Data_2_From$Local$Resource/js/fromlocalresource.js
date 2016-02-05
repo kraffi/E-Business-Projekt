@@ -17,8 +17,17 @@ var World = {
 	// The last selected marker
 	currentMarker: null,
 
+	//kr: radar
+	locationUpdateCounter: 0,
+    updatePlacemarkDistancesEveryXLocationUpdates: 10,
+
 	// called to inject new POI data
 	loadPoisFromJsonData: function loadPoisFromJsonDataFn(poiData) {
+
+		//kr: show radar & set click-listener
+        PoiRadar.show();
+        $('#radarContainer').unbind('click');
+        $("#radarContainer").click(PoiRadar.clickedRadar);
 
 		// empty list of visible markers
 		World.markerList = [];
@@ -42,8 +51,18 @@ var World = {
 			World.markerList.push(new Marker(singlePoi));
 		}
 
+        //kr: updates distance information of all placemarks
+        World.updateDistanceToUserValues();
+
 		World.updateStatusMessage(currentPlaceNr + ' places loaded');
 	},
+
+    //kr: sets/updates distances of all makers so they are available way faster than calling (time-consuming) distanceToUser() method all the time
+    updateDistanceToUserValues: function updateDistanceToUserValuesFn() {
+        for (var i = 0; i < World.markerList.length; i++) {
+            World.markerList[i].distanceToUser = World.markerList[i].markerObject.locations[0].distanceToUser();
+        }
+    },
 
 	// updates status message shon in small "i"-button aligned bottom center
 	updateStatusMessage: function updateStatusMessageFn(message, isWarning) {
@@ -68,6 +87,9 @@ var World = {
 			World.requestDataFromLocal(lat, lon);
 			World.initiallyLoadedData = true;
 		}
+
+		//kr: helper used to update placemark information every now and then (e.g. every 10 location upadtes fired)
+        World.locationUpdateCounter = (++World.locationUpdateCounter % World.updatePlacemarkDistancesEveryXLocationUpdates);
 	},
 
 	// fired when user pressed maker in cam
@@ -115,26 +137,26 @@ var World = {
 
 };
 
-var Helper = {
+/*var Helper = {
 
-	/* 
+	*//*
 		For demo purpose only, this method takes poi data and a center point (latitude, longitude) to relocate the given places randomly around the user
-	*/
+	*//*
 	bringPlacesToUser: function bringPlacesToUserFn(poiData, latitude, longitude) {
 		for (var i = 0; i < poiData.length; i++) {
 			poiData[i].latitude = latitude + (Math.random() / 5 - 0.1);
 			poiData[i].longitude = longitude + (Math.random() / 5 - 0.1);
-			/* 
+			*//*
 			Note: setting altitude to '0'
 			will cause places being shown below / above user,
 			depending on the user 's GPS signal altitude. 
 				Using this contant will ignore any altitude information and always show the places on user-level altitude
-			*/
+			*//*
 			poiData[i].altitude = AR.CONST.UNKNOWN_ALTITUDE;
 		}
 		return poiData;
 	}
-}
+}*/
 
 
 /* forward locationChanges to custom function */
