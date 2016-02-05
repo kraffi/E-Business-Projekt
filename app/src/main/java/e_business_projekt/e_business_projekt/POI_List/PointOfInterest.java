@@ -5,6 +5,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import e_business_projekt.e_business_projekt.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,6 +41,21 @@ public class PointOfInterest {
         this.address = place.getAddress().toString();
         this.phonenumber = place.getPhoneNumber().toString();
         this.websiteUri = place.getWebsiteUri();
+
+        //TODO: Replace Placeholder img
+        this.img = R.mipmap.ic_launcher;
+    }
+
+    public  PointOfInterest(){
+        this.id = "";
+        this.latLng = new LatLng(0.0,0.0);
+        this.distance = -1;
+        this.name = "";
+        this.placeTypes = new ArrayList<>();
+
+        this.address = "";
+        this.phonenumber = "";
+        this.websiteUri = Uri.parse("http://www.google.com");
 
         //TODO: Replace Placeholder img
         this.img = R.mipmap.ic_launcher;
@@ -171,6 +187,12 @@ public class PointOfInterest {
 
     public void setPhonenumber(String phonenumber) {
         this.phonenumber = phonenumber;
+    }
+
+    public void addPlaceType(int id){
+        if (!this.placeTypes.contains(id)){
+            placeTypes.add(id);
+        }
     }
 
     /**
