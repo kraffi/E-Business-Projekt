@@ -72,6 +72,9 @@ public class POIRouteProvider {
         if (position == activated){
             setActivated(activated-1);
         }
+        if (position == 0){
+            setActivated(0);
+        }
 
     }
 
