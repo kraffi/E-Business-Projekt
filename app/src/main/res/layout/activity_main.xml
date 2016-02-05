@@ -45,5 +45,16 @@
             android:layout_alignParentEnd="true"
             />
 
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="No routes available"
+            android:gravity="center"
+            android:id="@+id/emptyRouteListView"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:visibility="invisible"/>
+
 </RelativeLayout>
 

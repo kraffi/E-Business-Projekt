@@ -111,7 +111,6 @@ public class POIFilterDialog extends DialogFragment {
                 }
             }
         }
-        //Log.i("TEST:", checks.toString());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 

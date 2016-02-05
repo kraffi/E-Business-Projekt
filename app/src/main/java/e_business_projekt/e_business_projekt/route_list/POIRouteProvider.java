@@ -39,7 +39,13 @@ public class POIRouteProvider {
 
     public void addRoute(){
         Log.i(TAG, "addRoute() called");
-        this.POIRouteList.add(new POIRoute());
+        if(POIRouteList.isEmpty()){
+            setActivated(0);
+            this.POIRouteList.add(new POIRoute());
+            this.POIRouteList.get(0).setActivated(true);
+        } else {
+            this.POIRouteList.add(new POIRoute());
+        }
     }
 
     public int getActivated() {
@@ -56,6 +62,23 @@ public class POIRouteProvider {
             }
         }
 
+    }
+
+    public void deleteRoute(int position){
+        Log.i(TAG, "deleting Route with position " + position);
+        //TODO: HANDLE DELETE OF ACTIVE ROUTE
+        POIRouteList.remove(position);
+
+        if (position == activated){
+            setActivated(activated-1);
+        }
+
+    }
+
+    public void editRoute(int position){
+        Log.i(TAG, "editing Route with position " + position);
+        //TODO: CALL EDIT DIALOG
+        Log.i(TAG, "Call edit Route Dialog here!");
     }
 
     public void createTestData(){

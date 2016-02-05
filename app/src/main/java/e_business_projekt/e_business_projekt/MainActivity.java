@@ -18,12 +18,13 @@ import android.widget.TextView;
 import e_business_projekt.e_business_projekt.route_list.POIRoute;
 import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 import e_business_projekt.e_business_projekt.route_list.adapter.RouteListViewItemAdapter;
+import e_business_projekt.e_business_projekt.route_list.adapter.RouteListViewItemCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RouteListViewItemCallback {
 
     private static final String TAG = "EBP.MainActivity";
     private ArrayList<POIRoute> POIRouteList = new ArrayList<>();
@@ -33,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         POIRouteList = routeManager.getPOIRouteList();
 
@@ -54,8 +54,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 final ListView lv = (ListView) findViewById(R.id.routeListView);
+                final TextView empty = (TextView) findViewById(R.id.emptyRouteListView);
+
                 if (!poiRouteList.isEmpty()){
-                    lv.setAdapter(new RouteListViewItemAdapter(MainActivity.this, poiRouteList));
+                    empty.setVisibility(View.INVISIBLE);
+                    lv.setAdapter(new RouteListViewItemAdapter(MainActivity.this, MainActivity.this, poiRouteList));
                     lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -74,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }  else {
                     Log.i(TAG, "Show No Results");
+                    empty.setVisibility(View.VISIBLE);
+                    lv.setAdapter(new RouteListViewItemAdapter(MainActivity.this, MainActivity.this, poiRouteList));
                 }
             }
         });
@@ -89,6 +94,20 @@ public class MainActivity extends AppCompatActivity {
             final int childIndex = pos - firstListItemPosition;
             return listView.getChildAt(childIndex);
         }
+    }
+
+    @Override
+    public void editRouteButtonCallback(int position) {
+        Log.i(TAG, "editRouteButtonCallback() with Item " + position);
+        routeManager.editRoute(position);
+        buildRouteList(routeManager.getPOIRouteList());
+    }
+
+    @Override
+    public void deleteRouteButtonCallback(int position) {
+        Log.i(TAG, "editRouteButtonCallback() with Item " + position);
+        routeManager.deleteRoute(position);
+        buildRouteList(routeManager.getPOIRouteList());
     }
 
     @Override
