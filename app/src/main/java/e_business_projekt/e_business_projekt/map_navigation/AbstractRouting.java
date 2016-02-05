@@ -1,4 +1,4 @@
-package e_business_projekt.e_business_projekt.maps_navigation;
+package e_business_projekt.e_business_projekt.map_navigation;
 
 /**
  * Async Task to access the Google Direction API and return the routing data

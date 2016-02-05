@@ -4,7 +4,6 @@ import android.content.Intent;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import android.util.Log;
@@ -14,9 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import com.google.android.gms.maps.model.LatLng;
-import e_business_projekt.e_business_projekt.maps_navigation.MapActivity;
-import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
+
+import e_business_projekt.e_business_projekt.map_navigation.MapActivity;
 import e_business_projekt.e_business_projekt.route_list.POIRoute;
 import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 import e_business_projekt.e_business_projekt.route_list.adapter.RouteListViewItemAdapter;
