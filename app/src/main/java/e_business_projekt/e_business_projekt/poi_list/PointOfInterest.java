@@ -1,6 +1,7 @@
 package e_business_projekt.e_business_projekt.poi_list;
 
 import android.net.Uri;
+import android.os.Parcelable;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import e_business_projekt.e_business_projekt.R;

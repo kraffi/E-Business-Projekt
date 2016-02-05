@@ -15,10 +15,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import android.widget.TextView;
+import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 import e_business_projekt.e_business_projekt.route_list.POIRoute;
 import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 import e_business_projekt.e_business_projekt.route_list.adapter.RouteListViewItemAdapter;
 import e_business_projekt.e_business_projekt.route_list.adapter.RouteListViewItemCallback;
+import e_business_projekt.e_business_projekt.route_list.dialogs.EditRouteDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,8 +101,28 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
     @Override
     public void editRouteButtonCallback(int position) {
         Log.i(TAG, "editRouteButtonCallback() with Item " + position);
+
+        Bundle args = getData(POIRouteList.get(position).getPoiRoute());
+
+        EditRouteDialog dialog = new EditRouteDialog();
+        dialog.show(getFragmentManager(), "Edit Route Dialog");
+
+
+
         routeManager.editRoute(position);
         buildRouteList(routeManager.getPOIRouteList());
+    }
+
+    public Bundle getData(List<PointOfInterest> poiList){
+        Bundle args = new Bundle();
+
+        int poiListLength = poiList.size();
+        for (int i = 0; i < poiListLength; i++){
+            PointOfInterest poi = poiList.get(i);
+
+        }
+
+        return args;
     }
 
     @Override
