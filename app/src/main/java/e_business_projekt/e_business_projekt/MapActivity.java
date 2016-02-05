@@ -1,4 +1,4 @@
-package e_business_projekt.e_business_projekt.maps_navigation;
+package e_business_projekt.e_business_projekt;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -46,6 +46,12 @@ import e_business_projekt.e_business_projekt.CamActivity;
 import e_business_projekt.e_business_projekt.MainActivity;
 import e_business_projekt.e_business_projekt.PoiListActivity;
 import e_business_projekt.e_business_projekt.R;
+import e_business_projekt.e_business_projekt.map_navigation.AbstractRouting;
+import e_business_projekt.e_business_projekt.map_navigation.PlaceAutoCompleteAdapter;
+import e_business_projekt.e_business_projekt.map_navigation.Route;
+import e_business_projekt.e_business_projekt.map_navigation.Routing;
+import e_business_projekt.e_business_projekt.map_navigation.RoutingListener;
+import e_business_projekt.e_business_projekt.map_navigation.Util;
 
 public class MapActivity extends AppCompatActivity implements RoutingListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
     protected GoogleMap map;

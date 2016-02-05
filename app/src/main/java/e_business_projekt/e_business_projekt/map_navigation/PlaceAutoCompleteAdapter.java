@@ -1,4 +1,4 @@
-package e_business_projekt.e_business_projekt.maps_navigation;
+package e_business_projekt.e_business_projekt.map_navigation;
 
 /**
  * Created by Joel on 28/06/2015.
@@ -213,7 +213,7 @@ public class PlaceAutoCompleteAdapter
     /**
      * Holder for Places Geo Data Autocomplete API results.
      */
-    class PlaceAutocomplete {
+    public class PlaceAutocomplete {
 
         public CharSequence placeId;
         public CharSequence description;
