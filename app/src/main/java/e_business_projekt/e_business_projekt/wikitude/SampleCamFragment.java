@@ -6,13 +6,14 @@ import android.widget.Toast;
 
 import com.wikitude.architect.ArchitectView.ArchitectUrlListener;
 import com.wikitude.architect.ArchitectView.SensorAccuracyChangeListener;
-import com.wikitude.samples.utils.urllauncher.ARchitectUrlLauncherCamActivity;
+
 
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import e_business_projekt.e_business_projekt.R;
+import e_business_projekt.e_business_projekt.wikitude.urllauncher.ARchitectUrlLauncherCamActivity;
 
 
 public class SampleCamFragment extends AbstractArchitectCamFragmentV4{
@@ -36,7 +37,7 @@ public class SampleCamFragment extends AbstractArchitectCamFragmentV4{
 
 	@Override
 	public int getContentViewId() {
-		return R.layout.sample_cam;
+		return R.layout.activity_cam;
 	}
 
 	@Override

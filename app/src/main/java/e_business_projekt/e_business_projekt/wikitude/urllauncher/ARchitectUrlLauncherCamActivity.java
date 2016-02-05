@@ -8,8 +8,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.wikitude.samples.SampleCamFragment;
-import com.wikitude.sdksamples.R;
+
+
+import e_business_projekt.e_business_projekt.R;
+import e_business_projekt.e_business_projekt.wikitude.SampleCamFragment;
+
 
 /**
  * Demo Implementation of a fragment use of the Wikitude ARchitectView.

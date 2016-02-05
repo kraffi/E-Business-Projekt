@@ -47,7 +47,7 @@
     <string name="splash_screen_description">Vuforia Splash</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_poi_list">Points of Interests</string>
-
+    <string name="title_activity_web_view">Web</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 

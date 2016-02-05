@@ -27,6 +27,15 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "EBP.MainActivity";
     private ArrayList<POIRoute> POIRouteList = new ArrayList<>();
 
+    //Wikitude variables
+    public static final String EXTRAS_KEY_ACTIVITY_ARCHITECT_WORLD_URL = "activityArchitectWorldUrl";
+    public static final String EXTRAS_KEY_ACTIVITY_TITLE_STRING = "activityTitle";
+    public static final String EXTRAS_KEY_ACTIVITIES_TILES_ARRAY = "activitiesTitles";
+
+    public static final String EXTRAS_KEY_ACTIVITY_IR = "activityIr";
+    public static final String EXTRAS_KEY_ACTIVITY_GEO = "activityGeo";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,12 +56,12 @@ public class MainActivity extends AppCompatActivity {
         buildRouteList(POIRouteList);
     }
 
-    public void buildRouteList(final List<POIRoute> poiRouteList){
+    public void buildRouteList(final List<POIRoute> poiRouteList) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 ListView lv = (ListView) findViewById(R.id.routeListView);
-                if (!poiRouteList.isEmpty()){
+                if (!poiRouteList.isEmpty()) {
                     lv.setAdapter(new RouteListViewItemAdapter(MainActivity.this, poiRouteList));
                     lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override

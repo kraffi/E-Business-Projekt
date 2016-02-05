@@ -6,13 +6,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.widget.Toast;
 
-import com.wikitude.samples.ArchitectViewHolderInterface.ILocationProvider;
+
 
 
 /**
  * Sample implementation of a locationProvider, feel free to polish this very basic approach (compare http://goo.gl/pvkXV )
  */
-public class LocationProvider implements ILocationProvider {
+public class LocationProvider implements ArchitectViewHolderInterface.ILocationProvider {
 
 	/** location listener called on each location update */
 	private final LocationListener locationListener;
