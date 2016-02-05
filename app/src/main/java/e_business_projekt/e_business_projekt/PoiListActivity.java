@@ -1,12 +1,8 @@
 package e_business_projekt.e_business_projekt;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Looper;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.*;
@@ -19,7 +15,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
-import e_business_projekt.e_business_projekt.Maps_Navigation.MapActivity;
+import e_business_projekt.e_business_projekt.Maps_Navigation1.MapActivity;
 import e_business_projekt.e_business_projekt.poi_list.adapter.POIListViewItemAdapter;
 import e_business_projekt.e_business_projekt.poi_list.dialogs.POIDialog;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;

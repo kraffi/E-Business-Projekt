@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import e_business_projekt.e_business_projekt.Maps_Navigation.MapActivity;
+import e_business_projekt.e_business_projekt.Maps_Navigation1.MapActivity;
 
 /**
  * Created by Sebastian on 18.11.2015.

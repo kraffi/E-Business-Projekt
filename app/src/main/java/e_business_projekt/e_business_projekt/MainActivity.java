@@ -11,7 +11,7 @@ import android.view.MenuItem;
 
 import android.widget.ListView;
 import com.google.android.gms.maps.model.LatLng;
-import e_business_projekt.e_business_projekt.Maps_Navigation.MapActivity;
+import e_business_projekt.e_business_projekt.Maps_Navigation1.MapActivity;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 import e_business_projekt.e_business_projekt.route_list.POIRoute;
 import e_business_projekt.e_business_projekt.route_list.adapter.RouteListViewItemAdapter;
