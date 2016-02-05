@@ -32,4 +32,12 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.android.support:design:23.1.1'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile (name: 'wikitudesdk', ext:'aar')
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 }
