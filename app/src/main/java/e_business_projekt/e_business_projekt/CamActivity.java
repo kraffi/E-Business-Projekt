@@ -9,6 +9,7 @@ import android.hardware.SensorManager;
 import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.wikitude.architect.ArchitectView;
@@ -17,9 +18,10 @@ import com.wikitude.architect.ArchitectView.CaptureScreenCallback;
 import com.wikitude.architect.ArchitectView.SensorAccuracyChangeListener;
 import com.wikitude.architect.StartupConfiguration.CameraPosition;
 
-import e_business_projekt.e_business_projekt.Wikitude.AbstractArchitectCamActivity;
-import e_business_projekt.e_business_projekt.Wikitude.ArchitectViewHolderInterface;
-import e_business_projekt.e_business_projekt.Wikitude.PoiDetailActivity;
+import e_business_projekt.e_business_projekt.wikitude.AbstractArchitectCamActivity;
+import e_business_projekt.e_business_projekt.wikitude.ArchitectViewHolderInterface;
+import e_business_projekt.e_business_projekt.wikitude.LocationProvider;
+import e_business_projekt.e_business_projekt.wikitude.PoiDetailActivity;
 
 
 /**
@@ -36,8 +38,7 @@ public class CamActivity extends AbstractArchitectCamActivity {
 
     @Override
     public String getARchitectWorldPath() {
-        return getIntent().getExtras().getString(
-                MainActivity.EXTRAS_KEY_ACTIVITY_ARCHITECT_WORLD_URL);
+        return getIntent().getExtras().getString(MainActivity.EXTRAS_KEY_ACTIVITY_ARCHITECT_WORLD_URL);
     }
 
     @Override
@@ -141,8 +142,7 @@ public class CamActivity extends AbstractArchitectCamActivity {
 
     @Override
     public ILocationProvider getLocationProvider(final LocationListener locationListener) {
-        //todo kr 01.02.16: connect with location provider Raul implemented
-        return new LocationPRovider(this, locationListener);
+        return new LocationProvider(this, locationListener);
     }
 
     @Override
@@ -152,9 +152,8 @@ public class CamActivity extends AbstractArchitectCamActivity {
     }
 
     @Override
-    protected boolean hasGeo() {
-        return getIntent().getExtras().getBoolean(
-                MainActivity.EXTRAS_KEY_ACTIVITY_GEO);
+    public boolean hasGeo() {
+        return getIntent().getExtras().getBoolean(MainActivity.EXTRAS_KEY_ACTIVITY_GEO);
     }
 
     @Override

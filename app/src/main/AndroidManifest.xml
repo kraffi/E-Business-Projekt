@@ -6,6 +6,33 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Wikitude permissions -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Wikitude end -->
+
+    <!-- Wikitude features -->
+    <!-- Tell the system this app requires OpenGL ES 2.0. -->
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+
+    <!-- rear facing cam -->
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
+
+    <!-- users location -->
+    <uses-feature android:name="android.hardware.location" android:required="true" />
+
+    <!-- accelerometer -->
+    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
+
+    <!-- compass -->
+    <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
+    <!-- Wikitude end -->
+
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -40,13 +67,14 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".Maps_Navigation.MapActivity"
+                android:name=".MapActivity"
                 android:label="Map"
                 android:parentActivityName=".MainActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="e_business_projekt.e_business_projekt.MainActivity"/>
         </activity>
+        <!-- Wikitude Activities -->
         <activity
                 android:name=".CamActivity"
                 android:label="Cam"
@@ -56,6 +84,10 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="e_business_projekt.e_business_projekt.MainActivity"/>
         </activity>
+        <activity android:name="e_business_projekt.e_business_projekt.wikitude.CamContentFromNativeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity android:name="e_business_projekt.e_business_projekt.wikitude.PoiDetailActivity"/>
+        <!-- Wikitude end -->
         <activity
                 android:name=".PoiListActivity"
                 android:label="@string/title_activity_poi_list"

@@ -17,9 +17,13 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRAS_KEY_ACTIVITY_ARCHITECT_WORLD_URL = "activityArchitectWorldUrl";
     public static final String EXTRAS_KEY_ACTIVITY_TITLE_STRING = "activityTitle";
     public static final String EXTRAS_KEY_ACTIVITIES_TILES_ARRAY = "activitiesTitles";
-
+    public static final String EXTRAS_KEY_ACTIVITIES_CLASSNAMES_ARRAY = "activitiesClassnames";
     public static final String EXTRAS_KEY_ACTIVITY_IR = "activityIr";
     public static final String EXTRAS_KEY_ACTIVITY_GEO = "activityGeo";
+    public static final String EXTRAS_KEY_ACTIVITIES_ARCHITECT_WORLD_URLS_ARRAY = "activitiesArchitectWorldUrls";
+
+    boolean hasIr = true;
+    boolean hasGeo = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_cam:
                 intent = new Intent(this, CamActivity.class);
+                //intent.putExtra(EXTRAS_KEY_ACTIVITIES_ARCHITECT_WORLD_URLS_ARRAY, activityUrl);
+                //intent.putExtra(EXTRAS_KEY_ACTIVITIES_CLASSNAMES_ARRAY, activityClasses);
+                //intent.putExtra(EXTRAS_KEY_ACTIVITIES_TILES_ARRAY, activityTitles);
+                //intent.putExtra(EXTRAS_KEY_ACTIVITY_TITLE_STRING, activityTitle);
+                intent.putExtra(EXTRAS_KEY_ACTIVITY_IR, hasIr);
+                intent.putExtra(EXTRAS_KEY_ACTIVITY_GEO, hasGeo);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
