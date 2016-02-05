@@ -356,7 +356,7 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
         else
         {
             progressDialog = ProgressDialog.show(this, "Please wait.",
-                    "Fetching route information.", true);
+                    "Fetching POIRoute information.", true);
             Routing routing = new Routing.Builder()
                     .travelMode(AbstractRouting.TravelMode.DRIVING)
                     .withListener(this)
@@ -397,7 +397,7 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
         }
 
         polylines = new ArrayList<>();
-        //add route(s) to the map.
+        //add POIRoute(s) to the map.
         for (int i = 0; i <route.size(); i++) {
 
             //In case of more than 5 alternative routes
@@ -410,7 +410,7 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
             Polyline polyline = map.addPolyline(polyOptions);
             polylines.add(polyline);
 
-            Toast.makeText(getApplicationContext(),"Route "+ (i+1) +": distance - "+ route.get(i).getDistanceValue()+": duration - "+ route.get(i).getDurationValue(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"POIRoute "+ (i+1) +": distance - "+ route.get(i).getDistanceValue()+": duration - "+ route.get(i).getDurationValue(),Toast.LENGTH_SHORT).show();
         }
 
         // Start marker

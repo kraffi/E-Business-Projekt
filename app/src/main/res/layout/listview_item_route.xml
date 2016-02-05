@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingTop="16dp"
+              android:paddingBottom="16dp">
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+        <TextView
+                android:layout_width="231dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Route"
+                android:id="@+id/textViewRoute"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:layout_weight="0.22"/>
+
+        <ImageButton
+                android:src="@drawable/ic_delete_black_48dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageButton"/>
+
+        <ImageButton
+                android:src="@drawable/ic_mode_edit_black_48dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageButton2"/>
+
+    </LinearLayout>
+
+</LinearLayout>
