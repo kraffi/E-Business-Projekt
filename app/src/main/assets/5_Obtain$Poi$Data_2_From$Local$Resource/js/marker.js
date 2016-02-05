@@ -92,7 +92,7 @@ function Marker(poiData) {
                 this.markerDrawable_selected,
                 this.titleLabel,
                 this.descriptionLabel],
-            indicator: this.directionIndicatorDrawable
+            indicator: this.directionIndicatorDrawable,
             radar: this.radardrawables
         }
     });

@@ -124,15 +124,15 @@ var World = {
 	// request POI data
 	requestDataFromLocal: function requestDataFromLocalFn(lat, lon) {
 
-		var poisNearby = Helper.bringPlacesToUser(myJsonData, lat, lon);
-		World.loadPoisFromJsonData(poisNearby);
+		/*var poisNearby = Helper.bringPlacesToUser(myJsonData, lat, lon);
+		World.loadPoisFromJsonData(poisNearby);*/
 
 		/*
 		For demo purpose they are relocated randomly around the user using a 'Helper'-function.
 		Comment out previous 2 lines and use the following line > instead < to use static values 1:1. 
 		*/
 
-		// World.loadPoisFromJsonData(myJsonData);
+		World.loadPoisFromJsonData(myJsonData);
 	}
 
 };
