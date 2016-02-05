@@ -1,4 +1,4 @@
-package e_business_projekt.e_business_projekt.Wikitude;
+package e_business_projekt.e_business_projekt.wikitude;
 
 import android.location.LocationListener;
 

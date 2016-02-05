@@ -1,4 +1,4 @@
-package e_business_projekt.e_business_projekt.Wikitude;
+package e_business_projekt.e_business_projekt.wikitude;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.HashMap;
 
+import e_business_projekt.e_business_projekt.CamActivity;
 import e_business_projekt.e_business_projekt.R;
 
 /**
@@ -74,6 +75,9 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	public void onCreate( final Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 
+		Log.d("EXPLOCITY_onCreate", "Last known location: " + lastKnownLocaton);
+        //this.injectData();
+        Log.d("EXPLOCITY_onCreate", "JSON loaded.");
 		/* pressing volume up/down should cause music volume changes */
 		this.setVolumeControlStream( AudioManager.STREAM_MUSIC );
 
@@ -96,7 +100,9 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 
 		/* set AR-view for life-cycle notifications etc. */
 		this.architectView = (ArchitectView)this.findViewById( this.getArchitectViewId()  );
+        Log.d("EPLOCITY", "achitectViewID: " + this.architectView);
 
+        Log.d("EXPLOCITY", "license_key: " + this.getWikitudeSDKLicenseKey());
 		/* pass SDK key if you have one, this one is only valid for this package identifier and must not be used somewhere else */
 		final StartupConfiguration config = new StartupConfiguration( this.getWikitudeSDKLicenseKey(), this.getFeatures(), this.getCameraPosition() );
 
@@ -151,6 +157,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 							}
 						}
 					}
+                    Log.d("EXPLOCITY_onLocChanged", "Last known location: " + lastKnownLocaton);
 				}
 			};
 
@@ -165,7 +172,9 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	protected abstract CameraPosition getCameraPosition();
 
 	private int getFeatures() {
+		//Log.d("EXPLOCITY-getFeatures", "hasGeo: " + hasGeo());
 		int features = (hasGeo() ? StartupConfiguration.Features.Geo : 0) | (hasIR() ? StartupConfiguration.Features.Tracking2D : 0);
+		Log.d("EXPLOCITY-getFeatures", "features: " + features);
 		return features;
 	}
 
@@ -173,9 +182,11 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	protected abstract boolean hasIR();
 
 	@Override
-	protected void onPostCreate( final Bundle savedInstanceState ) {
+	    protected void onPostCreate( final Bundle savedInstanceState ) {
 		super.onPostCreate( savedInstanceState );
-		
+
+        String assetsHtml = "file:///android_assetk/5_Obtain$Poi$Data_2_From$Local$Resource/index.html";
+
 		if ( this.architectView != null ) {
 			
 			// call mandatory live-cycle method of architectView
@@ -183,7 +194,8 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 			
 			try {
 				// load content via url in architectView, ensure '<script src="architect://architect.js"></script>' is part of this HTML file, have a look at wikitude.com's developer section for API references
-				this.architectView.load( this.getARchitectWorldPath() );
+
+                this.architectView.load(assetsHtml);
 
 				if (this.getInitialCullingDistanceMeters() != ArchitectViewHolderInterface.CULLING_DISTANCE_DEFAULT_METERS) {
 					// set the culling distance - meaning: the maximum distance to render geo-content
@@ -329,9 +341,9 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 					isLoading = true;
 					
 					final int WAIT_FOR_LOCATION_STEP_MS = 2000;
-					
+					Log.d("EXHIBITO_injectData", "Last known location: "  + lastKnownLocaton);
 					while (lastKnownLocaton==null && !isFinishing()) {
-					
+
 						runOnUiThread(new Runnable() {
 							
 							@Override
