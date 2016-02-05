@@ -1,4 +1,4 @@
-package e_business_projekt.e_business_projekt.Maps_Navigation;
+package e_business_projekt.e_business_projekt.maps_navigation;
 //by Haseem Saheed
 
 import android.util.Log;
