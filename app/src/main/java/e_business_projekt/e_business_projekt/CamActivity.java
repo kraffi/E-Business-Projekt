@@ -9,6 +9,7 @@ import android.hardware.SensorManager;
 import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.wikitude.architect.ArchitectView;
@@ -37,8 +38,7 @@ public class CamActivity extends AbstractArchitectCamActivity {
 
     @Override
     public String getARchitectWorldPath() {
-        return getIntent().getExtras().getString(
-                MainActivity.EXTRAS_KEY_ACTIVITY_ARCHITECT_WORLD_URL);
+        return getIntent().getExtras().getString(MainActivity.EXTRAS_KEY_ACTIVITY_ARCHITECT_WORLD_URL);
     }
 
     @Override
@@ -152,9 +152,8 @@ public class CamActivity extends AbstractArchitectCamActivity {
     }
 
     @Override
-    protected boolean hasGeo() {
-        return getIntent().getExtras().getBoolean(
-                MainActivity.EXTRAS_KEY_ACTIVITY_GEO);
+    public boolean hasGeo() {
+        return getIntent().getExtras().getBoolean(MainActivity.EXTRAS_KEY_ACTIVITY_GEO);
     }
 
     @Override

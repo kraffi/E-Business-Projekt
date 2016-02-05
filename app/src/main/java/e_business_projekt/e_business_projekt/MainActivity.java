@@ -3,78 +3,33 @@ package e_business_projekt.e_business_projekt;
 import android.content.Intent;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-
-import e_business_projekt.e_business_projekt.route_list.POIRoute;
-import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
-import e_business_projekt.e_business_projekt.route_list.adapter.RouteListViewItemAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "EBP.MainActivity";
-    private ArrayList<POIRoute> POIRouteList = new ArrayList<>();
 
     //Wikitude variables
     public static final String EXTRAS_KEY_ACTIVITY_ARCHITECT_WORLD_URL = "activityArchitectWorldUrl";
     public static final String EXTRAS_KEY_ACTIVITY_TITLE_STRING = "activityTitle";
     public static final String EXTRAS_KEY_ACTIVITIES_TILES_ARRAY = "activitiesTitles";
-
+    public static final String EXTRAS_KEY_ACTIVITIES_CLASSNAMES_ARRAY = "activitiesClassnames";
     public static final String EXTRAS_KEY_ACTIVITY_IR = "activityIr";
     public static final String EXTRAS_KEY_ACTIVITY_GEO = "activityGeo";
+    public static final String EXTRAS_KEY_ACTIVITIES_ARCHITECT_WORLD_URLS_ARRAY = "activitiesArchitectWorldUrls";
 
+    boolean hasIr = true;
+    boolean hasGeo = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final POIRouteProvider routeManager = new POIRouteProvider();
-        POIRouteList = routeManager.getPOIRouteList();
-
-        FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.addRouteButton);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "addRouteButton clicked");
-                routeManager.addRoute();
-                buildRouteList(routeManager.getPOIRouteList());
-            }
-        });
-        buildRouteList(POIRouteList);
-    }
-
-    public void buildRouteList(final List<POIRoute> poiRouteList) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ListView lv = (ListView) findViewById(R.id.routeListView);
-                if (!poiRouteList.isEmpty()) {
-                    lv.setAdapter(new RouteListViewItemAdapter(MainActivity.this, poiRouteList));
-                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Log.i(TAG, "Item " + position + " clicked");
-                            view.setBackgroundResource(R.color.routeSelected);
-                        }
-                    });
-                }  else {
-                    Log.i(TAG, "Show No Results");
-                }
-            }
-        });
     }
 
     @Override
@@ -100,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_cam:
                 intent = new Intent(this, CamActivity.class);
+                //intent.putExtra(EXTRAS_KEY_ACTIVITIES_ARCHITECT_WORLD_URLS_ARRAY, activityUrl);
+                //intent.putExtra(EXTRAS_KEY_ACTIVITIES_CLASSNAMES_ARRAY, activityClasses);
+                //intent.putExtra(EXTRAS_KEY_ACTIVITIES_TILES_ARRAY, activityTitles);
+                //intent.putExtra(EXTRAS_KEY_ACTIVITY_TITLE_STRING, activityTitle);
+                intent.putExtra(EXTRAS_KEY_ACTIVITY_IR, hasIr);
+                intent.putExtra(EXTRAS_KEY_ACTIVITY_GEO, hasGeo);
                 break;
             default:
                 return super.onOptionsItemSelected(item);

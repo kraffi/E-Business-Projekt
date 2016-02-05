@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.wikitude.architect.ArchitectView;
-import com.wikitude.sdksamples.R;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -32,6 +31,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import e_business_projekt.e_business_projekt.R;
 
 
 /**
