@@ -1,4 +1,4 @@
-package e_business_projekt.e_business_projekt.Maps_Navigation;
+package e_business_projekt.e_business_projekt.maps_navigation;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -32,7 +32,7 @@ public class Routing extends AbstractRouting {
     }
 
     protected String constructURL () {
-        final StringBuilder stringBuilder = new StringBuilder(AbstractRouting.DIRECTIONS_API_URL);
+        final StringBuilder stringBuilder = new StringBuilder(DIRECTIONS_API_URL);
 
         // origin
         final LatLng origin = waypoints.get(0);
