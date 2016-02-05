@@ -19,7 +19,6 @@ import com.wikitude.architect.ArchitectView.SensorAccuracyChangeListener;
 import com.wikitude.architect.StartupConfiguration;
 import com.wikitude.architect.StartupConfiguration.CameraPosition;
 
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -38,13 +37,13 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	/**
 	 * holds the Wikitude SDK AR-View, this is where camera, markers, compass, 3D models etc. are rendered
 	 */
-	protected ArchitectView					architectView;
-	
+	protected ArchitectView architectView;
+
 	/**
 	 * sensor accuracy listener in case you want to display calibration hints
 	 */
-	protected SensorAccuracyChangeListener	sensorAccuracyListener;
-	
+	protected SensorAccuracyChangeListener sensorAccuracyListener;
+
 	/**
 	 * last known location of the user, used internally for content-loading after user location was fetched
 	 */
@@ -54,17 +53,17 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	 * sample location strategy, you may implement a more sophisticated approach too
 	 */
 	protected ILocationProvider				locationProvider;
-	
+
 	/**
 	 * location listener receives location updates and must forward them to the architectView
 	 */
 	protected LocationListener locationListener;
-	
+
 	/**
 	 * urlListener handling "document.location= 'architectsdk://...' " calls in JavaScript"
 	 */
-	protected ArchitectUrlListener 			urlListener;
-	
+	protected ArchitectUrlListener urlListener;
+
 	protected JSONArray poiData;
 
 	protected boolean isLoading = false;
@@ -80,7 +79,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 
 		/* set samples content view */
 		this.setContentView( this.getContentViewId() );
-		
+
 		this.setTitle( this.getActivityTitle() );
 		
 		/*  
@@ -90,9 +89,9 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 		 *	Details: https://developers.google.com/chrome-developer-tools/docs/remote-debugging
 		 */
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-		    if ( 0 != ( getApplicationInfo().flags &= ApplicationInfo.FLAG_DEBUGGABLE ) ) {
-		        WebView.setWebContentsDebuggingEnabled(true);
-		    }
+			if ( 0 != ( getApplicationInfo().flags &= ApplicationInfo.FLAG_DEBUGGABLE ) ) {
+				WebView.setWebContentsDebuggingEnabled(true);
+			}
 		}
 
 		/* set AR-view for life-cycle notifications etc. */
@@ -112,36 +111,36 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 
 		// set accuracy listener if implemented, you may e.g. show calibration prompt for compass using this listener
 		this.sensorAccuracyListener = this.getSensorAccuracyListener();
-		
+
 		// set urlListener, any calls made in JS like "document.location = 'architectsdk://foo?bar=123'" is forwarded to this listener, use this to interact between JS and native Android activity/fragment
-		this.urlListener = this.getUrlListener();  
-		
+		this.urlListener = this.getUrlListener();
+
 		// register valid urlListener in architectView, ensure this is set before content is loaded to not miss any event
 		if (this.urlListener != null && this.architectView != null) {
 			this.architectView.registerUrlListener( this.getUrlListener() );
 		}
-		
+
 		if (hasGeo()) {
 			// listener passed over to locationProvider, any location update is handled here
 			this.locationListener = new LocationListener() {
-	
+
 				@Override
 				public void onStatusChanged( String provider, int status, Bundle extras ) {
 				}
-	
+
 				@Override
 				public void onProviderEnabled( String provider ) {
 				}
-	
+
 				@Override
 				public void onProviderDisabled( String provider ) {
 				}
-	
+
 				@Override
 				public void onLocationChanged( final Location location ) {
 					// forward location updates fired by LocationProvider to architectView, you can set lat/lon from any location-strategy
 					if (location!=null) {
-					// sore last location as member, in case it is needed somewhere (in e.g. your adjusted project)
+						// sore last location as member, in case it is needed somewhere (in e.g. your adjusted project)
 						AbstractArchitectCamActivity.this.lastKnownLocaton = location;
 						if ( AbstractArchitectCamActivity.this.architectView != null ) {
 							// check if location has altitude at certain accuracy level & call right architect method (the one with altitude information)
@@ -166,13 +165,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	protected abstract CameraPosition getCameraPosition();
 
 	private int getFeatures() {
-		int features;
-		if (hasGeo())
-			if (hasIR())
-				features = StartupConfiguration.Features.Geo | StartupConfiguration.Features.Tracking2D;
-			else features = StartupConfiguration.Features.Geo | 0;
-		else if (hasIR()) features = 0 | StartupConfiguration.Features.Tracking2D;
-		else features = 0 | 0;
+		int features = (hasGeo() ? StartupConfiguration.Features.Geo : 0) | (hasIR() ? StartupConfiguration.Features.Tracking2D : 0);
 		return features;
 	}
 
@@ -182,12 +175,12 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	@Override
 	protected void onPostCreate( final Bundle savedInstanceState ) {
 		super.onPostCreate( savedInstanceState );
-		
+
 		if ( this.architectView != null ) {
-			
+
 			// call mandatory live-cycle method of architectView
 			this.architectView.onPostCreate();
-			
+
 			try {
 				// load content via url in architectView, ensure '<script src="architect://architect.js"></script>' is part of this HTML file, have a look at wikitude.com's developer section for API references
 				this.architectView.load( this.getARchitectWorldPath() );
@@ -196,7 +189,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 					// set the culling distance - meaning: the maximum distance to render geo-content
 					this.architectView.setCullingDistance( this.getInitialCullingDistanceMeters() );
 				}
-				
+
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -206,11 +199,11 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		// call mandatory live-cycle method of architectView
 		if ( this.architectView != null ) {
 			this.architectView.onResume();
-			
+
 			// register accuracy listener in architectView, if set
 			if (this.sensorAccuracyListener!=null) {
 				this.architectView.registerSensorAccuracyChangeListener( this.sensorAccuracyListener );
@@ -226,23 +219,23 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
+
 		// call mandatory live-cycle method of architectView
 		if ( this.architectView != null ) {
 			this.architectView.onPause();
-			
+
 			// unregister accuracy listener in architectView, if set
 			if ( this.sensorAccuracyListener != null ) {
 				this.architectView.unregisterSensorAccuracyChangeListener( this.sensorAccuracyListener );
 			}
 		}
-		
+
 		// tell locationProvider to pause, usually location is then no longer fetched, so the GPS indicator disappears in status bar
 		if ( this.locationProvider != null ) {
 			this.locationProvider.onPause();
 		}
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -251,7 +244,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+
 		// call mandatory live-cycle method of architectView
 		if ( this.architectView != null ) {
 			this.architectView.onDestroy();
@@ -271,33 +264,33 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	 * @return
 	 */
 	public abstract String getActivityTitle();
-	
+
 	/**
 	 * path to the architect-file (AR-Experience HTML) to launch
 	 * @return
 	 */
 	@Override
 	public abstract String getARchitectWorldPath();
-	
+
 	/**
 	 * url listener fired once e.g. 'document.location = "architectsdk://foo?bar=123"' is called in JS
 	 * @return
 	 */
 	@Override
 	public abstract ArchitectUrlListener getUrlListener();
-	
+
 	/**
 	 * @return layout id of your layout.xml that holds an ARchitect View, e.g. R.layout.camview
 	 */
 	@Override
 	public abstract int getContentViewId();
-	
+
 	/**
 	 * @return Wikitude SDK license key, checkout www.wikitude.com for details
 	 */
 	@Override
 	public abstract String getWikitudeSDKLicenseKey();
-	
+
 	/**
 	 * @return layout-id of architectView, e.g. R.id.architectView
 	 */
@@ -305,18 +298,18 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	public abstract int getArchitectViewId();
 
 	/**
-	 * 
+	 *
 	 * @return Implementation of a Location
 	 */
 	@Override
 	public abstract ILocationProvider getLocationProvider(final LocationListener locationListener);
-	
+
 	/**
 	 * @return Implementation of Sensor-Accuracy-Listener. That way you can e.g. show prompt to calibrate compass
 	 */
 	@Override
 	public abstract ArchitectView.SensorAccuracyChangeListener getSensorAccuracyListener();
-	
+
 	/**
 	 * helper to check if video-drawables are supported by this device. recommended to check before launching ARchitect Worlds with videodrawables
 	 * @return true if AR.VideoDrawables are supported, false if fallback rendering would apply (= show video fullscreen)
@@ -327,40 +320,39 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	}
 
 	protected void injectData() {
-		Log.d("SDK_injectData", "injectData started.");
 		if (!isLoading) {
 			final Thread t = new Thread(new Runnable() {
-				
+
 				@Override
 				public void run() {
-					
+
 					isLoading = true;
-					
+
 					final int WAIT_FOR_LOCATION_STEP_MS = 2000;
-					Log.d("SDK_injectData", "Last known location: " + lastKnownLocaton);
+
 					while (lastKnownLocaton==null && !isFinishing()) {
-					
+
 						runOnUiThread(new Runnable() {
-							
+
 							@Override
 							public void run() {
 								Toast.makeText(AbstractArchitectCamActivity.this, R.string.location_fetching, Toast.LENGTH_SHORT).show();
 							}
 						});
-			
+
 						try {
 							Thread.sleep(WAIT_FOR_LOCATION_STEP_MS);
 						} catch (InterruptedException e) {
 							break;
 						}
 					}
-					
+
 					if (lastKnownLocaton!=null && !isFinishing()) {
 						// TODO: you may replace this dummy implementation and instead load POI information e.g. from your database
 						poiData = getPoiInformation(lastKnownLocaton, 20);
 						callJavaScript("World.loadPoisFromJsonData", new String[] { poiData.toString() });
 					}
-					
+
 					isLoading = false;
 				}
 			});
@@ -381,13 +373,13 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 				argumentsString.append(", ");
 			}
 		}
-		
+
 		if (this.architectView!=null) {
 			final String js = ( methodName + "( " + argumentsString.toString() + " );" );
 			this.architectView.callJavascript(js);
 		}
 	}
-	
+
 	/**
 	 * loads poiInformation and returns them as JSONArray. Ensure attributeNames of JSON POIs are well known in JavaScript, so you can parse them easily
 	 * @param userLocation the location of the user
@@ -395,13 +387,13 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	 * @return POI information in JSONArray
 	 */
 	public static JSONArray getPoiInformation(final Location userLocation, final int numberOfPlaces) {
-		
+
 		if (userLocation==null) {
 			return null;
 		}
-		
+
 		final JSONArray pois = new JSONArray();
-		
+
 		// ensure these attributes are also used in JavaScript when extracting POI data
 		final String ATTR_ID = "id";
 		final String ATTR_NAME = "name";
@@ -409,7 +401,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 		final String ATTR_LATITUDE = "latitude";
 		final String ATTR_LONGITUDE = "longitude";
 		final String ATTR_ALTITUDE = "altitude";
-		
+
 		for (int i=1;i <= numberOfPlaces; i++) {
 			final HashMap<String, String> poiInformation = new HashMap<String, String>();
 			poiInformation.put(ATTR_ID, String.valueOf(i));
@@ -423,10 +415,10 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 			poiInformation.put(ATTR_ALTITUDE, String.valueOf(UNKNOWN_ALTITUDE));
 			pois.put(new JSONObject(poiInformation));
 		}
-		
+
 		return pois;
 	}
-	
+
 	/**
 	 * helper for creation of dummy places.
 	 * @param lat center latitude
