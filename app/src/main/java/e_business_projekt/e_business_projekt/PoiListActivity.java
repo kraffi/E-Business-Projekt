@@ -15,7 +15,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
-import e_business_projekt.e_business_projekt.map_navigation.MapActivity;
+
 import e_business_projekt.e_business_projekt.poi_list.adapter.POIListViewItemAdapter;
 import e_business_projekt.e_business_projekt.poi_list.dialogs.POIDialog;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
