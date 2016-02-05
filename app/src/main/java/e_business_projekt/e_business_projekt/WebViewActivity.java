@@ -11,6 +11,7 @@ import android.webkit.WebView;
  */
 public class WebViewActivity extends AppCompatActivity{
 
+    //TODO: Check behavior with https
     private WebView mWebView;
 
     @Override

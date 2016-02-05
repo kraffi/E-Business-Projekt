@@ -3,7 +3,6 @@ package e_business_projekt.e_business_projekt.poi_list.provider;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.Log;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -40,6 +39,7 @@ public class PlacesProvider {
     POIFilter filter;
     Location location;
 
+    String name;
     int radius;
     String type;
 
@@ -53,26 +53,23 @@ public class PlacesProvider {
         this.location = location;
         this.filter = filter;
 
+        //applying filter
+        this.name = filter.getKeyword();
         this.radius = filter.getRadius();
 
-        int numberOfTypes = filter.getFilterTypes().size();
-        if (numberOfTypes == 0){
-            type = "null";
-        } else {
-            type = TextUtils.join("|", filter.getFilterTypes());
-        }
+        // uncomment for applying InitFilter
+        //type = filter.getInitFilter();
+        type = "null";
 
         double latitude = this.location.getLatitude();
         double longitude = this.location.getLongitude();
 
-        String name = "";
         String key = "AIzaSyAwNzfpWJnTxtOVlqkKT3M1P9f9-pTqGuw";
 
         //composing query parts
         String URL_BASE = "https://maps.googleapis.com/maps/api/place/";
         String LOCATION = "location=" + latitude + "," + longitude;
         String RADIUS = "&radius=" + radius;
-        //String SEARCH_MODE = "nearbysearch/json?";
         String SEARCH_MODE = "radarsearch/json?";
         String TYPE = "&type=" + type;
         String NAME = "&name=" + name;
@@ -109,7 +106,9 @@ public class PlacesProvider {
 
                             poi.setDistance(currentLocation.distanceTo(poiLocation));
 
-                            poiList.add(poi);
+                            if (matchFilter(poi)){
+                                poiList.add(poi);
+                            }
                         }
                         Log.i(TAG, "getNearbyPOIs(): " + poiList.size() + " POIs added");
 
@@ -170,6 +169,26 @@ public class PlacesProvider {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private boolean matchFilter(PointOfInterest poi){
+
+        if (poi.getDistance() <= filter.getRadius()){
+            List<int[]> typeList = filter.getFilterTypes();
+            if (typeList.size() == 0){
+                return true;
+            }
+
+            List<Integer> poiTypes = poi.getPlaceTypes();
+            for (int[] types:typeList) {
+                for (int i = 0; i < types.length ; i++){
+                    if (poiTypes.contains(types[i])){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private class StartAsyncQuery extends AsyncTask<String, Void, String > {

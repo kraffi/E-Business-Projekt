@@ -57,6 +57,8 @@
         </activity>
         <activity
             android:name=".PoiListActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_poi_list"
             android:parentActivityName=".MainActivity" >
             <meta-data

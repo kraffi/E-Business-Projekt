@@ -3,15 +3,13 @@ package e_business_projekt.e_business_projekt;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.widget.*;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,11 +36,13 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         GoogleApiClient.OnConnectionFailedListener, PlacesProviderCallback, POIFilterDialogCallback {
 
     private static final String TAG = "EBP.PoiListActivity";
+
+    //
     private GoogleApiClient mGoogleApiClient;
     private ArrayList<PointOfInterest> poiList = new ArrayList<>();
-
     POIFilter filter;
     Location lastLocation;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +59,36 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        final SearchView s = (SearchView) findViewById(R.id.poiSearchView);
-        s.setFocusable(false);
-        s.setOnTouchListener(new View.OnTouchListener(){
+        //initialize Filter
+        filter = new POIFilter();
+
+        searchView = (SearchView) findViewById(R.id.poiSearchView);
+        //remove focus from SearchView
+        searchView.clearFocus();
+        searchView.setFocusable(false);
+        searchView.setOnTouchListener(new View.OnTouchListener(){
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                s.setFocusableInTouchMode(true);
+                searchView.setFocusableInTouchMode(true);
+                return false;
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                query = query.replace(" ", "%20");
+                Log.i(TAG, "Searchbar Query: " + query);
+                //remove focus from SearchView
+                searchView.clearFocus();
+                searchView.setFocusable(false);
+
+                filter.setKeyword(query);
+                startProvider(filter);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
                 return false;
             }
         });
@@ -74,7 +98,21 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "POI Filter Button clicked");
+                //remove focus from SearchView
+                searchView.clearFocus();
+                searchView.setFocusable(false);
+
+                Bundle args = new Bundle();
+                args.putString("keyword", filter.getKeyword());
+                args.putInt("radius", filter.getRadius());
+
+                List<int[]> filterTypesList = filter.getFilterTypes();
+                for (int i = 0; i < filterTypesList.size(); i++){
+                    args.putIntArray("types_" + i, filterTypesList.get(i));
+                }
+
                 POIFilterDialog dialog = new POIFilterDialog();
+                dialog.setArguments(args);
                 dialog.onAttach(PoiListActivity.this);
                 dialog.show(getFragmentManager(), "POI Filter Dialog");
             }
@@ -182,6 +220,9 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
                     lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                            //remove focus from SearchView
+                            searchView.clearFocus();
+                            searchView.setFocusable(false);
 
                             PointOfInterest poi = placesPOIList.get(position);
 
@@ -272,7 +313,6 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
     public void onConnected(Bundle bundle) {
         Log.d(TAG, "GoogleApiClient: Connected!");
         lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        filter = new POIFilter();
         startProvider(filter);
     }
 
@@ -302,9 +342,11 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
 
 
     @Override
-    public void poiFilterDialogCallback(List<String> filterTypes, int radius) {
-        Log.i(TAG,"Callback Filter: " + filterTypes.toString() + " | Radius: " + radius);
-        filter = new POIFilter("", filterTypes, radius);
+    public void poiFilterDialogCallback(String query, List<int[]> filterTypes, int radius) {
+        Log.i(TAG,"Callback Filter => Query: " + query + " | Types: "  + filterTypes.toString() + " | Radius: " + radius);
+
+        //TODO adjust POIFilter
+        filter = new POIFilter(query, filterTypes, radius);
         startProvider(filter);
     }
 

@@ -1,7 +1,6 @@
 package e_business_projekt.e_business_projekt.poi_list.adapter;
 
 import android.content.Context;
-import android.nfc.Tag;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,24 +19,28 @@ import java.util.List;
  */
 public class POIFilterListViewItemAdapter extends BaseAdapter {
 
-    private static List<String> filterList;
-    private List<String> selected = new ArrayList<>();
-
     private LayoutInflater mInflater;
 
-    public POIFilterListViewItemAdapter(Context ListViewSection, List<String> filterList) {
+    private List<String> filterListNames;
+    private List<int[]> filterList;
+    private List<int[]> selectedFilter = new ArrayList<>();
+    private List<Integer> checks = new ArrayList<>();
+
+    public POIFilterListViewItemAdapter(Context ListViewSection, List<String> filterListNames, List<int[]> filterList, List<Integer> checks) {
+        this.filterListNames = filterListNames;
         this.filterList = filterList;
         this.mInflater = LayoutInflater.from(ListViewSection);
+        this.checks = checks;
     }
 
     @Override
     public int getCount() {
-        return filterList.size();
+        return filterListNames.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return filterList.get(position);
+        return filterListNames.get(position);
     }
 
     @Override
@@ -46,7 +49,7 @@ public class POIFilterListViewItemAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
 
         if (convertView == null){
@@ -57,19 +60,36 @@ public class POIFilterListViewItemAdapter extends BaseAdapter {
             holder.filterName = (TextView) convertView.findViewById(R.id.textViewFilterType);
             holder.checkBox = (CheckBox) convertView.findViewById(R.id.checkBoxFilterType);
 
+            if (checks.contains(position)){
+                Log.i("TAGI:",checks.toString());
+                holder.checkBox.setChecked(true);
+                if (!selectedFilter.contains(filterList.get(position))){
+                    selectedFilter.add(filterList.get(position));
+                }
+            } else {
+                holder.checkBox.setChecked(false);
+                if (selectedFilter.contains(filterList.get(position))){
+                    selectedFilter.remove(filterList.get(position));
+                }
+            }
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.filterName.setText(filterList.get(position));
+        holder.filterName.setText(filterListNames.get(position));
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    selected.add(holder.filterName.getText().toString());
+                    if (!selectedFilter.contains(filterList.get(position))){
+                        selectedFilter.add(filterList.get(position));
+                    }
                 }else{
-                    selected.remove(holder.filterName.getText().toString());
+                    if (selectedFilter.contains(filterList.get(position))){
+                        selectedFilter.remove(filterList.get(position));
+                    }
                 }
             }
         });
@@ -82,9 +102,11 @@ public class POIFilterListViewItemAdapter extends BaseAdapter {
         CheckBox checkBox;
     }
 
-    public List<String> getSelected(){
-        return selected;
+    public List<int[]> getSelectedFilter(){
+        //Log.i("TEST:", "selectedFilter: " + selectedFilter.toString());
+        return selectedFilter;
     }
+
 
 
 }

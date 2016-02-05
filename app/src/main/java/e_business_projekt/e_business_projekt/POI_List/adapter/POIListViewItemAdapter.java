@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.google.android.gms.location.places.Place;
 import e_business_projekt.e_business_projekt.R;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 
@@ -61,9 +62,10 @@ public class POIListViewItemAdapter extends BaseAdapter {
         DecimalFormat df = new DecimalFormat("#.###");
         df.setRoundingMode(RoundingMode.CEILING);
         double dist = poiList.get(position).getDistance()/1000;
+        String types = poiList.get(position).getPlaceTypes().toString();
 
         holder.title.setText(poiList.get(position).getName());
-        holder.info.setText("Distanz: " + df.format(dist) + " km");
+        holder.info.setText("Distanz: " + df.format(dist) + " km \n" + types);
         //rn: TODO replace with Placeholder
         holder.img.setImageResource(poiList.get(position).getImg());
 
