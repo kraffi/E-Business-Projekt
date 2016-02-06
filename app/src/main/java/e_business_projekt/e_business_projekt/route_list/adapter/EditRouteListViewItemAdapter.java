@@ -76,6 +76,8 @@ public class EditRouteListViewItemAdapter extends BaseAdapter {
         return convertView;
     }
 
+
+
     static class ViewHolder{
         View base;
         TextView poiName;

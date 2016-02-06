@@ -27,6 +27,7 @@ public class EditRouteDialog extends DialogFragment implements EditRouteListView
     private static final String TAG = "EBP.EditRouteDialog";
     private EditRouteDialogCallback callback;
     private List<PointOfInterest> poiList;
+    private EditRouteListViewItemAdapter adapter;
 
     // set callback
     @Override
@@ -58,8 +59,8 @@ public class EditRouteDialog extends DialogFragment implements EditRouteListView
 
         // EditText Routename
         final EditText editRouteName = (EditText) dialogView.findViewById(R.id.editRouteName);
-        editRouteName.setSelection(editRouteName.getText().length());
         editRouteName.setText(routeName);
+        editRouteName.setSelection(editRouteName.getText().length());
 
         // Build Dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -81,7 +82,7 @@ public class EditRouteDialog extends DialogFragment implements EditRouteListView
         });
 
         //Create and set Adapter
-        final EditRouteListViewItemAdapter adapter = new EditRouteListViewItemAdapter(this, getActivity(), poiList);
+        adapter = new EditRouteListViewItemAdapter(this, getActivity(), poiList);
         listView.setAdapter(adapter);
 
         return builder.create();
@@ -104,5 +105,7 @@ public class EditRouteDialog extends DialogFragment implements EditRouteListView
     @Override
     public void removePoiFromRouteButton(int position) {
         Log.i("REMOVE", poiList.get(position).getName());
+        poiList.remove(position);
+        adapter.notifyDataSetChanged();
     }
 }
