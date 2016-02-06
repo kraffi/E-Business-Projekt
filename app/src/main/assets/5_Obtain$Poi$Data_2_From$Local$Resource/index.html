@@ -49,7 +49,14 @@
                    The position of the radar and its size are defined using a DOM element.
                    Wikitude SDK radar will be drawn into this div.
              -->
-             <div class="radarContainer_left" id="radarContainer"></div>
+            <div class="radarContainer_left" id="radarContainer"></div>
+
+            <!-- KR: the details-button -->
+            <!--<div class="detail_button" id="det_btn" href="javascript: World.onPoiDetailMoreButtonClicked();" data-role="button" data-icon="arrow-r" data-iconpos="right" data-inline="true"></div>-->
+            <div>
+                <a class="detail_button" id="det_btn" href="javascript: World.onPoiDetailMoreButtonClicked();" data-role="button" data-icon="arrow-r" data-iconpos="right" data-inline="true"
+                   >Details</a>
+            </div>
 
             <!-- transparent footer-->
             <div data-role="footer" class="ui-bar" data-theme="f" data-position="fixed" style="text-align:center;">
