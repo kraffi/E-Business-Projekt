@@ -1,15 +1,36 @@
 package e_business_projekt.e_business_projekt;
 
+import android.content.Context;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity {
+import android.widget.TextView;
+import e_business_projekt.e_business_projekt.map_navigation.Route;
+import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
+import e_business_projekt.e_business_projekt.route_list.POIRoute;
+import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
+import e_business_projekt.e_business_projekt.route_list.adapter.RouteListViewItemAdapter;
+import e_business_projekt.e_business_projekt.route_list.adapter.RouteListViewItemCallback;
+import e_business_projekt.e_business_projekt.route_list.dialogs.EditRouteDialog;
+import e_business_projekt.e_business_projekt.route_list.dialogs.EditRouteDialogCallback;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements RouteListViewItemCallback, EditRouteDialogCallback {
 
     private static final String TAG = "EBP.MainActivity";
 
@@ -24,12 +45,114 @@ public class MainActivity extends AppCompatActivity {
 
     boolean hasIr = true;
     boolean hasGeo = true;
+    private POIRouteProvider routeManager = POIRouteProvider.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ArrayList<POIRoute> POIRouteList = routeManager.getPOIRouteList();
+
+        FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.addRouteButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "addRouteButton clicked");
+                routeManager.addRoute();
+                buildRouteList(routeManager.getPOIRouteList());
+            }
+        });
+        buildRouteList(POIRouteList);
+
+        SharedPreferences prefs = this.getSharedPreferences("e_business_projekt.e_business_projekt", Context.MODE_PRIVATE);
+
+        //Log.i("TEST: ", );
+
+    }
+
+    public void buildRouteList(final List<POIRoute> poiRouteList){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final ListView lv = (ListView) findViewById(R.id.routeListView);
+                final TextView empty = (TextView) findViewById(R.id.emptyRouteListView);
+
+                if (!poiRouteList.isEmpty()){
+                    empty.setVisibility(View.INVISIBLE);
+                    lv.setAdapter(new RouteListViewItemAdapter(MainActivity.this, MainActivity.this, poiRouteList));
+                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Log.i(TAG, "Item " + position + " clicked and activated");
+                            view.setBackgroundResource(R.color.routeSelected);
+                            routeManager.setActivated(position);
+
+                            int listLength = lv.getCount();
+                            for (int i = 0; i < listLength; i++){
+                                if (!(i == position)){
+                                    View v = getViewByPosition(i, lv);
+                                    v.setBackgroundResource(R.color.routeUnselected);
+                                }
+                            }
+                        }
+                    });
+                }  else {
+                    Log.i(TAG, "Show No Results");
+                    empty.setVisibility(View.VISIBLE);
+                    lv.setAdapter(new RouteListViewItemAdapter(MainActivity.this, MainActivity.this, poiRouteList));
+                }
+            }
+        });
+    }
+
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
+    }
+
+    @Override
+    public void editRouteButtonCallback(int position) {
+        Log.i(TAG, "editRouteButtonCallback() with Item " + position);
+
+        // Set route and activated Route
+        routeManager.setActivated(position);
+        POIRoute route = routeManager.getPOIRouteList().get(position);
+
+        // Set arguments
+        Bundle args = new Bundle();
+        args.putParcelableArrayList("poiList", route.getPoiRoute());
+        args.putString("routeName", route.getRouteName());
+        args.putInt("position", position);
+
+        // Create dialog and pass arguments
+        EditRouteDialog dialog = new EditRouteDialog();
+        dialog.setArguments(args);
+        dialog.show(getFragmentManager(), "Edit Route Dialog");
+
+        buildRouteList(routeManager.getPOIRouteList());
+    }
+
+    @Override
+    public void deleteRouteButtonCallback(int position) {
+        Log.i(TAG, "editRouteButtonCallback() with Item " + position);
+        routeManager.deleteRoute(position);
+        buildRouteList(routeManager.getPOIRouteList());
+    }
+
+    @Override
+    public void editRouteDialogOkButtonCallback(String name, List<PointOfInterest> poiList, int position) {
+        Log.i(TAG, "editRouteDialogOKCallback(): edit " + name + " at position " + position);
+        routeManager.editRouteName(name, position);
+        buildRouteList(routeManager.getPOIRouteList());
     }
 
     @Override

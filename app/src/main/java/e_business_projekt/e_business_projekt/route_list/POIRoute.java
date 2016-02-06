@@ -10,23 +10,26 @@ import java.util.List;
  */
 public class POIRoute {
     private String routeName;
-    private List<PointOfInterest> poiRoute;
+    private ArrayList<PointOfInterest> poiRoute;
+    private boolean activated;
 
-    public POIRoute(String routeName, List<PointOfInterest> poiRoute) {
+    public POIRoute(String routeName, ArrayList<PointOfInterest> poiRoute) {
         this.routeName = routeName;
         this.poiRoute = poiRoute;
+        activated = false;
     }
 
     public POIRoute(){
         this.routeName = "New Route";
         this.poiRoute = new ArrayList<>();
+        activated = false;
     }
 
-    public List<PointOfInterest> getPoiRoute() {
+    public ArrayList<PointOfInterest> getPoiRoute() {
         return poiRoute;
     }
 
-    public void setPoiRoute(List<PointOfInterest> poiRoute) {
+    public void setPoiRoute(ArrayList<PointOfInterest> poiRoute) {
         this.poiRoute = poiRoute;
     }
 
@@ -42,6 +45,14 @@ public class POIRoute {
         if(!poiRoute.contains(poi)){
             this.poiRoute.add(poi);
         }
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
     }
 
     public PointOfInterest getPOI(int position){

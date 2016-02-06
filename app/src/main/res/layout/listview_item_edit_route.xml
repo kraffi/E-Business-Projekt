@@ -7,8 +7,8 @@
 
     <LinearLayout
             android:orientation="horizontal"
-            android:descendantFocusability="blocksDescendants"
             android:layout_width="match_parent"
+            android:descendantFocusability="blocksDescendants"
             android:layout_height="wrap_content">
 
         <TextView
@@ -16,23 +16,18 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:singleLine="true"
-                android:text="Route"
-                android:id="@+id/textViewRoute"
+                android:text="POI"
+                android:id="@+id/textViewRoutePOI"
                 android:layout_weight="0.47"
                 android:layout_gravity="center"
                 android:layout_marginLeft="16dp"/>
 
         <ImageButton
-                android:src="@drawable/ic_delete_black_48dp"
+                android:src="@drawable/ic_remove_black_48dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/deleteRouteButton"/>
+                android:id="@+id/removePOIButton"/>
 
-        <ImageButton
-                android:src="@drawable/ic_mode_edit_black_48dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/editRouteButton"/>
     </LinearLayout>
 
 </LinearLayout>

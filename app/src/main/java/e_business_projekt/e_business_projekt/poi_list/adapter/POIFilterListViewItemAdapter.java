@@ -51,7 +51,7 @@ public class POIFilterListViewItemAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
-
+        Log.i("TEST:", "OLOLOLOLO");
         if (convertView == null){
 
             convertView = mInflater.inflate(R.layout.listview_item_filter_type, null);
@@ -61,7 +61,6 @@ public class POIFilterListViewItemAdapter extends BaseAdapter {
             holder.checkBox = (CheckBox) convertView.findViewById(R.id.checkBoxFilterType);
 
             if (checks.contains(position)){
-                Log.i("TAGI:",checks.toString());
                 holder.checkBox.setChecked(true);
                 if (!selectedFilter.contains(filterList.get(position))){
                     selectedFilter.add(filterList.get(position));

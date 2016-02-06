@@ -24,6 +24,7 @@ import e_business_projekt.e_business_projekt.poi_list.dialogs.POIFilterDialogCal
 import e_business_projekt.e_business_projekt.poi_list.provider.POIFilter;
 import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProvider;
 import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProviderCallback;
+import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.List;
 public class PoiListActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, PlacesProviderCallback, POIFilterDialogCallback {
 
+    private POIRouteProvider routeManager = POIRouteProvider.getInstance();
     private static final String TAG = "EBP.PoiListActivity";
 
     //
@@ -44,6 +46,10 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poi_list);
+
+
+        int a = routeManager.getActivated();
+        Log.i("TEST:", routeManager.getPOIRouteList().get(a).getPoiRoute().toString());
 
         //initialize GoogleApiClient
         mGoogleApiClient = new GoogleApiClient
@@ -222,30 +228,8 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
 
                             PointOfInterest poi = placesPOIList.get(position);
 
-                            String name = poi.getName();
-                            String info = poi.toString();
-
-                            String address  = "";
-                            if (poi.getAddress() != null){
-                                address = poi.getAddress();
-                            }
-
-                            String phone = "";
-                            if(poi.getPhonenumber() != null){
-                                phone = poi.getPhonenumber();
-                            }
-
-                            String website = "";
-                            if (poi.getWebsiteUri() != null){
-                                website = poi.getWebsiteUri().toString();
-                            }
-
                             Bundle args = new Bundle();
-                            args.putString("name", name);
-                            args.putString("info", info);
-                            args.putString("address", address);
-                            args.putString("phone", phone);
-                            args.putString("website", website);
+                            args.putParcelable("poi", poi);
 
                             POIDialog dialog = new POIDialog();
                             dialog.setArguments(args);
@@ -335,13 +319,9 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         buildPOIList(pois);
     }
 
-
-
     @Override
     public void poiFilterDialogCallback(String query, List<int[]> filterTypes, int radius) {
         Log.i(TAG,"Callback Filter => Query: " + query + " | Types: "  + filterTypes.toString() + " | Radius: " + radius);
-
-        //TODO adjust POIFilter
         filter = new POIFilter(query, filterTypes, radius);
         startProvider(filter);
     }
