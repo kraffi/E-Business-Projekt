@@ -361,7 +361,7 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
         }
         else
         {
-            progressDialog = ProgressDialog.show(this, "Please wait.",
+            /*progressDialog = ProgressDialog.show(this, "Please wait.",
                     "Fetching POIRoute information.", true);
             Routing routing = new Routing.Builder()
                     .travelMode(AbstractRouting.TravelMode.DRIVING)
@@ -369,7 +369,24 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
                     .alternativeRoutes(true)
                     .waypoints(start, end)
                     .build();
-            routing.execute();
+            routing.execute();*/
+
+            //KR: drawing route with multiple destinations
+            Route route1;
+            route1 = ;
+            progressDialog = ProgressDialog.show(this, "Please wait.",
+                    "Fetching POIRoute information.", true);
+
+            for(int i=0; route1.length(); i++){
+                Routing routing = new Routing.Builder()
+                        .travelMode(AbstractRouting.TravelMode.WALKING)
+                        .withListener(this)
+                        .alternativeRoutes(false)
+                        .waypoints(start, end)
+                        .build();
+                routing.execute();
+            }
+
         }
     }
 
