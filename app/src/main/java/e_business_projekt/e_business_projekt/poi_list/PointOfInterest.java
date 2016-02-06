@@ -82,7 +82,11 @@ public class PointOfInterest implements Parcelable {
      * @return id as String
      */
     public String getId() {
-        return id;
+        if (id != null){
+            return id;
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -98,7 +102,12 @@ public class PointOfInterest implements Parcelable {
      * @return LatLng Object
      */
     public LatLng getLatLng() {
-        return latLng;
+
+        if (latLng != null){
+            return latLng;
+        } else {
+            return new LatLng(0.0, 0.0);
+        }
     }
 
     /**
@@ -106,7 +115,11 @@ public class PointOfInterest implements Parcelable {
      * @return name as a string
      */
     public String getName() {
-        return name;
+        if (name != null){
+            return name;
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -114,7 +127,11 @@ public class PointOfInterest implements Parcelable {
      * @return list of integers
      */
     public List<Integer> getPlaceTypes() {
-        return placeTypes;
+        if (placeTypes != null){
+            return placeTypes;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -122,7 +139,11 @@ public class PointOfInterest implements Parcelable {
      * @return website uri
      */
     public Uri getWebsiteUri() {
-        return websiteUri;
+        if (websiteUri != null){
+            return websiteUri;
+        } else {
+            return Uri.parse("www.google.com");
+        }
     }
 
     /**

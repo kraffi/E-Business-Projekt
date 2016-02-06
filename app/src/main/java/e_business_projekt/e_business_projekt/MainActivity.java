@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
         dialog.setArguments(args);
         dialog.show(getFragmentManager(), "Edit Route Dialog");
 
-        routeManager.editRoute(position);
         buildRouteList(routeManager.getPOIRouteList());
     }
 
@@ -128,9 +127,10 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
     }
 
     @Override
-    public void editRouteDialogOK(String name, List<PointOfInterest> poiList, int position) {
+    public void editRouteDialogOkButtonCallback(String name, List<PointOfInterest> poiList, int position) {
         Log.i(TAG, "editRouteDialogOKCallback(): edit " + name + " at position " + position);
         routeManager.editRouteName(name, position);
+        routeManager.setActivated(position);
         buildRouteList(routeManager.getPOIRouteList());
     }
 

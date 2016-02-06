@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by RaulVinhKhoa on 05.02.2016.
@@ -76,14 +77,8 @@ public class POIRouteProvider {
         }
     }
 
-    public void editRoute(int position){
-        Log.i(TAG, "editing Route with position " + position);
-        //TODO: CALL EDIT DIALOG
-        Log.i(TAG, "Call edit Route Dialog here!");
-    }
-
-    // TODO look at edit route xD
     public void editRouteName(String name, int position){
+        Log.i(TAG, "editing Route with position " + position);
         POIRouteList.get(position).setRouteName(name);
     }
 

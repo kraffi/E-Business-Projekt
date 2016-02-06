@@ -222,30 +222,8 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
 
                             PointOfInterest poi = placesPOIList.get(position);
 
-                            String name = poi.getName();
-                            String info = poi.toString();
-
-                            String address  = "";
-                            if (poi.getAddress() != null){
-                                address = poi.getAddress();
-                            }
-
-                            String phone = "";
-                            if(poi.getPhonenumber() != null){
-                                phone = poi.getPhonenumber();
-                            }
-
-                            String website = "";
-                            if (poi.getWebsiteUri() != null){
-                                website = poi.getWebsiteUri().toString();
-                            }
-
                             Bundle args = new Bundle();
-                            args.putString("name", name);
-                            args.putString("info", info);
-                            args.putString("address", address);
-                            args.putString("phone", phone);
-                            args.putString("website", website);
+                            args.putParcelable("poi", poi);
 
                             POIDialog dialog = new POIDialog();
                             dialog.setArguments(args);
@@ -334,8 +312,6 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         Log.i(TAG,"Callback: " + pois.size());
         buildPOIList(pois);
     }
-
-
 
     @Override
     public void poiFilterDialogCallback(String query, List<int[]> filterTypes, int radius) {

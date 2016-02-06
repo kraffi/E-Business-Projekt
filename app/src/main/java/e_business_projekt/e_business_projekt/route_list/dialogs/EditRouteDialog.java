@@ -13,19 +13,22 @@ import android.widget.EditText;
 import android.widget.ListView;
 import e_business_projekt.e_business_projekt.R;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
-import e_business_projekt.e_business_projekt.poi_list.dialogs.POIFilterDialogCallback;
+import e_business_projekt.e_business_projekt.poi_list.dialogs.POIDialog;
+import e_business_projekt.e_business_projekt.route_list.adapter.EditRouteListViewItemAdapter;
+import e_business_projekt.e_business_projekt.route_list.adapter.EditRouteListViewItemAdapterCallback;
 
 import java.util.List;
 
 /**
  * Created by RaulVinhKhoa on 05.02.2016.
  */
-public class EditRouteDialog extends DialogFragment {
+public class EditRouteDialog extends DialogFragment implements EditRouteListViewItemAdapterCallback{
 
     private static final String TAG = "EBP.EditRouteDialog";
-
     private EditRouteDialogCallback callback;
+    private List<PointOfInterest> poiList;
 
+    // set callback
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -40,26 +43,33 @@ public class EditRouteDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        // Get arguments
         Bundle args = getArguments();
-        final List<PointOfInterest> poiList = args.getParcelableArrayList("poiList");
+        poiList = args.getParcelableArrayList("poiList");
         final String routeName = args.getString("routeName");
         final int position = args.getInt("position");
 
+        // Get Dialog View
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_edit_route, null);
+
+        // ListView editRouteListView
         final ListView listView = (ListView) dialogView.findViewById(R.id.editRouteListView);
+
+        // EditText Routename
         final EditText editRouteName = (EditText) dialogView.findViewById(R.id.editRouteName);
+        editRouteName.setSelection(editRouteName.getText().length());
         editRouteName.setText(routeName);
 
+        // Build Dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(dialogView);
         builder.setTitle("Edit Route");
-
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                callback.editRouteDialogOK(editRouteName.getText().toString(), poiList, position);
+                callback.editRouteDialogOkButtonCallback(editRouteName.getText().toString(), poiList, position);
                 Log.i(TAG, "Edit OK clicked");
             }
         });
@@ -70,9 +80,29 @@ public class EditRouteDialog extends DialogFragment {
             }
         });
 
-        final EditRouteListViewItemAdapter adapter = new EditRouteListViewItemAdapter(getActivity(), poiList);
+        //Create and set Adapter
+        final EditRouteListViewItemAdapter adapter = new EditRouteListViewItemAdapter(this, getActivity(), poiList);
         listView.setAdapter(adapter);
 
         return builder.create();
+    }
+
+    @Override
+    public void clickPoi(int position) {
+        Log.i("KLICK", poiList.get(position).getName());
+
+        PointOfInterest poi = poiList.get(position);
+
+        Bundle args = new Bundle();
+        args.putParcelable("poi", poi);
+
+        POIDialog dialog = new POIDialog();
+        dialog.setArguments(args);
+        dialog.show(getFragmentManager(), "POI Dialog");
+    }
+
+    @Override
+    public void removePoiFromRouteButton(int position) {
+        Log.i("REMOVE", poiList.get(position).getName());
     }
 }
