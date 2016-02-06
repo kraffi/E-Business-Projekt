@@ -322,8 +322,6 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
     @Override
     public void poiFilterDialogCallback(String query, List<int[]> filterTypes, int radius) {
         Log.i(TAG,"Callback Filter => Query: " + query + " | Types: "  + filterTypes.toString() + " | Radius: " + radius);
-
-        //TODO adjust POIFilter
         filter = new POIFilter(query, filterTypes, radius);
         startProvider(filter);
     }

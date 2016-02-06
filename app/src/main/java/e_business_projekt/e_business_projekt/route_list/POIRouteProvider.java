@@ -28,8 +28,6 @@ public class POIRouteProvider {
         this.activated = activated;
     }
 
-
-
     public ArrayList<POIRoute> getPOIRouteList() {
         Log.i(TAG, "getPOIRouteList() called");
         return POIRouteList;
@@ -82,6 +80,10 @@ public class POIRouteProvider {
     public void editRouteName(String name, int position){
         Log.i(TAG, "editing Route with position " + position);
         POIRouteList.get(position).setRouteName(name);
+    }
+
+    public void addPoiToActiveRoute(PointOfInterest poi){
+        POIRouteList.get(activated).addPOI(poi);
     }
 
     public static POIRouteProvider getInstance(){
