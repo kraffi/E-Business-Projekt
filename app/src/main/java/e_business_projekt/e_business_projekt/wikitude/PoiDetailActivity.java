@@ -2,12 +2,13 @@ package e_business_projekt.e_business_projekt.wikitude;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import e_business_projekt.e_business_projekt.R;
 
 
-public class PoiDetailActivity extends Activity {
+public class PoiDetailActivity extends AppCompatActivity {
 
 	public static final String EXTRAS_KEY_POI_ID = "id";
 	public static final String EXTRAS_KEY_POI_TITILE = "title";
@@ -18,9 +19,9 @@ public class PoiDetailActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.sample_poidetail);
 		
-		((TextView)findViewById(R.id.poi_id)).setText(  getIntent().getExtras().getString(EXTRAS_KEY_POI_ID) );
+		/*((TextView)findViewById(R.id.poi_id)).setText(  getIntent().getExtras().getString(EXTRAS_KEY_POI_ID) );
 		((TextView)findViewById(R.id.poi_title)).setText( getIntent().getExtras().getString(EXTRAS_KEY_POI_TITILE) );
-		((TextView)findViewById(R.id.poi_description)).setText(  getIntent().getExtras().getString(EXTRAS_KEY_POI_DESCR) );
+		((TextView)findViewById(R.id.poi_description)).setText(  getIntent().getExtras().getString(EXTRAS_KEY_POI_DESCR) );*/
 	}
 
 }

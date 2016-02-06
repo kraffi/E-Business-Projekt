@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.hardware.SensorManager;
 import android.location.LocationListener;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,11 +20,14 @@ import com.wikitude.architect.ArchitectView.SensorAccuracyChangeListener;
 import com.wikitude.architect.StartupConfiguration.CameraPosition;
 
 import e_business_projekt.e_business_projekt.poi_list.dialogs.POIDialog;
+import e_business_projekt.e_business_projekt.poi_list.dialogs.POIFilterDialog;
+import e_business_projekt.e_business_projekt.poi_list.provider.POIFilter;
 import e_business_projekt.e_business_projekt.wikitude.AbstractArchitectCamActivity;
 import e_business_projekt.e_business_projekt.wikitude.ArchitectViewHolderInterface;
 import e_business_projekt.e_business_projekt.wikitude.LocationProvider;
 import e_business_projekt.e_business_projekt.wikitude.PoiDetailActivity;
 import e_business_projekt.e_business_projekt.wikitude.SampleCamFragment;
+import e_business_projekt.e_business_projekt.poi_list.dialogs.POIDialog;
 
 
 /**
@@ -37,6 +41,9 @@ public class CamActivity extends AbstractArchitectCamActivity {
      * last time the calibration toast was shown, this avoids too many toast shown when compass needs calibration
      */
     private long lastCalibrationToastShownTimeMillis = System.currentTimeMillis();
+
+    //KR:
+    POIFilter filter;
 
     @Override
     public String getARchitectWorldPath() {
@@ -88,14 +95,27 @@ public class CamActivity extends AbstractArchitectCamActivity {
             public boolean urlWasInvoked(String uriString) {
                 Uri invokedUri = Uri.parse(uriString);
 
-                // pressed "More" button on POI-detail panel
+                // pressed "Detail" button on POI-detail panel
                 if ("markerselected".equalsIgnoreCase(invokedUri.getHost())) {
-                    final Intent poiDetailIntent = new Intent(CamActivity.this, SampleCamFragment.class); //e_business_projekt.e_business_projekt.poi_list.dialogs.POIDialog.class
+                    final Intent poiDetailIntent = new Intent(CamActivity.this, PoiDetailActivity.class); //e_business_projekt.e_business_projekt.poi_list.dialogs.POIDialog.class
                     //poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_ID, String.valueOf(invokedUri.getQueryParameter("id")) );
                     //poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_TITILE, String.valueOf(invokedUri.getQueryParameter("title")) );
                     //poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_DESCR, String.valueOf(invokedUri.getQueryParameter("description")) );
                     Log.d("EXPLOCITY", "trying to start dialog");
                     CamActivity.this.startActivity(poiDetailIntent);
+                    Log.d("EXPLOCITY", "tried to start intent");
+
+                    /*Log.d("EXPLOCITIY", "creating bundle");
+                    Bundle args = new Bundle();
+                    args.putString("keyword", filter.getKeyword());
+                    args.putInt("radius", filter.getRadius());
+
+                    Log.d("EXPLOCITIY", "creating dialog");
+                    POIFilterDialog dialog = new POIFilterDialog();
+                    dialog.setArguments(args);
+                    dialog.onAttach(CamActivity.this);
+                    dialog.show(getFragmentManager(), "POI Filter Dialog");
+                    Log.d("EXPLOCITY", "Dialog is shown");*/
                     return true;
                 }
 
