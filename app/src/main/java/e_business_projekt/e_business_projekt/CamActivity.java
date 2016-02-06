@@ -97,10 +97,10 @@ public class CamActivity extends AbstractArchitectCamActivity {
 
                 // pressed "Detail" button on POI-detail panel
                 if ("markerselected".equalsIgnoreCase(invokedUri.getHost())) {
-                    final Intent poiDetailIntent = new Intent(CamActivity.this, PoiDetailActivity.class); //e_business_projekt.e_business_projekt.poi_list.dialogs.POIDialog.class
-                    //poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_ID, String.valueOf(invokedUri.getQueryParameter("id")) );
-                    //poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_TITILE, String.valueOf(invokedUri.getQueryParameter("title")) );
-                    //poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_DESCR, String.valueOf(invokedUri.getQueryParameter("description")) );
+                    final Intent poiDetailIntent = new Intent(CamActivity.this, PoiDetailActivity.class);
+                    poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_ID, String.valueOf(invokedUri.getQueryParameter("id")) );
+                    poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_TITILE, String.valueOf(invokedUri.getQueryParameter("title")) );
+                    poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_DESCR, String.valueOf(invokedUri.getQueryParameter("description")) );
                     Log.d("EXPLOCITY", "trying to start dialog");
                     CamActivity.this.startActivity(poiDetailIntent);
                     Log.d("EXPLOCITY", "tried to start intent");

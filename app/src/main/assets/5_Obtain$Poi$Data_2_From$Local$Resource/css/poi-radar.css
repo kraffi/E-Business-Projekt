@@ -18,8 +18,9 @@
     right:30px;
     background:#832630;
     color:#ffffff;
-    vertical-align: middle;
+    text-decoration:none;
 }
+
 #det_btn:active{
     background-color:#5F1E27;
     /*box-shadow: 0 0 1px rgba(0,0,0, .75);*/

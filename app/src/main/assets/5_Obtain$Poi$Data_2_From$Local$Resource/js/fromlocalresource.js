@@ -87,7 +87,7 @@ var World = {
     	// user clicked "More" button in POI-detail panel -> fire event to open native screen
     	onPoiDetailMoreButtonClicked: function onPoiDetailMoreButtonClickedFn() {
     		var currentMarker = World.currentMarker;
-    		var architectSdkUrl = "architectsdk://markerselected?id=" //KR: implement the right data structure: + encodeURIComponent(currentMarker.poiData.id) + "&title=" + encodeURIComponent(currentMarker.poiData.title) + "&description=" + encodeURIComponent(currentMarker.poiData.description);
+    		var architectSdkUrl = "architectsdk://markerselected?id=" + encodeURIComponent(currentMarker.poiData.id) + "&title=" + encodeURIComponent(currentMarker.poiData.title) + "&description=" + encodeURIComponent(currentMarker.poiData.description);
     		/*
     			The urlListener of the native project intercepts this call and parses the arguments.
     			This is the only way to pass information from JavaSCript to your native code.

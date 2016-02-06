@@ -11,7 +11,7 @@ import e_business_projekt.e_business_projekt.R;
 public class PoiDetailActivity extends AppCompatActivity {
 
 	public static final String EXTRAS_KEY_POI_ID = "id";
-	public static final String EXTRAS_KEY_POI_TITILE = "title";
+	public static final String EXTRAS_KEY_POI_TITILE = "name";
 	public static final String EXTRAS_KEY_POI_DESCR = "description";
 
 	@Override
@@ -19,9 +19,9 @@ public class PoiDetailActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.sample_poidetail);
 		
-		/*((TextView)findViewById(R.id.poi_id)).setText(  getIntent().getExtras().getString(EXTRAS_KEY_POI_ID) );
+		((TextView)findViewById(R.id.poi_id)).setText(  getIntent().getExtras().getString(EXTRAS_KEY_POI_ID) );
 		((TextView)findViewById(R.id.poi_title)).setText( getIntent().getExtras().getString(EXTRAS_KEY_POI_TITILE) );
-		((TextView)findViewById(R.id.poi_description)).setText(  getIntent().getExtras().getString(EXTRAS_KEY_POI_DESCR) );*/
+		((TextView)findViewById(R.id.poi_description)).setText(  getIntent().getExtras().getString(EXTRAS_KEY_POI_DESCR) );
 	}
 
 }
