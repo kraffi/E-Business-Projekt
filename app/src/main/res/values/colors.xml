@@ -13,4 +13,5 @@
     <color name="divider">#B6B6B6</color>
 
     <color name="routeSelected">#96832630</color>
+    <color name="routeUnselected">#00ffffff</color>
 </resources>

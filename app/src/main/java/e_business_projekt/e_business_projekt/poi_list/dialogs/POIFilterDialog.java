@@ -197,7 +197,6 @@ public class POIFilterDialog extends DialogFragment {
                 Log.i(TAG, "Filter OK clicked");
             }
         });
-
         builder.setNegativeButton("Cancel", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

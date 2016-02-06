@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import e_business_projekt.e_business_projekt.R;
 import e_business_projekt.e_business_projekt.WebViewActivity;
+import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 
 public class POIDialog extends DialogFragment {
 
@@ -26,12 +27,25 @@ public class POIDialog extends DialogFragment {
         Log.i(TAG, "Creating POI Dialog ");
 
         Bundle args = getArguments();
-        String name = args.getString("name", "");
-        String info = args.getString("info", "");
 
-        String address = args.getString("address", "");
-        String phone = args.getString("phone", "");
-        final String website = args.getString("website", "");
+        PointOfInterest poi = args.getParcelable("poi");
+
+        final String name ;
+        final String address;
+        final String phone;
+        final String website;
+
+        if (poi != null){
+            name = poi.getName();
+            address = poi.getAddress();
+            phone = poi.getPhonenumber();
+            website = poi.getWebsiteUri().toString();
+        } else {
+            name = "";
+            address = "";
+            phone = "";
+            website = "";
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -78,7 +92,6 @@ public class POIDialog extends DialogFragment {
 
         builder.setView(dialogView);
         builder.setTitle(name);
-        //builder.setMessage(info);
 
         builder.setPositiveButton("Wikipedia?", new DialogInterface.OnClickListener() {
             @Override

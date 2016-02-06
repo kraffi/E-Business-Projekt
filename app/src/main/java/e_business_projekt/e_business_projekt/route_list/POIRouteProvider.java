@@ -5,22 +5,27 @@ import com.google.android.gms.maps.model.LatLng;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by RaulVinhKhoa on 05.02.2016.
  */
 public class POIRouteProvider {
 
+    private static final POIRouteProvider instance = new POIRouteProvider();
     private static final String TAG = "EBP.POIRouteProvider";
-    private ArrayList<POIRoute> POIRouteList;
 
-    public POIRouteProvider() {
+    private ArrayList<POIRoute> POIRouteList;
+    private int activated;
+
+    private POIRouteProvider() {
         this.POIRouteList = new ArrayList<>();
         createTestData();
     }
 
-    public POIRouteProvider(ArrayList<POIRoute> POIRouteList) {
+    private POIRouteProvider(ArrayList<POIRoute> POIRouteList, int activated) {
         this.POIRouteList = POIRouteList;
+        this.activated = activated;
     }
 
     public ArrayList<POIRoute> getPOIRouteList() {
@@ -35,9 +40,55 @@ public class POIRouteProvider {
 
     public void addRoute(){
         Log.i(TAG, "addRoute() called");
-        this.POIRouteList.add(new POIRoute());
+        if(POIRouteList.isEmpty()){
+            setActivated(0);
+            this.POIRouteList.add(new POIRoute());
+            this.POIRouteList.get(0).setActivated(true);
+        } else {
+            this.POIRouteList.add(new POIRoute());
+        }
     }
 
+    public int getActivated() {
+        return activated;
+    }
+
+    public void setActivated(int activated) {
+        this.activated = activated;
+        for (int i = 0; i < this.POIRouteList.size(); i++){
+            if (i == activated) {
+                this.POIRouteList.get(i).setActivated(true);
+            } else {
+                this.POIRouteList.get(i).setActivated(false);
+            }
+        }
+
+    }
+
+    public void deleteRoute(int position){
+        Log.i(TAG, "deleting Route with position " + position);
+
+        POIRouteList.remove(position);
+        if (position == activated){
+            setActivated(activated-1);
+        }
+        if (position == 0){
+            setActivated(0);
+        }
+    }
+
+    public void editRouteName(String name, int position){
+        Log.i(TAG, "editing Route with position " + position);
+        POIRouteList.get(position).setRouteName(name);
+    }
+
+    public void addPoiToActiveRoute(PointOfInterest poi){
+        POIRouteList.get(activated).addPOI(poi);
+    }
+
+    public static POIRouteProvider getInstance(){
+        return instance;
+    }
 
     public void createTestData(){
         //----------------------- Creating Test Data -----------------------
@@ -116,7 +167,9 @@ public class POIRouteProvider {
         POIRoute3.setRouteName("Die Geile Route");
         POIRouteList.add(POIRoute3);
 
-        //----------------------- Test Data End -----------------------
+        // set activated route
+        activated = 1;
+        setActivated(activated);
     }
 
 }
