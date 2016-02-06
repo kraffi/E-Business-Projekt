@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
 
     private static final String TAG = "EBP.MainActivity";
 
-    private POIRouteProvider routeManager = new POIRouteProvider();
+    private POIRouteProvider routeManager = POIRouteProvider.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

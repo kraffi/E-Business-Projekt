@@ -12,21 +12,23 @@ import java.util.List;
  */
 public class POIRouteProvider {
 
+    private static final POIRouteProvider instance = new POIRouteProvider();
     private static final String TAG = "EBP.POIRouteProvider";
+
     private ArrayList<POIRoute> POIRouteList;
     private int activated;
 
-    public POIRouteProvider() {
+    private POIRouteProvider() {
         this.POIRouteList = new ArrayList<>();
         createTestData();
-        activated = 1;
-        POIRouteList.get(activated).setActivated(true);
     }
 
-    public POIRouteProvider(ArrayList<POIRoute> POIRouteList, int activated) {
+    private POIRouteProvider(ArrayList<POIRoute> POIRouteList, int activated) {
         this.POIRouteList = POIRouteList;
         this.activated = activated;
     }
+
+
 
     public ArrayList<POIRoute> getPOIRouteList() {
         Log.i(TAG, "getPOIRouteList() called");
@@ -82,7 +84,9 @@ public class POIRouteProvider {
         POIRouteList.get(position).setRouteName(name);
     }
 
-
+    public static POIRouteProvider getInstance(){
+        return instance;
+    }
 
     public void createTestData(){
         //----------------------- Creating Test Data -----------------------
@@ -162,6 +166,10 @@ public class POIRouteProvider {
         POIRouteList.add(POIRoute3);
 
         //----------------------- Test Data End -----------------------
+
+        // set activated route
+        activated = 1;
+        setActivated(activated);
     }
 
 }

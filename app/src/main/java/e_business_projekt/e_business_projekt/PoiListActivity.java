@@ -24,6 +24,7 @@ import e_business_projekt.e_business_projekt.poi_list.dialogs.POIFilterDialogCal
 import e_business_projekt.e_business_projekt.poi_list.provider.POIFilter;
 import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProvider;
 import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProviderCallback;
+import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.List;
 public class PoiListActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, PlacesProviderCallback, POIFilterDialogCallback {
 
+    private POIRouteProvider routeManager = POIRouteProvider.getInstance();
     private static final String TAG = "EBP.PoiListActivity";
 
     //
@@ -44,6 +46,10 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poi_list);
+
+
+        int a = routeManager.getActivated();
+        Log.i("TEST:", routeManager.getPOIRouteList().get(a).getPoiRoute().toString());
 
         //initialize GoogleApiClient
         mGoogleApiClient = new GoogleApiClient
