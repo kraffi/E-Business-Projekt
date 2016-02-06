@@ -167,8 +167,6 @@ public class POIRouteProvider {
         POIRoute3.setRouteName("Die Geile Route");
         POIRouteList.add(POIRoute3);
 
-        //----------------------- Test Data End -----------------------
-
         // set activated route
         activated = 1;
         setActivated(activated);

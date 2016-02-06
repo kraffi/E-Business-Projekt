@@ -1,7 +1,9 @@
 package e_business_projekt.e_business_projekt;
 
+import android.content.Context;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +27,7 @@ import e_business_projekt.e_business_projekt.route_list.dialogs.EditRouteDialog;
 import e_business_projekt.e_business_projekt.route_list.dialogs.EditRouteDialogCallback;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -50,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
             }
         });
         buildRouteList(POIRouteList);
+
+        SharedPreferences prefs = this.getSharedPreferences("e_business_projekt.e_business_projekt", Context.MODE_PRIVATE);
+
+        //Log.i("TEST: ", );
+
     }
 
     public void buildRouteList(final List<POIRoute> poiRouteList){
