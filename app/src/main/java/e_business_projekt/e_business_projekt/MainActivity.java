@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +18,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import android.widget.TextView;
-import e_business_projekt.e_business_projekt.map_navigation.Route;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import e_business_projekt.e_business_projekt.adapter.UriAdapter;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 import e_business_projekt.e_business_projekt.route_list.POIRoute;
 import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
@@ -27,7 +30,6 @@ import e_business_projekt.e_business_projekt.route_list.dialogs.EditRouteDialog;
 import e_business_projekt.e_business_projekt.route_list.dialogs.EditRouteDialogCallback;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RouteListViewItemCallback, EditRouteDialogCallback {
@@ -66,10 +68,17 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
         });
         buildRouteList(POIRouteList);
 
+        // TEST:
         SharedPreferences prefs = this.getSharedPreferences("e_business_projekt.e_business_projekt", Context.MODE_PRIVATE);
 
-        //Log.i("TEST: ", );
+        PointOfInterest p = routeManager.getPOIRouteList().get(0).getPoiRoute().get(0);
+        Gson gson = new GsonBuilder().registerTypeAdapter(Uri.class, new UriAdapter()).create();
+        String json = gson.toJson(p);
+        Log.i("TEST: ", json);
 
+        PointOfInterest a = gson.fromJson(json, PointOfInterest.class);
+        Log.i("Test:", a.toString());
+        // TEST END
     }
 
     public void buildRouteList(final List<POIRoute> poiRouteList){

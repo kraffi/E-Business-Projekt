@@ -1,7 +1,10 @@
 package e_business_projekt.e_business_projekt.route_list;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
+import e_business_projekt.e_business_projekt.MainActivity;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 
 import java.util.ArrayList;
@@ -14,18 +17,15 @@ public class POIRouteProvider {
 
     private static final POIRouteProvider instance = new POIRouteProvider();
     private static final String TAG = "EBP.POIRouteProvider";
+    private Context context;
 
+    private String userID;
     private ArrayList<POIRoute> POIRouteList;
     private int activated;
 
     private POIRouteProvider() {
         this.POIRouteList = new ArrayList<>();
         createTestData();
-    }
-
-    private POIRouteProvider(ArrayList<POIRoute> POIRouteList, int activated) {
-        this.POIRouteList = POIRouteList;
-        this.activated = activated;
     }
 
     public ArrayList<POIRoute> getPOIRouteList() {
@@ -49,6 +49,18 @@ public class POIRouteProvider {
         }
     }
 
+    public void deleteRoute(int position){
+        Log.i(TAG, "deleting Route with position " + position);
+
+        POIRouteList.remove(position);
+        if (position == activated){
+            setActivated(activated-1);
+        }
+        if (position == 0){
+            setActivated(0);
+        }
+    }
+
     public int getActivated() {
         return activated;
     }
@@ -61,19 +73,6 @@ public class POIRouteProvider {
             } else {
                 this.POIRouteList.get(i).setActivated(false);
             }
-        }
-
-    }
-
-    public void deleteRoute(int position){
-        Log.i(TAG, "deleting Route with position " + position);
-
-        POIRouteList.remove(position);
-        if (position == activated){
-            setActivated(activated-1);
-        }
-        if (position == 0){
-            setActivated(0);
         }
     }
 
@@ -89,6 +88,12 @@ public class POIRouteProvider {
     public static POIRouteProvider getInstance(){
         return instance;
     }
+
+    public void init(Context context){
+        this.context = context;
+    }
+
+
 
     public void createTestData(){
         //----------------------- Creating Test Data -----------------------
