@@ -5,12 +5,14 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
+import e_business_projekt.e_business_projekt.PoiListActivity;
 import e_business_projekt.e_business_projekt.R;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 import e_business_projekt.e_business_projekt.poi_list.dialogs.POIDialog;
@@ -72,6 +74,13 @@ public class EditRouteDialog extends DialogFragment implements EditRouteListView
 
                 callback.editRouteDialogOkButtonCallback(editRouteName.getText().toString(), poiList, position);
                 Log.i(TAG, "Edit OK clicked");
+            }
+        });
+        builder.setNeutralButton("Add POI", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent poiListIntent = new Intent(getActivity(), PoiListActivity.class);
+                getActivity().startActivity(poiListIntent);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

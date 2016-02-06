@@ -103,14 +103,17 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
     public void editRouteButtonCallback(int position) {
         Log.i(TAG, "editRouteButtonCallback() with Item " + position);
 
-        Bundle args = new Bundle();
-
+        // Set route and activated Route
+        routeManager.setActivated(position);
         POIRoute route = routeManager.getPOIRouteList().get(position);
 
+        // Set arguments
+        Bundle args = new Bundle();
         args.putParcelableArrayList("poiList", route.getPoiRoute());
         args.putString("routeName", route.getRouteName());
         args.putInt("position", position);
 
+        // Create dialog and pass arguments
         EditRouteDialog dialog = new EditRouteDialog();
         dialog.setArguments(args);
         dialog.show(getFragmentManager(), "Edit Route Dialog");
@@ -129,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
     public void editRouteDialogOkButtonCallback(String name, List<PointOfInterest> poiList, int position) {
         Log.i(TAG, "editRouteDialogOKCallback(): edit " + name + " at position " + position);
         routeManager.editRouteName(name, position);
-        routeManager.setActivated(position);
         buildRouteList(routeManager.getPOIRouteList());
     }
 

@@ -64,10 +64,6 @@ public class RouteListViewItemAdapter extends BaseAdapter{
         holder.getDeleteButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Log.i("ADAPTER:", "Delete Button " + position + " clicked");
-
-
-
                 callback.deleteRouteButtonCallback(position);
             }
         });
@@ -75,9 +71,6 @@ public class RouteListViewItemAdapter extends BaseAdapter{
         holder.getEditButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Log.i("ADAPTER:", "Edit Button " + position + " clicked");
-
-
 
                 callback.editRouteButtonCallback(position);
             }

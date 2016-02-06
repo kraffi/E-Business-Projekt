@@ -74,8 +74,14 @@ public class POIListViewItemAdapter extends BaseAdapter {
             public void onClick(View v) {
                 POIRouteProvider routeManager = POIRouteProvider.getInstance();
                 PointOfInterest poi = poiList.get(position);
-                routeManager.addPoiToActiveRoute(poi);
-                Toast.makeText(mInflater.getContext(), poi.getName() + "added to Route", Toast.LENGTH_LONG).show();
+                List<PointOfInterest> currentPoiList = routeManager.getPOIRouteList().get(routeManager.getActivated()).getPoiRoute();
+
+                if (!currentPoiList.contains(poi)){
+                    routeManager.addPoiToActiveRoute(poi);
+                    Toast.makeText(mInflater.getContext(), "Add " + poi.getName() + " to activated Route", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(mInflater.getContext(), poi.getName() + " already exists in Route", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
