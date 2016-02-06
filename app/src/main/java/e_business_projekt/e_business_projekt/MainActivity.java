@@ -31,15 +31,14 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements RouteListViewItemCallback, EditRouteDialogCallback {
 
     private static final String TAG = "EBP.MainActivity";
-    private ArrayList<POIRoute> POIRouteList = new ArrayList<>();
+
     private POIRouteProvider routeManager = new POIRouteProvider();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        POIRouteList = routeManager.getPOIRouteList();
+        ArrayList<POIRoute> POIRouteList = routeManager.getPOIRouteList();
 
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.addRouteButton);
         addButton.setOnClickListener(new View.OnClickListener() {

@@ -90,13 +90,13 @@ public class EditRouteDialog extends DialogFragment implements EditRouteListView
 
     @Override
     public void clickPoi(int position) {
-        Log.i("KLICK", poiList.get(position).getName());
 
+        // Set dialog data
         PointOfInterest poi = poiList.get(position);
-
         Bundle args = new Bundle();
         args.putParcelable("poi", poi);
 
+        // Call POI dialog
         POIDialog dialog = new POIDialog();
         dialog.setArguments(args);
         dialog.show(getFragmentManager(), "POI Dialog");
@@ -104,7 +104,7 @@ public class EditRouteDialog extends DialogFragment implements EditRouteListView
 
     @Override
     public void removePoiFromRouteButton(int position) {
-        Log.i("REMOVE", poiList.get(position).getName());
+        // Remove Dialog from poi list and notify adapter
         poiList.remove(position);
         adapter.notifyDataSetChanged();
     }
