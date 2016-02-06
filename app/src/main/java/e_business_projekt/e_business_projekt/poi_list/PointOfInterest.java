@@ -1,6 +1,7 @@
 package e_business_projekt.e_business_projekt.poi_list;
 
 import android.net.Uri;
+import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
@@ -13,7 +14,7 @@ import java.util.List;
  * Represents an Point of Interest Object
  * Created by Raul Vinh Khoa Nguyen on 10.12.2015.
  */
-public class PointOfInterest {
+public class PointOfInterest implements Parcelable {
 
     private String name;
     private String id;
@@ -47,6 +48,20 @@ public class PointOfInterest {
         this.img = R.mipmap.ic_launcher;
     }
 
+    public PointOfInterest(Parcel in){
+        this.name = in.readString();
+        this.id = in.readString();
+        //TODO: DoubleCheck:
+        this.latLng = new LatLng(in.readDouble(), in.readDouble());
+        this.distance = in.readFloat();
+        this.address = in.readString();
+        this.phonenumber = in.readString();
+        this.websiteUri = Uri.parse(in.readString());
+        this.placeTypes = in.readArrayList(Integer.class.getClassLoader());
+        this.img = in.readInt();
+    }
+
+    // TODO: Testing purpose
     public  PointOfInterest(){
         this.id = "";
         this.latLng = new LatLng(0.0,0.0);
@@ -212,4 +227,36 @@ public class PointOfInterest {
                 ", placeTypes=" + placeTypes +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(id);
+        dest.writeDouble(latLng.latitude);
+        dest.writeDouble(latLng.longitude);
+        dest.writeFloat(distance);
+        dest.writeString(address);
+        dest.writeString(phonenumber);
+        dest.writeString(websiteUri.toString());
+        dest.writeList(placeTypes);
+        dest.writeInt(img);
+    }
+
+    public static final Parcelable.Creator<PointOfInterest> CREATOR = new Parcelable.Creator<PointOfInterest>()
+    {
+        public PointOfInterest createFromParcel(Parcel in)
+        {
+            return new PointOfInterest(in);
+        }
+        public PointOfInterest[] newArray(int size)
+        {
+            return new PointOfInterest[size];
+        }
+    };
+
 }

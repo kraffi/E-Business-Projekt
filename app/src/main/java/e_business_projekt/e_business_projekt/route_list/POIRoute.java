@@ -10,10 +10,10 @@ import java.util.List;
  */
 public class POIRoute {
     private String routeName;
-    private List<PointOfInterest> poiRoute;
+    private ArrayList<PointOfInterest> poiRoute;
     private boolean activated;
 
-    public POIRoute(String routeName, List<PointOfInterest> poiRoute) {
+    public POIRoute(String routeName, ArrayList<PointOfInterest> poiRoute) {
         this.routeName = routeName;
         this.poiRoute = poiRoute;
         activated = false;
@@ -25,11 +25,11 @@ public class POIRoute {
         activated = false;
     }
 
-    public List<PointOfInterest> getPoiRoute() {
+    public ArrayList<PointOfInterest> getPoiRoute() {
         return poiRoute;
     }
 
-    public void setPoiRoute(List<PointOfInterest> poiRoute) {
+    public void setPoiRoute(ArrayList<PointOfInterest> poiRoute) {
         this.poiRoute = poiRoute;
     }
 

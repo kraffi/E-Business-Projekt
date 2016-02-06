@@ -15,18 +15,20 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import android.widget.TextView;
+import e_business_projekt.e_business_projekt.map_navigation.Route;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 import e_business_projekt.e_business_projekt.route_list.POIRoute;
 import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 import e_business_projekt.e_business_projekt.route_list.adapter.RouteListViewItemAdapter;
 import e_business_projekt.e_business_projekt.route_list.adapter.RouteListViewItemCallback;
 import e_business_projekt.e_business_projekt.route_list.dialogs.EditRouteDialog;
+import e_business_projekt.e_business_projekt.route_list.dialogs.EditRouteDialogCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements RouteListViewItemCallback {
+public class MainActivity extends AppCompatActivity implements RouteListViewItemCallback, EditRouteDialogCallback {
 
     private static final String TAG = "EBP.MainActivity";
     private ArrayList<POIRoute> POIRouteList = new ArrayList<>();
@@ -102,33 +104,33 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
     public void editRouteButtonCallback(int position) {
         Log.i(TAG, "editRouteButtonCallback() with Item " + position);
 
-        Bundle args = getData(POIRouteList.get(position).getPoiRoute());
+        Bundle args = new Bundle();
+
+        POIRoute route = routeManager.getPOIRouteList().get(position);
+
+        args.putParcelableArrayList("poiList", route.getPoiRoute());
+        args.putString("routeName", route.getRouteName());
+        args.putInt("position", position);
 
         EditRouteDialog dialog = new EditRouteDialog();
+        dialog.setArguments(args);
         dialog.show(getFragmentManager(), "Edit Route Dialog");
-
-
 
         routeManager.editRoute(position);
         buildRouteList(routeManager.getPOIRouteList());
-    }
-
-    public Bundle getData(List<PointOfInterest> poiList){
-        Bundle args = new Bundle();
-
-        int poiListLength = poiList.size();
-        for (int i = 0; i < poiListLength; i++){
-            PointOfInterest poi = poiList.get(i);
-
-        }
-
-        return args;
     }
 
     @Override
     public void deleteRouteButtonCallback(int position) {
         Log.i(TAG, "editRouteButtonCallback() with Item " + position);
         routeManager.deleteRoute(position);
+        buildRouteList(routeManager.getPOIRouteList());
+    }
+
+    @Override
+    public void editRouteDialogOK(String name, List<PointOfInterest> poiList, int position) {
+        Log.i(TAG, "editRouteDialogOKCallback(): edit " + name + " at position " + position);
+        routeManager.editRouteName(name, position);
         buildRouteList(routeManager.getPOIRouteList());
     }
 

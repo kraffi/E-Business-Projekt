@@ -1,6 +1,7 @@
 package e_business_projekt.e_business_projekt.route_list.dialogs;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,29 +16,29 @@ import java.util.List;
 /**
  * Created by RaulVinhKhoa on 05.02.2016.
  */
-public class EditRouteListViewAdapter extends BaseAdapter {
+public class EditRouteListViewItemAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private List<PointOfInterest> poiList;
 
-    public EditRouteListViewAdapter(Context ListViewSection, List<PointOfInterest> poiList) {
+    public EditRouteListViewItemAdapter(Context ListViewSection, List<PointOfInterest> poiList) {
         this.mInflater = LayoutInflater.from(ListViewSection);
         this.poiList = poiList;
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return poiList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return poiList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
@@ -55,7 +56,6 @@ public class EditRouteListViewAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
         holder.poiName.setText(poiList.get(position).getName());
 
         return convertView;

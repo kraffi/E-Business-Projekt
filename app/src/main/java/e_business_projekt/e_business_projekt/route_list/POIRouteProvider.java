@@ -66,16 +66,14 @@ public class POIRouteProvider {
 
     public void deleteRoute(int position){
         Log.i(TAG, "deleting Route with position " + position);
-        //TODO: HANDLE DELETE OF ACTIVE ROUTE
-        POIRouteList.remove(position);
 
+        POIRouteList.remove(position);
         if (position == activated){
             setActivated(activated-1);
         }
         if (position == 0){
             setActivated(0);
         }
-
     }
 
     public void editRoute(int position){
@@ -83,6 +81,13 @@ public class POIRouteProvider {
         //TODO: CALL EDIT DIALOG
         Log.i(TAG, "Call edit Route Dialog here!");
     }
+
+    // TODO look at edit route xD
+    public void editRouteName(String name, int position){
+        POIRouteList.get(position).setRouteName(name);
+    }
+
+
 
     public void createTestData(){
         //----------------------- Creating Test Data -----------------------
