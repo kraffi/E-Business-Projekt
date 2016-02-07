@@ -25,6 +25,7 @@ public class PointOfInterest implements Parcelable {
     private String address;
     private String phonenumber;
     private Uri websiteUri;
+    private String wikiLink;
 
     private List<Integer> placeTypes;
     private int img;
@@ -230,6 +231,14 @@ public class PointOfInterest implements Parcelable {
         if (!this.placeTypes.contains(id)){
             placeTypes.add(id);
         }
+    }
+
+    public String getWikiLink() {
+        return wikiLink;
+    }
+
+    public void setWikiLink(String wikiLink) {
+        this.wikiLink = wikiLink;
     }
 
     /**

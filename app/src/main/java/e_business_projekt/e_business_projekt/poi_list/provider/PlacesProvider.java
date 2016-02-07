@@ -11,6 +11,8 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +47,7 @@ public class PlacesProvider {
 
     //Query String
     String urlString;
+    String currentWikiQuery;
 
     // constructor
     public PlacesProvider(PlacesProviderCallback callback, GoogleApiClient googleApiClient, POIFilter filter, Location location) {
@@ -105,6 +108,14 @@ public class PlacesProvider {
                             Location currentLocation = location;
 
                             poi.setDistance(currentLocation.distanceTo(poiLocation));
+
+                            // TODO GET WIKI LINK, Blocks filterin POIS?
+//                            if (poi.getName().length() != 0){
+//                                currentWikiQuery = poi.getName();
+//                                new StartAsyncWikiQuery().execute();
+//                            } else {
+//                                poi.setWikiLink("");
+//                            }
 
                             if (matchFilter(poi)){
                                 poiList.add(poi);
@@ -171,6 +182,41 @@ public class PlacesProvider {
         }
     }
 
+    private String getWikiLink(String query){
+
+        try {
+            URL url = new URL("https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&namespace=0&format=json&search=" + query);
+            Log.i(TAG, "Wikipedia Query " + query + " URL: " + url.toString());
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            InputStreamReader in = new InputStreamReader(connection.getInputStream(), "UTF-8");
+
+            BufferedReader br = new BufferedReader(in);
+            StringBuilder sb = new StringBuilder();
+
+            String line;
+            while ((line = br.readLine()) != null)
+            {
+                sb.append(line);
+            }
+
+            Log.i(TAG, "GET: " + sb.toString());
+
+            JsonParser parser = new JsonParser();
+            JsonArray jsonArray = parser.parse(sb.toString()).getAsJsonArray();
+
+            Log.i(TAG, "Wikipedia :" + jsonArray.toString());
+
+
+        } catch (IOException e) {
+            Log.e(TAG, "Malformed URL Exception!");
+            throw new RuntimeException(e);
+        }
+
+        return "";
+    }
+
     private boolean matchFilter(PointOfInterest poi){
 
         if (poi.getDistance() <= filter.getRadius()){
@@ -208,6 +254,31 @@ public class PlacesProvider {
         @Override
         protected void onPostExecute(String s) {
             Log.i(TAG, "Get IDs from Places finished!");
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+    }
+
+    private class StartAsyncWikiQuery extends AsyncTask<String, Void, String > {
+
+        @Override
+        protected String doInBackground(String... params) {
+            Log.i(TAG, "StartAsyncQuery()");
+            getWikiLink(currentWikiQuery.replace(" ", "%20"));
+            return "StartAsyncQuery finished!";
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Log.i(TAG, "Get WikiLinks finished!");
         }
 
         @Override

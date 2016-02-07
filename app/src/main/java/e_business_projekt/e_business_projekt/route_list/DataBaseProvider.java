@@ -45,10 +45,8 @@ public class DataBaseProvider {
         POIRouteProvider routeManager = POIRouteProvider.getInstance();
 
         jsonString = gson.toJson(routeManager);
-        Log.i(TAG, "INPUT: " + jsonString);
-
+        Log.i(TAG, "Create post: " + jsonString);
         new createQuery().execute();
-
     }
 
     public void readData(){
@@ -58,16 +56,21 @@ public class DataBaseProvider {
     private class readQuery extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
-            Log.i(TAG, "BACKGROUND!");
 
             try {
-
                 URL url = new URL("https://api.mongolab.com/api/1/databases/explocity_database/collections/data?apiKey=Hg6Dr44IiwAGXwJirCdGbe5kJ4j9HaQr" + query);
-                Log.i(TAG, "Query URL: " + url.toString());
+                Log.i(TAG, "Read query URL: " + url.toString());
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                 InputStreamReader in = new InputStreamReader(connection.getInputStream(), "UTF-8");
+
+                int HttpResult = connection.getResponseCode();
+                if(HttpResult == HttpURLConnection.HTTP_OK){
+                    Log.i(TAG, "Read Success: " + connection.getResponseMessage());
+                }else{
+                    Log.i(TAG, "Read Fail: " + connection.getResponseMessage());
+                }
 
                 BufferedReader br = new BufferedReader(in);
                 StringBuilder sb = new StringBuilder();
@@ -78,7 +81,7 @@ public class DataBaseProvider {
                     sb.append(line);
                 }
 
-                Log.i(TAG, "GET: " + sb.toString());
+                Log.i(TAG, "Read get: " + sb.toString());
 
                 JsonParser parser = new JsonParser();
                 JsonArray jsonArray = parser.parse(sb.toString()).getAsJsonArray();
@@ -135,9 +138,58 @@ public class DataBaseProvider {
 
                 int HttpResult = connection.getResponseCode();
                 if(HttpResult == HttpURLConnection.HTTP_OK){
-                    Log.i(TAG, "Success: " + connection.getResponseMessage());
+                    Log.i(TAG, "Create Success: " + connection.getResponseMessage());
                 }else{
-                    Log.i(TAG, "Fail: " + connection.getResponseMessage());
+                    Log.i(TAG, "Create Fail: " + connection.getResponseMessage());
+                }
+
+            } catch (IOException e) {
+                Log.e(TAG, "Malformed URL Exception!");
+                throw new RuntimeException(e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Log.i(TAG, "POST EXECUTE!");
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Log.i(TAG, "PRE EXECUTE!");
+        }
+    }
+
+    private class updateQuery extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+
+                URL url = new URL("https://api.mongolab.com/api/1/databases/explocity_database/collections/data?apiKey=Hg6Dr44IiwAGXwJirCdGbe5kJ4j9HaQr");
+                Log.i("TAG", "Create Query URL: " + url.toString());
+
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoOutput(true);
+                connection.setDoInput(true);
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("Accept", "application/json");
+                connection.setRequestMethod("POST");
+
+                OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
+                wr.write(jsonString);
+                wr.flush();
+
+                int HttpResult = connection.getResponseCode();
+                if(HttpResult == HttpURLConnection.HTTP_OK){
+                    Log.i(TAG, "Update Success: " + connection.getResponseMessage());
+                }else{
+                    Log.i(TAG, "Update Fail: " + connection.getResponseMessage());
                 }
 
             } catch (IOException e) {
