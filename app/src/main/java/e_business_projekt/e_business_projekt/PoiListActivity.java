@@ -47,10 +47,6 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poi_list);
 
-
-        int a = routeManager.getActivated();
-        Log.i("TEST:", routeManager.getPOIRouteList().get(a).getPoiRoute().toString());
-
         //initialize GoogleApiClient
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)

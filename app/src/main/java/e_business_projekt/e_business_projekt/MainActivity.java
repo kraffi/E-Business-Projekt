@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import e_business_projekt.e_business_projekt.adapter.UriAdapter;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
+import e_business_projekt.e_business_projekt.route_list.DataBaseProvider;
 import e_business_projekt.e_business_projekt.route_list.POIRoute;
 import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 import e_business_projekt.e_business_projekt.route_list.adapter.RouteListViewItemAdapter;
@@ -68,17 +69,25 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
         });
         buildRouteList(POIRouteList);
 
-        // TEST:
-        SharedPreferences prefs = this.getSharedPreferences("e_business_projekt.e_business_projekt", Context.MODE_PRIVATE);
+        // ---------------------------------------------  TEST:  ---------------------------------------------
+        //SharedPreferences prefs = this.getSharedPreferences("e_business_projekt.e_business_projekt", Context.MODE_PRIVATE);
 
-        PointOfInterest p = routeManager.getPOIRouteList().get(0).getPoiRoute().get(0);
-        Gson gson = new GsonBuilder().registerTypeAdapter(Uri.class, new UriAdapter()).create();
-        String json = gson.toJson(p);
-        Log.i("TEST: ", json);
+        //PointOfInterest p = routeManager.getPOIRouteList().get(0).getPoiRoute().get(0);
+        //Gson gson = new GsonBuilder().registerTypeAdapter(Uri.class, new UriAdapter()).create();
+        //String json = gson.toJson(p);
+        //Log.i("TEST: ", json);
 
-        PointOfInterest a = gson.fromJson(json, PointOfInterest.class);
-        Log.i("Test:", a.toString());
-        // TEST END
+        //PointOfInterest a = gson.fromJson(json, PointOfInterest.class);
+        //Log.i("Test:", a.toString());
+        // ---------------------------------------------  TEST END  ---------------------------------------------
+
+        // ---------------------------------------------  TEST 2  ---------------------------------------------
+
+
+        DataBaseProvider x = new DataBaseProvider();
+        //x.start();
+
+        // ---------------------------------------------  TEST 2 END  ---------------------------------------------
     }
 
     public void buildRouteList(final List<POIRoute> poiRouteList){

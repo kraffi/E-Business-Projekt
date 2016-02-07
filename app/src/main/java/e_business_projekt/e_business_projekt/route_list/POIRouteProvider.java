@@ -15,9 +15,8 @@ import java.util.List;
  */
 public class POIRouteProvider {
 
-    private static final POIRouteProvider instance = new POIRouteProvider();
     private static final String TAG = "EBP.POIRouteProvider";
-    private Context context;
+    private static final POIRouteProvider instance = new POIRouteProvider();
 
     private String userID;
     private ArrayList<POIRoute> POIRouteList;
@@ -25,7 +24,8 @@ public class POIRouteProvider {
 
     private POIRouteProvider() {
         this.POIRouteList = new ArrayList<>();
-        createTestData();
+        this.userID="sampleId2222";
+//        createTestData();
     }
 
     public ArrayList<POIRoute> getPOIRouteList() {
@@ -89,11 +89,20 @@ public class POIRouteProvider {
         return instance;
     }
 
-    public void init(Context context){
-        this.context = context;
+    public void setInstance(POIRouteProvider copyInstance){
+        this.userID = copyInstance.getUserID();
+        this.activated = copyInstance.getActivated();
+        this.POIRouteList = copyInstance.getPOIRouteList();
+
     }
 
+    public String getUserID() {
+        return userID;
+    }
 
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
 
     public void createTestData(){
         //----------------------- Creating Test Data -----------------------
@@ -176,5 +185,4 @@ public class POIRouteProvider {
         activated = 1;
         setActivated(activated);
     }
-
 }
