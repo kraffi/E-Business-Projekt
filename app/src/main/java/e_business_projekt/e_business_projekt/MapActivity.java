@@ -257,7 +257,7 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
         for(LatLng poi : route1){
             MarkerOptions options = new MarkerOptions();
             options.position(poi);
-            options.icon(BitmapDescriptorFactory.fromResource(R.drawable.Marker_48));
+            options.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_72));
             map.addMarker(options);
         }
     }
@@ -297,8 +297,9 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
         for(PointOfInterest poi : POIList){
             route1.add(poi.getLatLng());
         }
-
         Log.d("EXPLOCITY", "route1: " + route1);
+
+        Log.d("EXPLOCITY", "POIList: " + POIList);
 
         progressDialog = ProgressDialog.show(this, "Please wait.",
                 "Fetching POIRoute information.", true);
