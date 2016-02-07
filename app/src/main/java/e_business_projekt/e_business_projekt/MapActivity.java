@@ -39,6 +39,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +69,11 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
     protected LatLng end;
     private ArrayList<LatLng> route1;
     private List<PointOfInterest> POIList;
+
+    private String poi_id;
+    private String poi_name;
+    private double poi_lat;
+    private double poi_long;
 
     LocationManager locationManager;
     /*@InjectView(R.id.start)
@@ -111,6 +119,41 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
             @Override
             public void onClick(View v) {
                 Log.i("EXPLOCITY", "start_wikitude");
+
+                //todo KR: 07.02.16: create JSON-string in .js file for wikitude
+                int activated_route = POIRouteProvider.getInstance().getActivated();
+                POIList = POIRouteProvider.getInstance().getPOIRouteList().get(activated_route).getPoiRoute();
+
+                JSONObject json_poi = new JSONObject();
+                JSONObject json_route = new JSONObject();
+
+                for(PointOfInterest poi : POIList){
+
+                    poi_id = poi.getId();
+                    poi_name = poi.getName();
+                    poi_lat = poi.getLatLng().latitude;
+                    poi_long = poi.getLatLng().longitude;
+
+                    try {
+                        json_poi.put("id", poi_id);
+                        json_poi.put("name", poi_name);
+                        json_poi.put("latitude", poi_lat);
+                        json_poi.put("longitude", poi_long);
+                        json_poi.put("altitude", "100.0");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        json_route.accumulate("route", json_poi);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+
+                Log.d("EXPLOCITY", "json_route: " + json_route);
+
                 Intent intent;
                 intent = new Intent(MapActivity.this, CamActivity.class);
                 intent.putExtra(EXTRAS_KEY_ACTIVITY_IR, hasIr);
@@ -306,8 +349,8 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
 
         //create an array-list with all POIs of the route
         route1 = new ArrayList();
-        int activated = POIRouteProvider.getInstance().getActivated();
-        POIList = POIRouteProvider.getInstance().getPOIRouteList().get(activated).getPoiRoute();
+        int activated_route = POIRouteProvider.getInstance().getActivated();
+        POIList = POIRouteProvider.getInstance().getPOIRouteList().get(activated_route).getPoiRoute();
 
         //add the current location as the starting point of the route
         route1.add(start);

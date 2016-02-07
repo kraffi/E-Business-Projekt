@@ -34,7 +34,8 @@ function Marker(poiData) {
         onClick: null
     });
 
-    // create an AR.Label for the marker's title 
+
+    // create an AR.Label for the marker's title
     this.titleLabel = new AR.Label(poiData.title.trunc(10), 1, {
         zOrder: 1,
         offsetY: 0.55,
@@ -43,6 +44,7 @@ function Marker(poiData) {
             fontStyle: AR.CONST.FONT_STYLE.BOLD
         }
     });
+    //KR: description will not be shown
 
     // create an AR.Label for the marker's description
     this.descriptionLabel = new AR.Label(poiData.description.trunc(15), 0.8, {
