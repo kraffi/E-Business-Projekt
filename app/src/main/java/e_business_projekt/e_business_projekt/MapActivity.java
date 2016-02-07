@@ -6,6 +6,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -81,6 +82,10 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
     private ArrayList<Polyline> polylines;
     private int[] colors = new int[]{R.color.primary_dark,R.color.primary,R.color.primary_light,R.color.accent,R.color.primary_dark_material_light};
 
+    public static final String EXTRAS_KEY_ACTIVITY_IR = "activityIr";
+    public static final String EXTRAS_KEY_ACTIVITY_GEO = "activityGeo";
+    boolean hasIr = true;
+    boolean hasGeo = true;
 
     private static final LatLngBounds BOUNDS_JAMAICA= new LatLngBounds(new LatLng(-57.965341647205726, 144.9987719580531),
             new LatLng(72.77492067739843, -9.998857788741589));
@@ -100,6 +105,19 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
         setContentView(R.layout.activity_maps);
         ButterKnife.inject(this);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.fab_start_wikitude);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("EXPLOCITY", "start_wikitude");
+                Intent intent;
+                intent = new Intent(MapActivity.this, CamActivity.class);
+                intent.putExtra(EXTRAS_KEY_ACTIVITY_IR, hasIr);
+                intent.putExtra(EXTRAS_KEY_ACTIVITY_GEO, hasGeo);
+                startActivity(intent);
+            }
+        });
 
         polylines = new ArrayList<>();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
