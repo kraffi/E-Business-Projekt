@@ -39,6 +39,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -53,15 +54,18 @@ import e_business_projekt.e_business_projekt.map_navigation.Route;
 import e_business_projekt.e_business_projekt.map_navigation.Routing;
 import e_business_projekt.e_business_projekt.map_navigation.RoutingListener;
 import e_business_projekt.e_business_projekt.map_navigation.Util;
+import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
+import e_business_projekt.e_business_projekt.route_list.POIRoute;
+import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 
 public class MapActivity extends AppCompatActivity implements RoutingListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
     protected GoogleMap map;
+
     protected LatLng start;
-    //KR
     protected LatLng end;
-    //KR
-    protected LatLng middle1;
-    protected LatLng middle2;
+    private ArrayList<LatLng> route1;
+    private List<PointOfInterest> POIList;
+
     LocationManager locationManager;
     /*@InjectView(R.id.start)
     AutoCompleteTextView starting;
@@ -71,6 +75,7 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
     ImageView send;*/
     private String LOG_TAG = "MyActivity";
     protected GoogleApiClient mGoogleApiClient;
+    private Location location;
     private PlaceAutoCompleteAdapter mAdapter;
     private ProgressDialog progressDialog;
     private ArrayList<Polyline> polylines;
@@ -142,7 +147,6 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
         map.animateCamera(zoom);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Log.d("EXPLOCITY", "locationManager1: " + locationManager);
 
         locationManager.requestLocationUpdates(
                 LocationManager.NETWORK_PROVIDER, 5000, 0,
@@ -174,7 +178,6 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
                     }
                 });
 
-
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 3000, 0, new LocationListener() {
                     @Override
@@ -203,230 +206,7 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
 
                     }
                 });
-
-
-
-        /*
-        * Adds auto complete adapter to both auto complete
-        * text views.
-        * */
-        /*starting.setAdapter(mAdapter);
-        destination.setAdapter(mAdapter);*/
-
-
-        /*
-        * Sets the start and destination points based on the values selected
-        * from the autocomplete text views.
-        * */
-
-        /*starting.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                final PlaceAutoCompleteAdapter.PlaceAutocomplete item = mAdapter.getItem(position);
-                final String placeId = String.valueOf(item.placeId);
-                Log.i(LOG_TAG, "Autocomplete item selected: " + item.description);
-
-            *//*
-             Issue a request to the Places Geo Data API to retrieve a Place object with additional
-              details about the place.
-              *//*
-                PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                        .getPlaceById(mGoogleApiClient, placeId);
-                placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
-                    @Override
-                    public void onResult(PlaceBuffer places) {
-                        if (!places.getStatus().isSuccess()) {
-                            // Request did not complete successfully
-                            Log.e(LOG_TAG, "Place query did not complete. Error: " + places.getStatus().toString());
-                            places.release();
-                            return;
-                        }
-                        // Get the Place object from the buffer.
-                        final Place place = places.get(0);
-
-                        start = place.getLatLng();
-                    }
-                });
-
-            }
-        });
-        destination.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                final PlaceAutoCompleteAdapter.PlaceAutocomplete item = mAdapter.getItem(position);
-                final String placeId = String.valueOf(item.placeId);
-                Log.i(LOG_TAG, "Autocomplete item selected: " + item.description);
-
-            *//*
-             Issue a request to the Places Geo Data API to retrieve a Place object with additional
-              details about the place.
-              *//*
-                PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                        .getPlaceById(mGoogleApiClient, placeId);
-                placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
-                    @Override
-                    public void onResult(PlaceBuffer places) {
-                        if (!places.getStatus().isSuccess()) {
-                            // Request did not complete successfully
-                            Log.e(LOG_TAG, "Place query did not complete. Error: " + places.getStatus().toString());
-                            places.release();
-                            return;
-                        }
-                        // Get the Place object from the buffer.
-                        final Place place = places.get(0);
-
-                        end = place.getLatLng();
-                    }
-                });
-
-            }
-        });*/
-
-        /*
-        These text watchers set the start and end points to null because once there's
-        * a change after a value has been selected from the dropdown
-        * then the value has to reselected from dropdown to get
-        * the correct location.
-        * */
-        /*starting.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int startNum, int before, int count) {
-                if (start != null) {
-                    start = null;
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        destination.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-
-                if (end != null) {
-                    end = null;
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });*/
-
-        //KR: hardcoded values for testing purposes
-        Log.d("EXPLOCITY", "locationManager2: " + locationManager);
-        Location location = locationManager.getLastKnownLocation( LocationManager.GPS_PROVIDER );
-        Log.d("EXPLOCITY", "location: " + location);
-        start = getStart(location);
-        middle1 = new LatLng(52.51454340000001,13.3501189);
-        middle2 = new LatLng(52.5096488,13.3759441);
-        end= new LatLng(52.5162746,13.377704);
-
-        progressDialog = ProgressDialog.show(this, "Please wait.",
-                "Fetching POIRoute information.", true);
-        Log.d("EXPLOCITY", "start: " + start);
-        Routing routing = new Routing.Builder()
-                .travelMode(AbstractRouting.TravelMode.DRIVING)
-                .withListener(this)
-                .alternativeRoutes(true)
-                .waypoints(start, middle1, middle2, end)
-                .build();
-        routing.execute();
     }
-
-    /*@OnClick(R.id.send)
-    public void sendRequest()
-    {
-        if(Util.Operations.isOnline(this))
-        {
-            route();
-        }
-        else
-        {
-            Toast.makeText(this,"No internet connectivity",Toast.LENGTH_SHORT).show();
-        }
-    }*/
-
-    /*public void route()
-    {
-        if(start==null || end==null)
-        {
-            if(start==null)
-            {
-                if(starting.getText().length()>0)
-                {
-                    starting.setError("Choose location from dropdown.");
-                }
-                else
-                {
-                    Toast.makeText(this,"Please choose a starting point.",Toast.LENGTH_SHORT).show();
-                }
-            }
-            if(end==null)
-            {
-                if(destination.getText().length()>0)
-                {
-                    destination.setError("Choose location from dropdown.");
-                }
-                else
-                {
-                    Toast.makeText(this,"Please choose a destination.",Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-        else
-        {
-            start = new LatLng(52.51454340000001,13.3501189);
-            middle = new LatLng(52.5096488,13.3759441);
-            end= new LatLng(52.5162746,13.377704);
-
-            progressDialog = ProgressDialog.show(this, "Please wait.",
-                    "Fetching POIRoute information.", true);
-            Routing routing = new Routing.Builder()
-                    .travelMode(AbstractRouting.TravelMode.DRIVING)
-                    .withListener(this)
-                    .alternativeRoutes(true)
-                    .waypoints(start, middle, end)
-                    .build();
-            routing.execute();*/
-
-            /*//KR: drawing route with multiple destinations
-            Route route1;
-            route1 = ;
-            progressDialog = ProgressDialog.show(this, "Please wait.",
-                    "Fetching POIRoute information.", true);
-
-            for(int i=0; route1.length(); i++){
-                Routing routing = new Routing.Builder()
-                        .travelMode(AbstractRouting.TravelMode.WALKING)
-                        .withListener(this)
-                        .alternativeRoutes(false)
-                        .waypoints(start, end)
-                        .build();
-                routing.execute();
-            }*/
-
-
-       // }
-   // }
-
 
     @Override
     public void onRoutingFailure() {
@@ -465,7 +245,7 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
 
             PolylineOptions polyOptions = new PolylineOptions();
             polyOptions.color(getResources().getColor(colors[colorIndex]));
-            polyOptions.width(10 + i * 3);
+            polyOptions.width(10 + i * 10);
             polyOptions.addAll(route.get(i).getPoints());
             Polyline polyline = map.addPolyline(polyOptions);
             polylines.add(polyline);
@@ -473,18 +253,13 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
             Toast.makeText(getApplicationContext(),"POIRoute "+ (i+1) +": distance - "+ route.get(i).getDistanceValue()+": duration - "+ route.get(i).getDurationValue(),Toast.LENGTH_SHORT).show();
         }
 
-        // Start marker
-        MarkerOptions options = new MarkerOptions();
-        options.position(start);
-        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue));
-        map.addMarker(options);
-
-        // End marker
-        options = new MarkerOptions();
-        options.position(end);
-        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green));
-        map.addMarker(options);
-
+        //set marker for all the POIs in the list
+        for(LatLng poi : route1){
+            MarkerOptions options = new MarkerOptions();
+            options.position(poi);
+            options.icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue));
+            map.addMarker(options);
+        }
     }
 
     @Override
@@ -500,6 +275,42 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
 
     @Override
     public void onConnected(Bundle bundle) {
+
+        location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        Log.d("EXPLOCITY", "location onConnected: " + location);
+
+        //starting point of every route
+        start = new LatLng(location.getLatitude(), location.getLongitude());
+
+        /*middle1 = new LatLng(52.51454340000001,13.3501189);
+        middle2 = new LatLng(52.5096488,13.3759441);
+        end= new LatLng(52.5162746,13.377704);*/
+
+        //create an array-list with all POIs of the route
+        route1 = new ArrayList();
+        int activated = POIRouteProvider.getInstance().getActivated();
+        POIList = POIRouteProvider.getInstance().getPOIRouteList().get(activated).getPoiRoute();
+
+        //add the current location as the starting point of the route
+        route1.add(start);
+
+        for(PointOfInterest poi : POIList){
+            route1.add(poi.getLatLng());
+        }
+
+        Log.d("EXPLOCITY", "route1: " + route1);
+
+        progressDialog = ProgressDialog.show(this, "Please wait.",
+                "Fetching POIRoute information.", true);
+        Log.d("EXPLOCITY", "start: " + start);
+        Routing routing = new Routing.Builder()
+                .travelMode(AbstractRouting.TravelMode.WALKING)
+                .withListener(this)
+                .alternativeRoutes(true)
+                .waypoints(route1)
+                .build();
+        routing.execute();
+
     }
 
     @Override
