@@ -1,6 +1,7 @@
 package e_business_projekt.e_business_projekt.poi_list.provider;
 
 import android.location.Location;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -12,6 +13,7 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 import org.json.JSONArray;
@@ -110,12 +112,6 @@ public class PlacesProvider {
                             poi.setDistance(currentLocation.distanceTo(poiLocation));
 
                             // TODO GET WIKI LINK, Blocks filterin POIS?
-//                            if (poi.getName().length() != 0){
-//                                currentWikiQuery = poi.getName();
-//                                new StartAsyncWikiQuery().execute();
-//                            } else {
-//                                poi.setWikiLink("");
-//                            }
 
                             if (matchFilter(poi)){
                                 poiList.add(poi);
@@ -130,6 +126,7 @@ public class PlacesProvider {
                                 return (int) (poi1.getDistance() - poi2.getDistance());
                             }
                         });
+                        new StartAsyncWikiQuery().execute();
 
                         ppc.placesProviderCallback(poiList);
                     }
@@ -137,7 +134,7 @@ public class PlacesProvider {
             }
         } else {
             poiList.clear();
-            ppc.placesProviderCallback(poiList);
+            //ppc.placesProviderCallback(poiList);
         }
     }
 
@@ -182,11 +179,12 @@ public class PlacesProvider {
         }
     }
 
-    private String getWikiLink(String query){
+    private String getWikiLink(String query, int position){
 
         try {
-            URL url = new URL("https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&namespace=0&format=json&search=" + query);
-            Log.i(TAG, "Wikipedia Query " + query + " URL: " + url.toString());
+
+            URL url = new URL("https://de.wikipedia.org/w/api.php?action=opensearch&limit=1&namespace=0&format=json&search=" + query);
+            //Log.i(TAG, "Wikipedia Query " + query + " URL: " + url.toString());
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -201,13 +199,21 @@ public class PlacesProvider {
                 sb.append(line);
             }
 
-            Log.i(TAG, "GET: " + sb.toString());
+            //Log.i(TAG, "GET: " + sb.toString());
 
             JsonParser parser = new JsonParser();
             JsonArray jsonArray = parser.parse(sb.toString()).getAsJsonArray();
 
-            Log.i(TAG, "Wikipedia :" + jsonArray.toString());
+            String link = jsonArray.get(3).toString();
 
+            if (link.length() == 2 ){
+                link = "";
+            } else {
+                link = link.substring(2, link.length()-2);
+            }
+
+            Log.i(TAG, "Wikipedialink :" + link);
+            poiList.get(position).setWikiLink(link);
 
         } catch (IOException e) {
             Log.e(TAG, "Malformed URL Exception!");
@@ -267,7 +273,15 @@ public class PlacesProvider {
         @Override
         protected String doInBackground(String... params) {
             Log.i(TAG, "StartAsyncQuery()");
-            getWikiLink(currentWikiQuery.replace(" ", "%20"));
+
+            int poiListLength = poiList.size();
+            //Log.i(TAG,"POISIZE: " + poiListLength);
+
+            for (int i = 0; i < poiListLength; i++){
+                currentWikiQuery = poiList.get(i).getName();
+                getWikiLink(currentWikiQuery.replace(" ", "%20"), i);
+            }
+
             return "StartAsyncQuery finished!";
         }
 
@@ -279,6 +293,7 @@ public class PlacesProvider {
         @Override
         protected void onPostExecute(String s) {
             Log.i(TAG, "Get WikiLinks finished!");
+            ppc.placesProviderCallback(poiList);
         }
 
         @Override

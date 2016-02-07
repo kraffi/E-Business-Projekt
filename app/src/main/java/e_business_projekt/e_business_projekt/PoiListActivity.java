@@ -24,6 +24,7 @@ import e_business_projekt.e_business_projekt.poi_list.dialogs.POIFilterDialogCal
 import e_business_projekt.e_business_projekt.poi_list.provider.POIFilter;
 import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProvider;
 import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProviderCallback;
+import e_business_projekt.e_business_projekt.route_list.POIRoute;
 import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 
 import java.util.ArrayList;
@@ -115,6 +116,8 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
                 dialog.show(getFragmentManager(), "POI Filter Dialog");
             }
         });
+        Spinner spinnerActivatedRoute = (Spinner) findViewById(R.id.spinnerActivatedRoute);
+        ArrayList<POIRoute> routeList = routeManager.getPOIRouteList();
     }
 
 

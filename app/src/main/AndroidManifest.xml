@@ -89,6 +89,10 @@
         <activity android:name="e_business_projekt.e_business_projekt.wikitude.CamContentFromNativeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity android:name="e_business_projekt.e_business_projekt.wikitude.PoiDetailActivity"/>
+        <activity android:name=".WebViewActivity"
+                  android:label="@string/title_activity_web_view">
+
+        </activity>
 
         <!-- Wikitude end -->
         <activity

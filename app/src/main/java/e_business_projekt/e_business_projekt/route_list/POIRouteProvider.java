@@ -24,7 +24,7 @@ public class POIRouteProvider {
 
     private POIRouteProvider() {
         this.POIRouteList = new ArrayList<>();
-        this.userID="sampleId2222";
+        this.userID="sampleId22229999";
 //        createTestData();
     }
 
@@ -47,6 +47,7 @@ public class POIRouteProvider {
         } else {
             this.POIRouteList.add(new POIRoute());
         }
+        DataBaseProvider.getInstance().updateData();
     }
 
     public void deleteRoute(int position){
@@ -59,6 +60,7 @@ public class POIRouteProvider {
         if (position == 0){
             setActivated(0);
         }
+        DataBaseProvider.getInstance().updateData();
     }
 
     public int getActivated() {
@@ -74,15 +76,18 @@ public class POIRouteProvider {
                 this.POIRouteList.get(i).setActivated(false);
             }
         }
+        DataBaseProvider.getInstance().updateData();
     }
 
     public void editRouteName(String name, int position){
         Log.i(TAG, "editing Route with position " + position);
         POIRouteList.get(position).setRouteName(name);
+        DataBaseProvider.getInstance().updateData();
     }
 
     public void addPoiToActiveRoute(PointOfInterest poi){
         POIRouteList.get(activated).addPOI(poi);
+        DataBaseProvider.getInstance().updateData();
     }
 
     public static POIRouteProvider getInstance(){
@@ -93,7 +98,6 @@ public class POIRouteProvider {
         this.userID = copyInstance.getUserID();
         this.activated = copyInstance.getActivated();
         this.POIRouteList = copyInstance.getPOIRouteList();
-
     }
 
     public String getUserID() {

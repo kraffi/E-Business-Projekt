@@ -25,20 +25,22 @@ import java.net.URL;
 public class DataBaseProvider {
 
     private static final String TAG = "EBP.DataBaseProvider";
-    private String jsonString;
-    private String userID;
-    private Gson gson;
+    private static final DataBaseProvider instance = new DataBaseProvider();
+    private DataBaseCallback callback;
 
+    private String userID;
+    private String jsonString;
     private String query;
 
-    public DataBaseProvider() {
+    private Gson gson;
 
-        gson = new GsonBuilder().registerTypeAdapter(Uri.class, new UriAdapter()).create();
+    private DataBaseProvider() {
         userID = POIRouteProvider.getInstance().getUserID();
+        jsonString = "";
         query = "&q={\"userID\":\"" + userID + "\"}";
 
-        readData();
-        //createData();
+        gson = new GsonBuilder().registerTypeAdapter(Uri.class, new UriAdapter()).create();
+
     }
 
     public void createData(){
@@ -51,6 +53,18 @@ public class DataBaseProvider {
 
     public void readData(){
         new readQuery().execute();
+    }
+
+    public void updateData(){
+        POIRouteProvider routeManager = POIRouteProvider.getInstance();
+
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject= parser.parse(gson.toJson(routeManager)).getAsJsonObject();
+
+        jsonString = jsonObject.toString();
+        Log.i(TAG, "Update post: " + jsonString);
+
+        new updateQuery().execute();
     }
 
     private class readQuery extends AsyncTask<String, Void, String> {
@@ -87,8 +101,8 @@ public class DataBaseProvider {
                 JsonArray jsonArray = parser.parse(sb.toString()).getAsJsonArray();
 
                 if (jsonArray.size() == 0){
-                    createData();
                     Log.i(TAG, "No User! Create new User/Data");
+                    createData();
                 } else {
                     JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
                     POIRouteProvider.getInstance().setInstance(gson.fromJson(jsonObject.toString(), POIRouteProvider.class));
@@ -108,7 +122,8 @@ public class DataBaseProvider {
 
         @Override
         protected void onPostExecute(String s) {
-            Log.i(TAG, "POST EXECUTE!");
+            Log.i(TAG, "Finish get Data, refresh RouteListView!");
+            callback.readDataBaseCallback();
         }
 
         @Override
@@ -157,7 +172,8 @@ public class DataBaseProvider {
 
         @Override
         protected void onPostExecute(String s) {
-            Log.i(TAG, "POST EXECUTE!");
+            Log.i(TAG, "New User Created, get MongoID");
+            readData();
         }
 
         @Override
@@ -171,15 +187,15 @@ public class DataBaseProvider {
         protected String doInBackground(String... params) {
             try {
 
-                URL url = new URL("https://api.mongolab.com/api/1/databases/explocity_database/collections/data?apiKey=Hg6Dr44IiwAGXwJirCdGbe5kJ4j9HaQr");
-                Log.i("TAG", "Create Query URL: " + url.toString());
+                URL url = new URL("https://api.mongolab.com/api/1/databases/explocity_database/collections/data?apiKey=Hg6Dr44IiwAGXwJirCdGbe5kJ4j9HaQr" + query);
+                Log.i("TAG", "Update Query URL: " + url.toString());
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoOutput(true);
                 connection.setDoInput(true);
                 connection.setRequestProperty("Content-Type", "application/json");
                 connection.setRequestProperty("Accept", "application/json");
-                connection.setRequestMethod("POST");
+                connection.setRequestMethod("PUT");
 
                 OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
                 wr.write(jsonString);
@@ -215,7 +231,12 @@ public class DataBaseProvider {
         }
     }
 
-    // TODO If user exist = normal getrequest, if not post request;
+    public static DataBaseProvider getInstance(){
+        return instance;
+    }
 
+    public void setCallback(DataBaseCallback callback){
+        this.callback = callback;
+    }
 
 }
