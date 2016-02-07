@@ -257,7 +257,7 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
         for(LatLng poi : route1){
             MarkerOptions options = new MarkerOptions();
             options.position(poi);
-            options.icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue));
+            options.icon(BitmapDescriptorFactory.fromResource(R.drawable.Marker_48));
             map.addMarker(options);
         }
     }
