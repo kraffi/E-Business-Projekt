@@ -147,6 +147,7 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
                         json_route.accumulate("route", json_poi);
                     } catch (JSONException e) {
                         e.printStackTrace();
+
                     }
                 }
 
