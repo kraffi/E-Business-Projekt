@@ -116,8 +116,35 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
                 dialog.show(getFragmentManager(), "POI Filter Dialog");
             }
         });
+
+        // Populate Spinner to choose activated route
         Spinner spinnerActivatedRoute = (Spinner) findViewById(R.id.spinnerActivatedRoute);
         ArrayList<POIRoute> routeList = routeManager.getPOIRouteList();
+        ArrayList<String> routeNames = new ArrayList<>();
+        for (POIRoute r : routeList){
+            routeNames.add(r.getRouteName());
+        }
+
+        if (!routeNames.isEmpty()){
+            spinnerActivatedRoute.setVisibility(View.VISIBLE);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, routeNames);
+            spinnerActivatedRoute.setAdapter(adapter);
+            spinnerActivatedRoute.setSelection(routeManager.getActivated());
+            spinnerActivatedRoute.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    routeManager.setActivated(position);
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        } else {
+            spinnerActivatedRoute.setVisibility(View.INVISIBLE);
+        }
+
     }
 
 
