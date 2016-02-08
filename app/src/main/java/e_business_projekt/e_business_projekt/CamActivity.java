@@ -2,6 +2,7 @@ package e_business_projekt.e_business_projekt;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -51,12 +52,12 @@ public class CamActivity extends AbstractArchitectCamActivity {
     private long lastCalibrationToastShownTimeMillis = System.currentTimeMillis();
 
     //KR:
-    POIFilter filter;
     private List<PointOfInterest> POIList;
 
     @Override
     protected void onPostCreate( final Bundle savedInstanceState ) {
         super.onPostCreate( savedInstanceState );
+        Log.d("EXPLOCITY", "CamActivity-onPostCreate: injectData() wird gestartet");
         this.injectData();
     }
 
@@ -124,7 +125,6 @@ public class CamActivity extends AbstractArchitectCamActivity {
                     Bundle args = new Bundle();
                     args.putString("keyword", filter.getKeyword());
                     args.putInt("radius", filter.getRadius());
-
                     Log.d("EXPLOCITIY", "creating dialog");
                     POIFilterDialog dialog = new POIFilterDialog();
                     dialog.setArguments(args);
@@ -181,52 +181,43 @@ public class CamActivity extends AbstractArchitectCamActivity {
     protected void injectData() {
         if (!isLoading) {
             final Thread t = new Thread(new Runnable() {
-
                 @Override
                 public void run() {
-
                     int activated_route = POIRouteProvider.getInstance().getActivated();
                     POIList = POIRouteProvider.getInstance().getPOIRouteList().get(activated_route).getPoiRoute();
-
                     isLoading = true;
-
                     final int WAIT_FOR_LOCATION_STEP_MS = 2000;
-
                     while (lastKnownLocaton==null && !isFinishing()) {
-
                         runOnUiThread(new Runnable() {
-
                             @Override
                             public void run() {
                                 Toast.makeText(CamActivity.this, R.string.location_fetching, Toast.LENGTH_SHORT).show();
                             }
                         });
-
                         try {
                             Thread.sleep(WAIT_FOR_LOCATION_STEP_MS);
                         } catch (InterruptedException e) {
                             break;
                         }
                     }
-
                     if (lastKnownLocaton!=null && !isFinishing()) {
                         //KR: take pois and pass them to javascript
                         poiData = getPoiInformation(lastKnownLocaton, POIList);
+                        Log.d("EXPLOCITY", "injectData(): poiData: " + poiData);
                         callJavaScript("World.loadPoisFromJsonData", new String[] { poiData.toString() });
                     }
-
                     isLoading = false;
                 }
             });
             t.start();
         }
+        Log.d("EXPLOCITY", "CamActivity: injectData");
     }
-
     /**
      * call JacaScript in architectView
      * @param methodName
      * @param arguments
-     */
+    */
     private void callJavaScript(final String methodName, final String[] arguments) {
         final StringBuilder argumentsString = new StringBuilder("");
         for (int i= 0; i<arguments.length; i++) {
@@ -235,47 +226,39 @@ public class CamActivity extends AbstractArchitectCamActivity {
                 argumentsString.append(", ");
             }
         }
-
         if (this.architectView!=null) {
             final String js = ( methodName + "( " + argumentsString.toString() + " );" );
             this.architectView.callJavascript(js);
         }
     }
-
     /**
      * loads poiInformation and returns them as JSONArray. Ensure attributeNames of JSON POIs are well known in JavaScript, so you can parse them easily
      * @param userLocation the location of the user
      * @return POI information in JSONArray
-     */
+    */
     public static JSONArray getPoiInformation(final Location userLocation, List<PointOfInterest> POIList){
-
         if (userLocation==null) {
             return null;
         }
-
         final JSONArray pois = new JSONArray();
-
-
-
         // ensure these attributes are also used in JavaScript when extracting POI data
         final String ATTR_ID = "id";
         final String ATTR_NAME = "name";
         final String ATTR_LATITUDE = "latitude";
         final String ATTR_LONGITUDE = "longitude";
         final String ATTR_ALTITUDE = "altitude";
-
         for (PointOfInterest poi : POIList) {
             final HashMap<String, String> poiInformation = new HashMap<>();
             poiInformation.put(ATTR_ID, poi.getId());
-            poiInformation.put(ATTR_NAME, poi.getName());
             poiInformation.put(ATTR_LATITUDE, String.valueOf(poi.getLatLng().latitude));
             poiInformation.put(ATTR_LONGITUDE, String.valueOf(poi.getLatLng().longitude));
             final float UNKNOWN_ALTITUDE = -32768f;  // equals "AR.CONST.UNKNOWN_ALTITUDE" in JavaScript (compare AR.GeoLocation specification)
             // Use "AR.CONST.UNKNOWN_ALTITUDE" to tell ARchitect that altitude of places should be on user level. Be aware to handle altitude properly in locationManager in case you use valid POI altitude value (e.g. pass altitude only if GPS accuracy is <7m).
             poiInformation.put(ATTR_ALTITUDE, String.valueOf(UNKNOWN_ALTITUDE));
+            poiInformation.put(ATTR_NAME, poi.getName());
             pois.put(new JSONObject(poiInformation));
         }
-        Log.d("EXPLOCITY", "pois from getPoiInformatin: " + pois);
+        Log.d("EXPLOCITY", "getPoiInformatin-pois: " + pois);
         return pois;
     }
 

@@ -12,8 +12,8 @@ var World = {
 	currentMarker: null,
 
 	//kr: radar
-    	locationUpdateCounter: 0,
-        updatePlacemarkDistancesEveryXLocationUpdates: 10,
+    	/*locationUpdateCounter: 0,
+        updatePlacemarkDistancesEveryXLocationUpdates: 10,*/
 
 	/*
 		Have a look at the native code to get a better understanding of how data can be injected to JavaScript.
@@ -24,9 +24,9 @@ var World = {
 	loadPoisFromJsonData: function loadPoisFromJsonDataFn(poiData) {
 
 		//kr: show radar & set click-listener
-                PoiRadar.show();
-                $('#radarContainer').unbind('click');
-                $("#radarContainer").click(PoiRadar.clickedRadar);
+        /*PoiRadar.show();
+        $('#radarContainer').unbind('click');
+        $("#radarContainer").click(PoiRadar.clickedRadar);*/
 
 		// empty list of visible markers
 		World.markerList = [];

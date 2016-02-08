@@ -74,6 +74,9 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	public void onCreate( final Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 
+		/*Log.d("EXPLOCITY", "AbstractCam...: injectData() wird gestartet");
+		this.injectData();*/
+
 		/* pressing volume up/down should cause music volume changes */
 		this.setVolumeControlStream( AudioManager.STREAM_MUSIC );
 
@@ -175,6 +178,9 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	@Override
 	protected void onPostCreate( final Bundle savedInstanceState ) {
 		super.onPostCreate( savedInstanceState );
+
+        /*Log.d("EXPLOCITY", "AbstractCam...: injectData() wird gestartet");
+        this.injectData();*/
 
 		if ( this.architectView != null ) {
 
@@ -319,7 +325,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 		return extensions != null && extensions.contains( "GL_OES_EGL_image_external" );
 	}
 
-	protected void injectData() {
+	/*protected void injectData() {
 		if (!isLoading) {
 			final Thread t = new Thread(new Runnable() {
 
@@ -360,11 +366,13 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 		}
 	}
 
-	/**
+	*/
+	/*/**
 	 * call JacaScript in architectView
 	 * @param methodName
 	 * @param arguments
 	 */
+	/*
 	private void callJavaScript(final String methodName, final String[] arguments) {
 		final StringBuilder argumentsString = new StringBuilder("");
 		for (int i= 0; i<arguments.length; i++) {
@@ -379,13 +387,15 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 			this.architectView.callJavascript(js);
 		}
 	}
+	*/
 
-	/**
+	 /*/**
 	 * loads poiInformation and returns them as JSONArray. Ensure attributeNames of JSON POIs are well known in JavaScript, so you can parse them easily
 	 * @param userLocation the location of the user
 	 * @param numberOfPlaces number of places to load (at max)
 	 * @return POI information in JSONArray
 	 */
+	/*
 	public static JSONArray getPoiInformation(final Location userLocation, final int numberOfPlaces) {
 
 		if (userLocation==null) {
@@ -417,7 +427,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 		}
 
 		return pois;
-	}
+	}*/
 
 	/**
 	 * helper for creation of dummy places.
