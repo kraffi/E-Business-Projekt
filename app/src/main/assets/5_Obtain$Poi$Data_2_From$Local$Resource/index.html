@@ -17,10 +17,6 @@
     <!-- positioning of poi-radar -->
     <link rel="stylesheet" href="css/poi-radar.css" />
 
-    <!-- important for static POI loading - include the static data  -->
-    <script type="text/javascript" src="js/myjsondata.js"></script>
-
-
     <!-- jquery mobile CSS -->
     <link rel="stylesheet" href="jquery/jquery.mobile-1.3.2.min.css" />
     <!-- required to set background transparent & enable "click through" -->
@@ -31,50 +27,48 @@
     <script type="text/javascript" src="jquery/jquery.mobile-1.3.2.min.js"></script>
 
     <!-- marker representation-->
-    <script type="text/javascript" src="js/marker.js"></script>    
+    <script src="js/marker.js"></script>    
 
     <!-- World logic-->
-    <script type="text/javascript" src="js/fromlocalresource.js"></script>
+    <script type="text/javascript" src="js/fromapplicationmodel.js"></script>
 
     <!-- radar component -->
     <script type="text/javascript" src="js/radar.js"></script>
 </head>
     
     <body >
-     <div data-role="page" id="page1" style="background: none;" >
-            
-            <!-- MAIN PAGE CONTENT -->
+    <div data-role="page" id="page1" style="background: none;" >
 
-             <!--
-                   The position of the radar and its size are defined using a DOM element.
-                   Wikitude SDK radar will be drawn into this div.
-             -->
-            <div class="radarContainer_left" id="radarContainer"></div>
+        <!-- MAIN PAGE CONTENT -->
 
-            <!-- transparent footer-->
-            <div data-role="footer" class="ui-bar" data-theme="f" data-position="fixed" style="text-align:center;">
+        <!--
+              The position of the radar and its size are defined using a DOM element.
+              Wikitude SDK radar will be drawn into this div.
+        -->
+        <div class="radarContainer_left" id="radarContainer"></div>
 
-                <!-- KR: the details-button -->
-                <!--<div class="detail_button" id="det_btn" href="javascript: World.onPoiDetailMoreButtonClicked();" data-role="button" data-icon="arrow-r" data-iconpos="right" data-inline="true"></div>-->
-                <a href="javascript: World.onPoiDetailMoreButtonClicked();" id="det_btn" data-rel="popup" class="ui-icon-alt" data-transition="pop" data-role="button" data-icon="arrow-r" data-iconpos="right" data-inline="true">Details</a>
+        <!-- transparent footer-->
+        <div data-role="footer" class="ui-bar" data-theme="f" data-position="fixed" style="text-align:center;">
 
-                <!-- popup displayed when button clicked -->
-                <div data-role="popup" id="popupInfoKR" class="ui-content" class="ui-icon-alt" data-theme="e" style="max-width:350px;">
-                    <p style="text-align:right;" id="status-messageKR">Button works</p>
-                </div>
+            <!-- KR: the details-button -->
+            <!--<div class="detail_button" id="det_btn" href="javascript: World.onPoiDetailMoreButtonClicked();" data-role="button" data-icon="arrow-r" data-iconpos="right" data-inline="true"></div>-->
+            <a href="javascript: World.onPoiDetailMoreButtonClicked();" id="det_btn" data-rel="popup" class="ui-icon-alt" data-transition="pop" data-role="button" data-icon="arrow-r" data-iconpos="right" data-inline="true">Details</a>
 
-                <!-- small status-button -->
-                <a style="text-align:right;" id="popupInfoButton" href="#popupInfo" data-rel="popup" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="alert" data-theme="e" data-iconpos="notext">Log</a> </p>
+            <!-- popup displayed when button clicked -->
+            <div data-role="popup" id="popupInfoKR" class="ui-content" class="ui-icon-alt" data-theme="e" style="max-width:350px;">
+                <p style="text-align:right;" id="status-messageKR">Button works</p>
+            </div>
 
-                <!-- popup displayed when button clicked -->
-                <div data-role="popup" id="popupInfo" class="ui-content" data-theme="e" style="max-width:350px;">
-                  <p style="text-align:right;" id="status-message">Trying to find out where you are</p>
-                </div>
-                
+            <!-- small status-button -->
+            <a style="text-align:right;" id="popupInfoButton" href="#popupInfo" data-rel="popup" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="alert" data-theme="e" data-iconpos="notext">Log</a> </p>
+
+            <!-- popup displayed when button clicked -->
+            <div data-role="popup" id="popupInfo" class="ui-content" data-theme="e" style="max-width:350px;">
+                <p style="text-align:right;" id="status-message">Trying to find out where you are</p>
             </div>
 
         </div>
 
-    </body>
+    </div>
     
 </html>

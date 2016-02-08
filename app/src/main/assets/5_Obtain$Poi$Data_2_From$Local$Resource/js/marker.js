@@ -34,9 +34,8 @@ function Marker(poiData) {
         onClick: null
     });
 
-
     // create an AR.Label for the marker's title
-    this.titleLabel = new AR.Label(poiData.title.trunc(10), 1, {
+    this.titleLabel = new AR.Label(poiData.name.trunc(10), 1, {
         zOrder: 1,
         offsetY: 0.55,
         style: {
@@ -44,8 +43,9 @@ function Marker(poiData) {
             fontStyle: AR.CONST.FONT_STYLE.BOLD
         }
     });
-    //KR: description will not be shown
 
+    //KR: description will not be shown
+    /*
     // create an AR.Label for the marker's description
     this.descriptionLabel = new AR.Label(poiData.description.trunc(15), 0.8, {
         zOrder: 1,
@@ -54,6 +54,7 @@ function Marker(poiData) {
             textColor: '#FFFFFF'
         }
     });
+    */
 
     /*
         Create an AR.ImageDrawable using the AR.ImageResource for the direction indicator which was created in the World. Set options regarding the offset and anchor of the image so that it will be displayed correctly on the edge of the screen.
@@ -92,8 +93,7 @@ function Marker(poiData) {
         drawables: {
             cam: [this.markerDrawable_idle,
                 this.markerDrawable_selected,
-                this.titleLabel,
-                this.descriptionLabel],
+                this.titleLabel],
             indicator: this.directionIndicatorDrawable,
             radar: this.radardrawables
         }

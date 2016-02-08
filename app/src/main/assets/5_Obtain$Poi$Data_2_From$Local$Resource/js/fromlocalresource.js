@@ -151,13 +151,12 @@ var World = {
 		Comment out previous 2 lines and use the following line > instead < to use static values 1:1. 
 		*/
 
-		World.loadPoisFromJsonData(myJsonData);
+		//World.loadPoisFromJsonData(myJsonData);
 	}
 
 };
 
 /*var Helper = {
-
 	*//*
 		For demo purpose only, this method takes poi data and a center point (latitude, longitude) to relocate the given places randomly around the user
 	*//*

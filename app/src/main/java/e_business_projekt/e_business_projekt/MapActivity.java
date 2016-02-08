@@ -120,7 +120,7 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
             public void onClick(View v) {
                 Log.i("EXPLOCITY", "start_wikitude");
 
-                //todo KR: 07.02.16: create JSON-string in .js file for wikitude
+                /*
                 int activated_route = POIRouteProvider.getInstance().getActivated();
                 POIList = POIRouteProvider.getInstance().getPOIRouteList().get(activated_route).getPoiRoute();
 
@@ -150,10 +150,8 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
 
                     }
                 }
-
-
-
                 Log.d("EXPLOCITY", "json_route: " + json_route);
+                */
 
                 Intent intent;
                 intent = new Intent(MapActivity.this, CamActivity.class);

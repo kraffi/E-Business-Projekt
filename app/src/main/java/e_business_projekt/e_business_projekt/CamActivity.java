@@ -2,10 +2,13 @@ package e_business_projekt.e_business_projekt;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.List;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,9 +22,14 @@ import com.wikitude.architect.ArchitectView.CaptureScreenCallback;
 import com.wikitude.architect.ArchitectView.SensorAccuracyChangeListener;
 import com.wikitude.architect.StartupConfiguration.CameraPosition;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 import e_business_projekt.e_business_projekt.poi_list.dialogs.POIDialog;
 import e_business_projekt.e_business_projekt.poi_list.dialogs.POIFilterDialog;
 import e_business_projekt.e_business_projekt.poi_list.provider.POIFilter;
+import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 import e_business_projekt.e_business_projekt.wikitude.AbstractArchitectCamActivity;
 import e_business_projekt.e_business_projekt.wikitude.ArchitectViewHolderInterface;
 import e_business_projekt.e_business_projekt.wikitude.LocationProvider;
@@ -44,6 +52,13 @@ public class CamActivity extends AbstractArchitectCamActivity {
 
     //KR:
     POIFilter filter;
+    private List<PointOfInterest> POIList;
+
+    @Override
+    protected void onPostCreate( final Bundle savedInstanceState ) {
+        super.onPostCreate( savedInstanceState );
+        this.injectData();
+    }
 
     @Override
     public String getARchitectWorldPath() {
@@ -162,6 +177,108 @@ public class CamActivity extends AbstractArchitectCamActivity {
             }
         };
     }
+
+    protected void injectData() {
+        if (!isLoading) {
+            final Thread t = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    int activated_route = POIRouteProvider.getInstance().getActivated();
+                    POIList = POIRouteProvider.getInstance().getPOIRouteList().get(activated_route).getPoiRoute();
+
+                    isLoading = true;
+
+                    final int WAIT_FOR_LOCATION_STEP_MS = 2000;
+
+                    while (lastKnownLocaton==null && !isFinishing()) {
+
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                Toast.makeText(CamActivity.this, R.string.location_fetching, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        try {
+                            Thread.sleep(WAIT_FOR_LOCATION_STEP_MS);
+                        } catch (InterruptedException e) {
+                            break;
+                        }
+                    }
+
+                    if (lastKnownLocaton!=null && !isFinishing()) {
+                        //KR: take pois and pass them to javascript
+                        poiData = getPoiInformation(lastKnownLocaton, POIList);
+                        callJavaScript("World.loadPoisFromJsonData", new String[] { poiData.toString() });
+                    }
+
+                    isLoading = false;
+                }
+            });
+            t.start();
+        }
+    }
+
+    /**
+     * call JacaScript in architectView
+     * @param methodName
+     * @param arguments
+     */
+    private void callJavaScript(final String methodName, final String[] arguments) {
+        final StringBuilder argumentsString = new StringBuilder("");
+        for (int i= 0; i<arguments.length; i++) {
+            argumentsString.append(arguments[i]);
+            if (i<arguments.length-1) {
+                argumentsString.append(", ");
+            }
+        }
+
+        if (this.architectView!=null) {
+            final String js = ( methodName + "( " + argumentsString.toString() + " );" );
+            this.architectView.callJavascript(js);
+        }
+    }
+
+    /**
+     * loads poiInformation and returns them as JSONArray. Ensure attributeNames of JSON POIs are well known in JavaScript, so you can parse them easily
+     * @param userLocation the location of the user
+     * @return POI information in JSONArray
+     */
+    public static JSONArray getPoiInformation(final Location userLocation, List<PointOfInterest> POIList){
+
+        if (userLocation==null) {
+            return null;
+        }
+
+        final JSONArray pois = new JSONArray();
+
+
+
+        // ensure these attributes are also used in JavaScript when extracting POI data
+        final String ATTR_ID = "id";
+        final String ATTR_NAME = "name";
+        final String ATTR_LATITUDE = "latitude";
+        final String ATTR_LONGITUDE = "longitude";
+        final String ATTR_ALTITUDE = "altitude";
+
+        for (PointOfInterest poi : POIList) {
+            final HashMap<String, String> poiInformation = new HashMap<>();
+            poiInformation.put(ATTR_ID, poi.getId());
+            poiInformation.put(ATTR_NAME, poi.getName());
+            poiInformation.put(ATTR_LATITUDE, String.valueOf(poi.getLatLng().latitude));
+            poiInformation.put(ATTR_LONGITUDE, String.valueOf(poi.getLatLng().longitude));
+            final float UNKNOWN_ALTITUDE = -32768f;  // equals "AR.CONST.UNKNOWN_ALTITUDE" in JavaScript (compare AR.GeoLocation specification)
+            // Use "AR.CONST.UNKNOWN_ALTITUDE" to tell ARchitect that altitude of places should be on user level. Be aware to handle altitude properly in locationManager in case you use valid POI altitude value (e.g. pass altitude only if GPS accuracy is <7m).
+            poiInformation.put(ATTR_ALTITUDE, String.valueOf(UNKNOWN_ALTITUDE));
+            pois.put(new JSONObject(poiInformation));
+        }
+        Log.d("EXPLOCITY", "pois from getPoiInformatin: " + pois);
+        return pois;
+    }
+
 
     @Override
     public ILocationProvider getLocationProvider(final LocationListener locationListener) {
