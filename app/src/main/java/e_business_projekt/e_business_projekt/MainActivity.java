@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
 
         Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra("userurl", "www.google.com");
-        //startActivity(intent);
+        startActivity(intent);
 
         boolean loggedIn = true;
         if (loggedIn){
