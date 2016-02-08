@@ -10,7 +10,7 @@ var World = {
 
 	// The last selected marker
 	currentMarker: null,
-
+    alert("Test1");
 	//kr: radar
     	/*locationUpdateCounter: 0,
         updatePlacemarkDistancesEveryXLocationUpdates: 10,*/
@@ -47,12 +47,13 @@ var World = {
 			};
 
 			World.markerList.push(new Marker(singlePoi));
+			alert("Test");
 		}
 
 		World.updateStatusMessage(currentPlaceNr + ' places loaded');
 	},
 
-	// updates status message shon in small "i"-button aligned bottom center
+	// updates status message shown in small "i"-button aligned bottom center
 	updateStatusMessage: function updateStatusMessageFn(message, isWarning) {
 
 		var themeToUse = isWarning ? "e" : "c";

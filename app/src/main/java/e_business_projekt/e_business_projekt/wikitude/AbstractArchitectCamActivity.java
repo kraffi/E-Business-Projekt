@@ -72,7 +72,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	@SuppressLint("NewApi")
 	@Override
 	public void onCreate( final Bundle savedInstanceState ) {
-		super.onCreate( savedInstanceState );
+		super.onCreate(savedInstanceState);
 
 		/*Log.d("EXPLOCITY", "AbstractCam...: injectData() wird gestartet");
 		this.injectData();*/
