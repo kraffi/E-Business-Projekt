@@ -79,6 +79,11 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
 
     //TODO: Replace with real Login
     public void login(){
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("userurl", "www.google.com");
+        startActivity(intent);
+
         boolean loggedIn = true;
         if (loggedIn){
             dataBaseManager.readData();
