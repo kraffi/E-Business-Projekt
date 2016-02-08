@@ -60,9 +60,17 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //init route and database manager on create
         ArrayList<POIRoute> POIRouteList = routeManager.getPOIRouteList();
         dataBaseManager.setCallback(this);
 
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("userName");
+
+        //TextView routeListHeader = (TextView) findViewById(R.id.headerRouteActivity);
+        //routeListHeader.setText(name + "'s routes");
+
+        // handling add route button
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.addRouteButton);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,22 +80,12 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
                 buildRouteList(routeManager.getPOIRouteList());
             }
         });
-        login();
+
+        //fetching mongoDB with Database Manager
+        dataBaseManager.readData();
+
+        //building route while fetching (no routes available at this point)
         buildRouteList(POIRouteList);
-
-    }
-
-    //TODO: Replace with real Login
-    public void login(){
-
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra("userurl", "www.google.com");
-        startActivity(intent);
-
-        boolean loggedIn = true;
-        if (loggedIn){
-            dataBaseManager.readData();
-        }
     }
 
     public void buildRouteList(final List<POIRoute> poiRouteList){
@@ -212,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
 
     @Override
     public void readDataBaseCallback() {
+        //build route list after fetching data
         buildRouteList(routeManager.getPOIRouteList());
     }
 }

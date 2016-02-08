@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -15,6 +17,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -40,11 +45,28 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+        //handling sign in button
         SignInButton signInButton = (SignInButton) findViewById(R.id.button_sign_in);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
+            }
+        });
+        //handling log out button
+        Button logOutButton = (Button) findViewById(R.id.button_logout);
+        logOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
+            }
+        });
+        //handling sign in button
+        Button guestSignInButton = (Button) findViewById(R.id.button_guest_sign_in);
+        guestSignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                guestSignIn();
             }
         });
 
@@ -54,6 +76,31 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         Log.i(TAG, "Sign In Button clicked");
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void guestSignIn(){
+        Log.i(TAG, "Guest Sign In Button clicked");
+        String guestID = "Guest1234";
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("userID", guestID);
+        intent.putExtra("userName", "Guest");
+
+        //set user id to route manager
+        POIRouteProvider.getInstance().setUserID(guestID);
+        Toast.makeText(getBaseContext(), "Signed in as Guest", Toast.LENGTH_LONG).show();
+        startActivity(intent);
+    }
+
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        Log.i(TAG, "Sign Out Successful");
+                        Toast.makeText(getBaseContext(), "Sign out successful", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     private void handleSignInResult(GoogleSignInResult result){
@@ -66,10 +113,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             Log.d(TAG, "ID:" + acct.getId());
             Log.d(TAG, "Email:" + acct.getEmail());
 
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("userID", acct.getId());
+            intent.putExtra("userName", acct.getDisplayName());
+
+            //set user id to route manager
+            POIRouteProvider.getInstance().setUserID(acct.getId());
+            startActivity(intent);
+
             //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             //updateUI(true);
         } else {
-
             // Signed out, show unauthenticated UI.
             Log.d(TAG, "FAIL:" + result.isSuccess());
             //updateUI(false);
@@ -79,7 +133,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);

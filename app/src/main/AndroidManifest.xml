@@ -74,16 +74,29 @@
 
 
         <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait" >
+                android:name=".LoginActivity"
+                android:label="@string/title_activity_login" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
+        <activity
+                android:name=".MainActivity"
+                android:screenOrientation="portrait" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="e_business_projekt.e_business_projekt.LoginActivity" />
+        </activity>
+        <activity
+                android:name=".PoiListActivity"
+                android:label="@string/title_activity_poi_list"
+                android:parentActivityName=".MainActivity" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="e_business_projekt.e_business_projekt.MainActivity" />
+        </activity>
         <activity
             android:name=".MapActivity"
             android:label="Map"
@@ -92,8 +105,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="e_business_projekt.e_business_projekt.MainActivity" />
         </activity>
-
-
         <!-- Wikitude Activities -->
         <activity
             android:name=".CamActivity"
@@ -112,16 +123,8 @@
             android:name=".WebViewActivity"
             android:label="@string/title_activity_web_view" >
         </activity>
-
         <!-- Wikitude end -->
-        <activity
-            android:name=".PoiListActivity"
-            android:label="@string/title_activity_poi_list"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="e_business_projekt.e_business_projekt.MainActivity" />
-        </activity>
+
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -135,10 +138,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login" >
-        </activity>
     </application>
 
 </manifest>

@@ -36,14 +36,6 @@
                 android:padding="5dp"
                 android:textSize="16dp" />
 
-        <Button
-                android:id="@+id/logout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:onClick="logout"
-                android:padding="10dp"
-                android:text="@string/logout"
-                android:textSize="18dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -71,6 +63,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:textSize="18dp" />
+
+        <Button
+                android:id="@+id/button_logout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/logout"
+                android:textSize="18dp" />
+
+        <Button
+                android:id="@+id/button_guest_sign_in"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Guest Sign In"
+                android:textSize="18dp" />
+
+
     </LinearLayout>
 
 </LinearLayout>
