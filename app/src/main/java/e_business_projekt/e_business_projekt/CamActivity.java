@@ -2,6 +2,7 @@ package e_business_projekt.e_business_projekt;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -51,14 +52,42 @@ public class CamActivity extends AbstractArchitectCamActivity {
     private long lastCalibrationToastShownTimeMillis = System.currentTimeMillis();
 
     //KR:
-    POIFilter filter;
     private List<PointOfInterest> POIList;
 
-    @Override
+    /*@Override
     protected void onPostCreate( final Bundle savedInstanceState ) {
         super.onPostCreate( savedInstanceState );
+
+        Log.d("EXPLOCITY", "Cam...: injectData() wird gestartet");
         this.injectData();
-    }
+        Log.d("EXPLOCITY", "Cam...: injectData() wurde gestartet");
+
+        if ( this.architectView != null ) {
+
+            // call mandatory live-cycle method of architectView
+            // this.architectView.onPostCreate();
+
+            try {
+                // load content via url in architectView, ensure '<script src="architect://architect.js"></script>' is part of this HTML file, have a look at wikitude.com's developer section for API references
+                this.architectView.load("file:///android_asset/5_Obtain$Poi$Data_2_From$Local$Resource/index.html");
+
+                if (this.getInitialCullingDistanceMeters() != ArchitectViewHolderInterface.CULLING_DISTANCE_DEFAULT_METERS) {
+                    // set the culling distance - meaning: the maximum distance to render geo-content
+                    this.architectView.setCullingDistance( this.getInitialCullingDistanceMeters() );
+                }
+
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }*/
+
+    /*@Override
+    protected void onPostCreate( final Bundle savedInstanceState ) {
+        super.onPostCreate( savedInstanceState );
+        Log.d("EXPLOCITY", "CamActivity...: injectData() wird gestartet");
+        this.injectData();
+    }*/
 
     @Override
     public String getARchitectWorldPath() {
@@ -178,7 +207,7 @@ public class CamActivity extends AbstractArchitectCamActivity {
         };
     }
 
-    protected void injectData() {
+    /*protected void injectData() {
         if (!isLoading) {
             final Thread t = new Thread(new Runnable() {
 
@@ -212,6 +241,7 @@ public class CamActivity extends AbstractArchitectCamActivity {
                     if (lastKnownLocaton!=null && !isFinishing()) {
                         //KR: take pois and pass them to javascript
                         poiData = getPoiInformation(lastKnownLocaton, POIList);
+                        Log.d("EXPLOCITY", "injectData(): poiData: " + poiData);
                         callJavaScript("World.loadPoisFromJsonData", new String[] { poiData.toString() });
                     }
 
@@ -220,13 +250,15 @@ public class CamActivity extends AbstractArchitectCamActivity {
             });
             t.start();
         }
+        Log.d("EXPLOCITY", "CamActivity: injectData");
     }
 
-    /**
+    */
+    /*/**
      * call JacaScript in architectView
      * @param methodName
      * @param arguments
-     */
+     *//*
     private void callJavaScript(final String methodName, final String[] arguments) {
         final StringBuilder argumentsString = new StringBuilder("");
         for (int i= 0; i<arguments.length; i++) {
@@ -242,11 +274,12 @@ public class CamActivity extends AbstractArchitectCamActivity {
         }
     }
 
-    /**
+    */
+    /*/**
      * loads poiInformation and returns them as JSONArray. Ensure attributeNames of JSON POIs are well known in JavaScript, so you can parse them easily
      * @param userLocation the location of the user
      * @return POI information in JSONArray
-     */
+     *//*
     public static JSONArray getPoiInformation(final Location userLocation, List<PointOfInterest> POIList){
 
         if (userLocation==null) {
@@ -254,8 +287,6 @@ public class CamActivity extends AbstractArchitectCamActivity {
         }
 
         final JSONArray pois = new JSONArray();
-
-
 
         // ensure these attributes are also used in JavaScript when extracting POI data
         final String ATTR_ID = "id";
@@ -277,7 +308,7 @@ public class CamActivity extends AbstractArchitectCamActivity {
         }
         Log.d("EXPLOCITY", "pois from getPoiInformatin: " + pois);
         return pois;
-    }
+    }*/
 
 
     @Override

@@ -86,8 +86,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="e_business_projekt.e_business_projekt.MainActivity"/>
         </activity>
-        <activity android:name="e_business_projekt.e_business_projekt.wikitude.CamContentFromNativeActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity android:name="e_business_projekt.e_business_projekt.wikitude.CamContentFromNativeActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity android:name="e_business_projekt.e_business_projekt.wikitude.PoiDetailActivity"/>
 
         <!-- Wikitude end -->

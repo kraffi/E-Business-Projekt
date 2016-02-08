@@ -74,6 +74,9 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	public void onCreate( final Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 
+        Log.d("EXPLOCITY", "AbstractCam...: injectData() wird gestartet");
+        this.injectData();
+
 		/* pressing volume up/down should cause music volume changes */
 		this.setVolumeControlStream( AudioManager.STREAM_MUSIC );
 
@@ -173,10 +176,13 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	protected abstract boolean hasIR();
 
 	@Override
-	protected void onPostCreate( final Bundle savedInstanceState ) {
+    protected void onPostCreate( final Bundle savedInstanceState ) {
 		super.onPostCreate( savedInstanceState );
 
-		if ( this.architectView != null ) {
+        /*Log.d("EXPLOCITY", "AbstractCam...: injectData() wird gestartet");
+        this.injectData();*/
+
+        if ( this.architectView != null ) {
 
 			// call mandatory live-cycle method of architectView
 			this.architectView.onPostCreate();
