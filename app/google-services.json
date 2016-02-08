@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_id": "e-business-project-1134",
+    "project_number": "735811389389",
+    "name": "E-Business Project"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735811389389:android:ef7dc0d52f3dd13b",
+        "client_id": "android:e_business_projekt.e_business_projekt",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "e_business_projekt.e_business_projekt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "735811389389-gssdl8dvt9j38co9gntkbfnflnu7j7sk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "e_business_projekt.e_business_projekt",
+            "certificate_hash": "D0F15298DA79F6E4263208DB172A7B70B61789C1"
+          }
+        },
+        {
+          "client_id": "735811389389-960m5tkhevuv0jtsb5k76i6efb545kpi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "e_business_projekt.e_business_projekt",
+            "certificate_hash": "F70746B32103B60729661FF9C8A87D0B1471C972"
+          }
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
