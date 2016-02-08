@@ -44,6 +44,7 @@ public class PointOfInterest implements Parcelable {
         this.address = place.getAddress().toString();
         this.phonenumber = place.getPhoneNumber().toString();
         this.websiteUri = place.getWebsiteUri();
+        this.wikiLink = "";
 
         //TODO: Replace Placeholder img
         this.img = R.mipmap.ic_launcher;
@@ -52,12 +53,12 @@ public class PointOfInterest implements Parcelable {
     public PointOfInterest(Parcel in){
         this.name = in.readString();
         this.id = in.readString();
-        //TODO: DoubleCheck:
         this.latLng = new LatLng(in.readDouble(), in.readDouble());
         this.distance = in.readFloat();
         this.address = in.readString();
         this.phonenumber = in.readString();
         this.websiteUri = Uri.parse(in.readString());
+        this.wikiLink = "";
         this.placeTypes = in.readArrayList(Integer.class.getClassLoader());
         this.img = in.readInt();
     }
@@ -72,7 +73,8 @@ public class PointOfInterest implements Parcelable {
 
         this.address = "";
         this.phonenumber = "";
-        this.websiteUri = Uri.parse("http://www.google.com");
+        this.wikiLink = "";
+        this.websiteUri = Uri.parse("");
 
         //TODO: Replace Placeholder img
         this.img = R.mipmap.ic_launcher;

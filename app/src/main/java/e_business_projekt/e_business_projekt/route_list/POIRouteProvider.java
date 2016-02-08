@@ -67,6 +67,10 @@ public class POIRouteProvider {
         return activated;
     }
 
+    public POIRoute getActivatedRoute(){
+        return POIRouteList.get(activated);
+    }
+
     public void setActivated(int activated) {
         this.activated = activated;
         for (int i = 0; i < this.POIRouteList.size(); i++){
