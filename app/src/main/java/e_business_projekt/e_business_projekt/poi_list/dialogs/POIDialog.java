@@ -34,17 +34,20 @@ public class POIDialog extends DialogFragment {
         final String address;
         final String phone;
         final String website;
+        final String wikiLink;
 
         if (poi != null){
             name = poi.getName();
             address = poi.getAddress();
             phone = poi.getPhonenumber();
             website = poi.getWebsiteUri().toString();
+            wikiLink = poi.getWikiLink();
         } else {
             name = "";
             address = "";
             phone = "";
             website = "";
+            wikiLink = "";
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -92,13 +95,19 @@ public class POIDialog extends DialogFragment {
 
         builder.setView(dialogView);
         builder.setTitle(name);
+        if (wikiLink.length() != 0){
+            builder.setPositiveButton("Wikipedia", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-        builder.setPositiveButton("Wikipedia?", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.i(TAG, "Wikipediabutton clicked");
-            }
-        });
+                    Intent intent = new Intent(getActivity().getApplicationContext(), WebViewActivity.class);
+                    intent.putExtra("url", wikiLink);
+                    startActivity(intent);
+
+                    Log.i(TAG, "Wikipediabutton clicked");
+                }
+            });
+        }
         builder.setNegativeButton("Back", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

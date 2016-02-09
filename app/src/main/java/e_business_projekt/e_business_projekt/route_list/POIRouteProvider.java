@@ -1,7 +1,10 @@
 package e_business_projekt.e_business_projekt.route_list;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
+import e_business_projekt.e_business_projekt.MainActivity;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 
 import java.util.ArrayList;
@@ -12,20 +15,17 @@ import java.util.List;
  */
 public class POIRouteProvider {
 
-    private static final POIRouteProvider instance = new POIRouteProvider();
     private static final String TAG = "EBP.POIRouteProvider";
+    private static final POIRouteProvider instance = new POIRouteProvider();
 
+    private String userID;
     private ArrayList<POIRoute> POIRouteList;
     private int activated;
 
     private POIRouteProvider() {
         this.POIRouteList = new ArrayList<>();
-        createTestData();
-    }
-
-    private POIRouteProvider(ArrayList<POIRoute> POIRouteList, int activated) {
-        this.POIRouteList = POIRouteList;
-        this.activated = activated;
+        this.userID="sampleId22229999";
+//        createTestData();
     }
 
     public ArrayList<POIRoute> getPOIRouteList() {
@@ -47,6 +47,20 @@ public class POIRouteProvider {
         } else {
             this.POIRouteList.add(new POIRoute());
         }
+        DataBaseProvider.getInstance().updateData();
+    }
+
+    public void deleteRoute(int position){
+        Log.i(TAG, "deleting Route with position " + position);
+
+        POIRouteList.remove(position);
+        if (position == activated){
+            setActivated(activated-1);
+        }
+        if (position == 0){
+            setActivated(0);
+        }
+        DataBaseProvider.getInstance().updateData();
     }
 
     public int getActivated() {
@@ -62,32 +76,36 @@ public class POIRouteProvider {
                 this.POIRouteList.get(i).setActivated(false);
             }
         }
-
-    }
-
-    public void deleteRoute(int position){
-        Log.i(TAG, "deleting Route with position " + position);
-
-        POIRouteList.remove(position);
-        if (position == activated){
-            setActivated(activated-1);
-        }
-        if (position == 0){
-            setActivated(0);
-        }
+        DataBaseProvider.getInstance().updateData();
     }
 
     public void editRouteName(String name, int position){
         Log.i(TAG, "editing Route with position " + position);
         POIRouteList.get(position).setRouteName(name);
+        DataBaseProvider.getInstance().updateData();
     }
 
     public void addPoiToActiveRoute(PointOfInterest poi){
         POIRouteList.get(activated).addPOI(poi);
+        DataBaseProvider.getInstance().updateData();
     }
 
     public static POIRouteProvider getInstance(){
         return instance;
+    }
+
+    public void setInstance(POIRouteProvider copyInstance){
+        this.userID = copyInstance.getUserID();
+        this.activated = copyInstance.getActivated();
+        this.POIRouteList = copyInstance.getPOIRouteList();
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public void createTestData(){
@@ -171,5 +189,4 @@ public class POIRouteProvider {
         activated = 1;
         setActivated(activated);
     }
-
 }

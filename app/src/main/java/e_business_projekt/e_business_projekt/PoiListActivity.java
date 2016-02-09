@@ -24,6 +24,7 @@ import e_business_projekt.e_business_projekt.poi_list.dialogs.POIFilterDialogCal
 import e_business_projekt.e_business_projekt.poi_list.provider.POIFilter;
 import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProvider;
 import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProviderCallback;
+import e_business_projekt.e_business_projekt.route_list.POIRoute;
 import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 
 import java.util.ArrayList;
@@ -46,10 +47,6 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poi_list);
-
-
-        int a = routeManager.getActivated();
-        Log.i("TEST:", routeManager.getPOIRouteList().get(a).getPoiRoute().toString());
 
         //initialize GoogleApiClient
         mGoogleApiClient = new GoogleApiClient
@@ -119,6 +116,35 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
                 dialog.show(getFragmentManager(), "POI Filter Dialog");
             }
         });
+
+        // Populate Spinner to choose activated route
+        Spinner spinnerActivatedRoute = (Spinner) findViewById(R.id.spinnerActivatedRoute);
+        ArrayList<POIRoute> routeList = routeManager.getPOIRouteList();
+        ArrayList<String> routeNames = new ArrayList<>();
+        for (POIRoute r : routeList){
+            routeNames.add(r.getRouteName());
+        }
+
+        if (!routeNames.isEmpty()){
+            spinnerActivatedRoute.setVisibility(View.VISIBLE);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, routeNames);
+            spinnerActivatedRoute.setAdapter(adapter);
+            spinnerActivatedRoute.setSelection(routeManager.getActivated());
+            spinnerActivatedRoute.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    routeManager.setActivated(position);
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        } else {
+            spinnerActivatedRoute.setVisibility(View.INVISIBLE);
+        }
+
     }
 
 

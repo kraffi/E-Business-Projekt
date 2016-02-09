@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 
@@ -17,8 +19,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import android.widget.TextView;
-import e_business_projekt.e_business_projekt.map_navigation.Route;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import e_business_projekt.e_business_projekt.adapter.UriAdapter;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
+import e_business_projekt.e_business_projekt.route_list.DataBaseCallback;
+import e_business_projekt.e_business_projekt.route_list.DataBaseProvider;
 import e_business_projekt.e_business_projekt.route_list.POIRoute;
 import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 import e_business_projekt.e_business_projekt.route_list.adapter.RouteListViewItemAdapter;
@@ -27,10 +33,10 @@ import e_business_projekt.e_business_projekt.route_list.dialogs.EditRouteDialog;
 import e_business_projekt.e_business_projekt.route_list.dialogs.EditRouteDialogCallback;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements RouteListViewItemCallback, EditRouteDialogCallback {
+public class MainActivity extends AppCompatActivity implements RouteListViewItemCallback, EditRouteDialogCallback,
+        DataBaseCallback {
 
     private static final String TAG = "EBP.MainActivity";
 
@@ -46,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
     boolean hasIr = true;
     boolean hasGeo = true;
     private POIRouteProvider routeManager = POIRouteProvider.getInstance();
+    private DataBaseProvider dataBaseManager = DataBaseProvider.getInstance();
 
 
     @Override
@@ -54,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
         setContentView(R.layout.activity_main);
 
         ArrayList<POIRoute> POIRouteList = routeManager.getPOIRouteList();
+        dataBaseManager.setCallback(this);
 
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.addRouteButton);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -64,12 +72,17 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
                 buildRouteList(routeManager.getPOIRouteList());
             }
         });
+        login();
         buildRouteList(POIRouteList);
 
-        SharedPreferences prefs = this.getSharedPreferences("e_business_projekt.e_business_projekt", Context.MODE_PRIVATE);
+    }
 
-        //Log.i("TEST: ", );
-
+    //TODO: Replace with real Login
+    public void login(){
+        boolean loggedIn = true;
+        if (loggedIn){
+            dataBaseManager.readData();
+        }
     }
 
     public void buildRouteList(final List<POIRoute> poiRouteList){
@@ -190,5 +203,10 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
         }
         startActivity(intent);
         return true;
+    }
+
+    @Override
+    public void readDataBaseCallback() {
+        buildRouteList(routeManager.getPOIRouteList());
     }
 }
