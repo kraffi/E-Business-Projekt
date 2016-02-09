@@ -109,6 +109,7 @@ public class CamActivity extends AbstractArchitectCamActivity {
 
                 // pressed "Detail" button on POI-detail panel
                 if ("markerselected".equalsIgnoreCase(invokedUri.getHost())) {
+                    Log.d("EXPLOCITY", "CamAct-Button pressed");
                     final Intent poiDetailIntent = new Intent(CamActivity.this, PoiDetailActivity.class);
                     poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_ID, String.valueOf(invokedUri.getQueryParameter("id")) );
                     /*poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_TITILE, String.valueOf(invokedUri.getQueryParameter("title")) );

@@ -94,7 +94,9 @@ var World = {
 	// fired when user pressed maker in cam
 	onMarkerSelected: function onMarkerSelectedFn(marker) {
 
-		// deselect previous marker
+	    World.currentMarker = marker;
+
+        // deselect previous marker
 		if (World.currentMarker) {
 			if (World.currentMarker.poiData.id == marker.poiData.id) {
 				return;
@@ -112,7 +114,7 @@ var World = {
 		if (World.currentMarker) {
 			World.currentMarker.setDeselected(World.currentMarker);
 		}
-	}
+	},
 
 	/*KR:
 	It may make sense to display POI details in your native style.
@@ -120,18 +122,18 @@ var World = {
 	This demoes the interaction between JavaScript and native code.
 	*/
 	// user clicked "More" button in POI-detail panel -> fire event to open native screen
-	/*onPoiDetailMoreButtonClicked: function onPoiDetailMoreButtonClickedFn() {
+	onPoiDetailMoreButtonClicked: function onPoiDetailMoreButtonClickedFn() {
 		var currentMarker = World.currentMarker;
-		var architectSdkUrl = "architectsdk://markerselected?id=" + encodeURIComponent(currentMarker.poiData.id));
-		*//*
+		var architectSdkUrl = "architectsdk://markerselected?id=" + encodeURIComponent(currentMarker.poiData.id) + "&title=" + encodeURIComponent(currentMarker.poiData.name) + "&description=" + encodeURIComponent(currentMarker.poiData.description);
+		/*
 			The urlListener of the native project intercepts this call and parses the arguments.
 			This is the only way to pass information from JavaSCript to your native code.
 			Ensure to properly encode and decode arguments.
 			Note: you must use 'document.location = "architectsdk://...' to pass information from JavaScript to native.
 			! This will cause an HTTP error if you didn't register a urlListener in native architectView !
-		*//*
+		*/
 		document.location = architectSdkUrl;
-	}*/
+	}
 
 };
 
