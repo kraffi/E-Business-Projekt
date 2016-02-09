@@ -57,18 +57,6 @@ public class CamActivity extends AbstractArchitectCamActivity {
      */
     private long lastCalibrationToastShownTimeMillis = System.currentTimeMillis();
 
-    //KR:
-    private List<PointOfInterest> POIList;
-    protected Location lastKnownLocaton;
-
-
-    /*@Override
-    protected void onPostCreate( final Bundle savedInstanceState ) {
-        super.onPostCreate( savedInstanceState );
-        Log.d("EXPLOCITY", "CamActivity-onPostCreate: injectData() wird gestartet");
-        this.injectData();
-    }*/
-
     @Override
     public String getARchitectWorldPath() {
         return getIntent().getExtras().getString(MainActivity.EXTRAS_KEY_ACTIVITY_ARCHITECT_WORLD_URL);
@@ -121,10 +109,11 @@ public class CamActivity extends AbstractArchitectCamActivity {
 
                 // pressed "Detail" button on POI-detail panel
                 if ("markerselected".equalsIgnoreCase(invokedUri.getHost())) {
+                    Log.d("EXPLOCITY", "CamAct-Button pressed");
                     final Intent poiDetailIntent = new Intent(CamActivity.this, PoiDetailActivity.class);
                     poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_ID, String.valueOf(invokedUri.getQueryParameter("id")) );
-                    poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_TITILE, String.valueOf(invokedUri.getQueryParameter("title")) );
-                    poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_DESCR, String.valueOf(invokedUri.getQueryParameter("description")) );
+                    /*poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_TITILE, String.valueOf(invokedUri.getQueryParameter("title")) );
+                    poiDetailIntent.putExtra(PoiDetailActivity.EXTRAS_KEY_POI_DESCR, String.valueOf(invokedUri.getQueryParameter("description")) );*/
                     Log.d("EXPLOCITY", "trying to start dialog");
                     CamActivity.this.startActivity(poiDetailIntent);
                     Log.d("EXPLOCITY", "tried to start intent");
