@@ -6,7 +6,7 @@
               android:gravity="center"
               android:orientation="vertical"
               android:padding="15dp"
-              tools:context=".AndroidGooglePlusExample" >
+              tools:context=".LoginActivity" >
 
     <LinearLayout
             android:id="@+id/profileFrame"

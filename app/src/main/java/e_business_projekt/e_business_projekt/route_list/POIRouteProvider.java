@@ -19,12 +19,17 @@ public class POIRouteProvider {
     private static final POIRouteProvider instance = new POIRouteProvider();
 
     private String userID;
+    private String userName;
     private ArrayList<POIRoute> POIRouteList;
     private int activated;
+    private boolean blocked;
 
     private POIRouteProvider() {
         this.POIRouteList = new ArrayList<>();
-        this.userID="sampleId22229999";
+        this.userID= "Guest1234";
+        this.userName= "Guest";
+        this.activated = 0;
+        this.blocked = false;
 //        createTestData();
     }
 
@@ -100,9 +105,20 @@ public class POIRouteProvider {
 
     public void setInstance(POIRouteProvider copyInstance){
         this.userID = copyInstance.getUserID();
+        this.userName = copyInstance.getUserName();
         this.activated = copyInstance.getActivated();
         this.POIRouteList = copyInstance.getPOIRouteList();
     }
+
+    public void resetInstance(){
+        Log.i(TAG, "reseting POIRouteProvider!");
+        this.userID = "Guest1234";
+        this.userName = "Guest";
+        this.activated = 0;
+        this.POIRouteList = new ArrayList<>();
+    }
+
+
 
     public String getUserID() {
         return userID;
@@ -110,6 +126,23 @@ public class POIRouteProvider {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
     }
 
     public void createTestData(){

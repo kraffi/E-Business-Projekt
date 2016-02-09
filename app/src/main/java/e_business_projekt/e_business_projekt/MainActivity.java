@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import android.widget.TextView;
+import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import e_business_projekt.e_business_projekt.adapter.UriAdapter;
@@ -59,16 +60,17 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.i(TAG, "MAIN: onCreate");
 
         //init route and database manager on create
         ArrayList<POIRoute> POIRouteList = routeManager.getPOIRouteList();
         dataBaseManager.setCallback(this);
 
         Intent intent = getIntent();
-        String name = intent.getStringExtra("userName");
+        String name = POIRouteProvider.getInstance().getUserName();
 
-        //TextView routeListHeader = (TextView) findViewById(R.id.headerRouteActivity);
-        //routeListHeader.setText(name + "'s routes");
+        TextView routeListHeader = (TextView) findViewById(R.id.activityTitle);
+        routeListHeader.setText(name + "'s routes");
 
         // handling add route button
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.addRouteButton);
@@ -76,8 +78,13 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "addRouteButton clicked");
-                routeManager.addRoute();
-                buildRouteList(routeManager.getPOIRouteList());
+
+                if(!POIRouteProvider.getInstance().isBlocked()){
+                    routeManager.addRoute();
+                    buildRouteList(routeManager.getPOIRouteList());
+                } else {
+                    Toast.makeText(getBaseContext(), "Please wait for retrieving Route List", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -212,5 +219,23 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
     public void readDataBaseCallback() {
         //build route list after fetching data
         buildRouteList(routeManager.getPOIRouteList());
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "ON STOP");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "ON DESTROY");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "ON PAUSE");
     }
 }

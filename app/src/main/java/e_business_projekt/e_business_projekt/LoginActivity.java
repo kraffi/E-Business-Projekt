@@ -23,14 +23,17 @@ import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = "EBP.PoiListActivity";
+    private static final String TAG = "EBP.LoginActivity";
     private static final int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "LOGIN: onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        POIRouteProvider.getInstance().resetInstance();
+
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -81,13 +84,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void guestSignIn(){
         Log.i(TAG, "Guest Sign In Button clicked");
         String guestID = "Guest1234";
+        String guestName = "Guest";
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("userID", guestID);
-        intent.putExtra("userName", "Guest");
+        intent.putExtra("userName", guestName);
 
         //set user id to route manager
         POIRouteProvider.getInstance().setUserID(guestID);
+        POIRouteProvider.getInstance().setUserName(guestName);
         Toast.makeText(getBaseContext(), "Signed in as Guest", Toast.LENGTH_LONG).show();
         startActivity(intent);
     }
@@ -119,6 +124,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             //set user id to route manager
             POIRouteProvider.getInstance().setUserID(acct.getId());
+            POIRouteProvider.getInstance().setUserName(acct.getDisplayName());
             startActivity(intent);
 
             //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
