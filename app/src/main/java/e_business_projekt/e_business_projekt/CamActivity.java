@@ -59,150 +59,15 @@ public class CamActivity extends AbstractArchitectCamActivity {
 
     //KR:
     private List<PointOfInterest> POIList;
-
-
-    /**
-     * holds the Wikitude SDK AR-View, this is where camera, markers, compass, 3D models etc. are rendered
-     */
-    protected ArchitectView architectView;
-
-    /**
-     * sensor accuracy listener in case you want to display calibration hints
-     */
-    protected SensorAccuracyChangeListener sensorAccuracyListener;
-
-    /**
-     * last known location of the user, used internally for content-loading after user location was fetched
-     */
     protected Location lastKnownLocaton;
 
-    /**
-     * sample location strategy, you may implement a more sophisticated approach too
-     */
-    protected ILocationProvider				locationProvider;
 
-    /**
-     * location listener receives location updates and must forward them to the architectView
-     */
-    protected LocationListener locationListener;
-
-    /**
-     * urlListener handling "document.location= 'architectsdk://...' " calls in JavaScript"
-     */
-    protected ArchitectUrlListener urlListener;
-
-    protected JSONArray poiData;
-
-    protected boolean isLoading = false;
-
-    /** Called when the activity is first created. */
-    @SuppressLint("NewApi")
-    @Override
-    public void onCreate( final Bundle savedInstanceState ) {
-        super.onCreate(savedInstanceState);
-
-		/*Log.d("EXPLOCITY", "AbstractCam...: injectData() wird gestartet");
-		this.injectData();*/
-
-		/* pressing volume up/down should cause music volume changes */
-        this.setVolumeControlStream( AudioManager.STREAM_MUSIC );
-
-		/* set samples content view */
-        this.setContentView( this.getContentViewId() );
-
-        this.setTitle( this.getActivityTitle() );
-
-		/*
-		 *	this enables remote debugging of a WebView on Android 4.4+ when debugging = true in AndroidManifest.xml
-		 *	If you get a compile time error here, ensure to have SDK 19+ used in your ADT/Eclipse.
-		 *	You may even delete this block in case you don't need remote debugging or don't have an Android 4.4+ device in place.
-		 *	Details: https://developers.google.com/chrome-developer-tools/docs/remote-debugging
-		 */
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if ( 0 != ( getApplicationInfo().flags &= ApplicationInfo.FLAG_DEBUGGABLE ) ) {
-                WebView.setWebContentsDebuggingEnabled(true);
-            }
-        }
-
-		/* set AR-view for life-cycle notifications etc. */
-        this.architectView = (ArchitectView)this.findViewById( this.getArchitectViewId()  );
-
-		/* pass SDK key if you have one, this one is only valid for this package identifier and must not be used somewhere else */
-        final StartupConfiguration config = new StartupConfiguration( this.getWikitudeSDKLicenseKey(), this.getFeatures(), this.getCameraPosition() );
-
-        try {
-			/* first mandatory life-cycle notification */
-            this.architectView.onCreate( config );
-        } catch (RuntimeException rex) {
-            this.architectView = null;
-            Toast.makeText(getApplicationContext(), "can't create Architect View", Toast.LENGTH_SHORT).show();
-            Log.e(this.getClass().getName(), "Exception in ArchitectView.onCreate()", rex);
-        }
-
-        // set accuracy listener if implemented, you may e.g. show calibration prompt for compass using this listener
-        this.sensorAccuracyListener = this.getSensorAccuracyListener();
-
-        // set urlListener, any calls made in JS like "document.location = 'architectsdk://foo?bar=123'" is forwarded to this listener, use this to interact between JS and native Android activity/fragment
-        this.urlListener = this.getUrlListener();
-
-        // register valid urlListener in architectView, ensure this is set before content is loaded to not miss any event
-        if (this.urlListener != null && this.architectView != null) {
-            this.architectView.registerUrlListener( this.getUrlListener() );
-        }
-
-        if (hasGeo()) {
-            // listener passed over to locationProvider, any location update is handled here
-            this.locationListener = new LocationListener() {
-
-                @Override
-                public void onStatusChanged( String provider, int status, Bundle extras ) {
-                }
-
-                @Override
-                public void onProviderEnabled( String provider ) {
-                }
-
-                @Override
-                public void onProviderDisabled( String provider ) {
-                }
-
-                @Override
-                public void onLocationChanged( final Location location ) {
-                    // forward location updates fired by LocationProvider to architectView, you can set lat/lon from any location-strategy
-                    if (location!=null) {
-                        // sore last location as member, in case it is needed somewhere (in e.g. your adjusted project)
-                        CamActivity.this.lastKnownLocaton = location;
-                        if ( CamActivity.this.architectView != null ) {
-                            // check if location has altitude at certain accuracy level & call right architect method (the one with altitude information)
-                            if ( location.hasAltitude() && location.hasAccuracy() && location.getAccuracy()<7) {
-                                CamActivity.this.architectView.setLocation( location.getLatitude(), location.getLongitude(), location.getAltitude(), location.getAccuracy() );
-                            } else {
-                                CamActivity.this.architectView.setLocation( location.getLatitude(), location.getLongitude(), location.hasAccuracy() ? location.getAccuracy() : 1000 );
-                            }
-                        }
-                    }
-                }
-            };
-
-            // locationProvider used to fetch user position
-            this.locationProvider = getLocationProvider( this.locationListener );
-        } else {
-            this.locationProvider = null;
-            this.locationListener = null;
-        }
-    }
-
-    private int getFeatures() {
-        int features = (hasGeo() ? StartupConfiguration.Features.Geo : 0) | (hasIR() ? StartupConfiguration.Features.Tracking2D : 0);
-        return features;
-    }
-
-    @Override
+    /*@Override
     protected void onPostCreate( final Bundle savedInstanceState ) {
         super.onPostCreate( savedInstanceState );
         Log.d("EXPLOCITY", "CamActivity-onPostCreate: injectData() wird gestartet");
         this.injectData();
-    }
+    }*/
 
     @Override
     public String getARchitectWorldPath() {
@@ -264,16 +129,6 @@ public class CamActivity extends AbstractArchitectCamActivity {
                     CamActivity.this.startActivity(poiDetailIntent);
                     Log.d("EXPLOCITY", "tried to start intent");
 
-                    /*Log.d("EXPLOCITIY", "creating bundle");
-                    Bundle args = new Bundle();
-                    args.putString("keyword", filter.getKeyword());
-                    args.putInt("radius", filter.getRadius());
-                    Log.d("EXPLOCITIY", "creating dialog");
-                    POIFilterDialog dialog = new POIFilterDialog();
-                    dialog.setArguments(args);
-                    dialog.onAttach(CamActivity.this);
-                    dialog.show(getFragmentManager(), "POI Filter Dialog");
-                    Log.d("EXPLOCITY", "Dialog is shown");*/
                     return true;
                 }
 
@@ -321,7 +176,7 @@ public class CamActivity extends AbstractArchitectCamActivity {
         };
     }
 
-    protected void injectData() {
+    /*protected void injectData() {
         if (!isLoading) {
             final Thread t = new Thread(new Runnable() {
                 @Override
@@ -358,11 +213,12 @@ public class CamActivity extends AbstractArchitectCamActivity {
         }
         Log.d("EXPLOCITY", "CamActivity-injectData");
     }
-    /**
+    */
+    /*/**
      * call JacaScript in architectView
      * @param methodName
      * @param arguments
-    */
+    *//*
     private void callJavaScript(final String methodName, final String[] arguments) {
         final StringBuilder argumentsString = new StringBuilder("");
         for (int i= 0; i<arguments.length; i++) {
@@ -376,11 +232,12 @@ public class CamActivity extends AbstractArchitectCamActivity {
             this.architectView.callJavascript(js);
         }
     }
-    /**
+    *//*/**
      * loads poiInformation and returns them as JSONArray. Ensure attributeNames of JSON POIs are well known in JavaScript, so you can parse them easily
      * @param userLocation the location of the user
      * @return POI information in JSONArray
     */
+    /*
     public static JSONArray getPoiInformation(final Location userLocation, List<PointOfInterest> POIList){
         if (userLocation==null) {
             return null;
@@ -405,7 +262,7 @@ public class CamActivity extends AbstractArchitectCamActivity {
         }
         Log.d("EXPLOCITY", "CamActivity-getPoiInformatin-pois: " + pois);
         return pois;
-    }
+    }*/
 
 
     @Override

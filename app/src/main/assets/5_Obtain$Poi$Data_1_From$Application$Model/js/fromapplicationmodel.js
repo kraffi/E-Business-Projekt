@@ -11,10 +11,6 @@ var World = {
 	// The last selected marker
 	currentMarker: null,
 
-	//kr: radar
-    	/*locationUpdateCounter: 0,
-        updatePlacemarkDistancesEveryXLocationUpdates: 10,*/
-
 	/*
 		Have a look at the native code to get a better understanding of how data can be injected to JavaScript.
 		Besides loading data from assets it is also possible to load data from a database, or to create it in native code. Use the platform common way to create JSON Objects of your data and use native 'architectView.callJavaScript()' to pass them to the ARchitect World's JavaScript.
@@ -22,11 +18,6 @@ var World = {
 	*/
 	// called to inject new POI data
 	loadPoisFromJsonData: function loadPoisFromJsonDataFn(poiData) {
-
-		//kr: show radar & set click-listener
-        /*PoiRadar.show();
-        $('#radarContainer').unbind('click');
-        $("#radarContainer").click(PoiRadar.clickedRadar);*/
 
 		// empty list of visible markers
 		World.markerList = [];
@@ -43,17 +34,17 @@ var World = {
 				"latitude": parseFloat(poiData[currentPlaceNr].latitude),
 				"longitude": parseFloat(poiData[currentPlaceNr].longitude),
 				"altitude": parseFloat(poiData[currentPlaceNr].altitude),
-				"name": poiData[currentPlaceNr].name
+				"title": poiData[currentPlaceNr].name,
+				"description": poiData[currentPlaceNr].description
 			};
 
 			World.markerList.push(new Marker(singlePoi));
-			alert("Test");
 		}
 
 		World.updateStatusMessage(currentPlaceNr + ' places loaded');
 	},
 
-	// updates status message shown in small "i"-button aligned bottom center
+	// updates status message shon in small "i"-button aligned bottom center
 	updateStatusMessage: function updateStatusMessageFn(message, isWarning) {
 
 		var themeToUse = isWarning ? "e" : "c";
@@ -66,25 +57,6 @@ var World = {
 		$("#popupInfoButton").buttonMarkup({
 			icon: iconToUse
 		});
-	},
-
-	/*KR:
-		It may make sense to display POI details in your native style.
-		In this sample a very simple native screen opens when user presses the 'More' button in HTML.
-		This demoes the interaction between JavaScript and native code.
-	*/
-	// user clicked "More" button in POI-detail panel -> fire event to open native screen
-	onPoiDetailMoreButtonClicked: function onPoiDetailMoreButtonClickedFn() {
-		var currentMarker = World.currentMarker;
-		var architectSdkUrl = "architectsdk://markerselected?id=" + encodeURIComponent(currentMarker.poiData.id) + "&title=");
-		/*
-			The urlListener of the native project intercepts this call and parses the arguments.
-			This is the only way to pass information from JavaSCript to your native code.
-			Ensure to properly encode and decode arguments.
-			Note: you must use 'document.location = "architectsdk://...' to pass information from JavaScript to native.
-			! This will cause an HTTP error if you didn't register a urlListener in native architectView !
-		*/
-		document.location = architectSdkUrl;
 	},
 
 	// location updates, fired every time you call architectView.setLocation() in native environment
