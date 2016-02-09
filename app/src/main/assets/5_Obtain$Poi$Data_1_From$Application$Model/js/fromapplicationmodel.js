@@ -22,10 +22,10 @@ var World = {
 	// called to inject new POI data
 	loadPoisFromJsonData: function loadPoisFromJsonDataFn(poiData) {
 
-	    //kr: show radar & set click-listener
+	    /*//kr: show radar & set click-listener
         PoiRadar.show();
         $('#radarContainer').unbind('click');
-        $("#radarContainer").click(PoiRadar.clickedRadar);
+        $("#radarContainer").click(PoiRadar.clickedRadar);*/
 
 		// empty list of visible markers
 		World.markerList = [];
@@ -46,11 +46,21 @@ var World = {
 				"description": poiData[currentPlaceNr].description
 			};
 
+            //KR: updates distance information of all placemarks
+            World.updateDistanceToUserValues();
+
 			World.markerList.push(new Marker(singlePoi));
 		}
 
 		World.updateStatusMessage(currentPlaceNr + ' places loaded');
 	},
+
+	//KR:
+    updateDistanceToUserValues: function updateDistanceToUserValuesFn() {
+        for (var i = 0; i < World.markerList.length; i++) {
+            World.markerList[i].distanceToUser = World.markerList[i].markerObject.locations[0].distanceToUser();
+        }
+    },
 
 	// updates status message shon in small "i"-button aligned bottom center
 	updateStatusMessage: function updateStatusMessageFn(message, isWarning) {
@@ -70,19 +80,15 @@ var World = {
 	// location updates, fired every time you call architectView.setLocation() in native environment
 	locationChanged: function locationChangedFn(lat, lon, alt, acc) {
 
-	    //KR: request data if not already present
-        /*if (!World.initiallyLoadedData) {
+	    /*//KR: request data if not already present
+        if (!World.initiallyLoadedData) {
             World.requestDataFromLocal(lat, lon);
             World.initiallyLoadedData = true;
         }*/
 
-        //kr: helper used to update placemark information every now and then (e.g. every 10 location upadtes fired)
-        World.locationUpdateCounter = (++World.locationUpdateCounter % World.updatePlacemarkDistancesEveryXLocationUpdates);
+        /*//kr: helper used to update placemark information every now and then (e.g. every 10 location upadtes fired)
+        World.locationUpdateCounter = (++World.locationUpdateCounter % World.updatePlacemarkDistancesEveryXLocationUpdates);*/
 
-		/* 
-			No action required in JS, in this sample places are injected via native code. 
-			Although it is recommended to inject any geo-content >after< first location update was fired.
-		*/
 	},
 
 	// fired when user pressed maker in cam

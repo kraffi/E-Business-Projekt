@@ -61,14 +61,14 @@ function Marker(poiData) {
         verticalAnchor: AR.CONST.VERTICAL_ANCHOR.TOP
     });
 
-    //KR: radar
+    /*//KR: radar
     this.radarCircle = new AR.Circle(0.03, {
             horizontalAnchor: AR.CONST.HORIZONTAL_ANCHOR.CENTER,
             opacity: 0.8,
             style: {
                 fillColor: "#ffffff"
             }
-        });
+    });
 
     this.radarCircleSelected = new AR.Circle(0.05, {
         horizontalAnchor: AR.CONST.HORIZONTAL_ANCHOR.CENTER,
@@ -84,15 +84,18 @@ function Marker(poiData) {
     this.radardrawablesSelected = [];
     this.radardrawablesSelected.push(this.radarCircleSelected);
     //--radar end--
-
+*/
     /*
         Create the AR.GeoObject with the drawable objects and define the AR.ImageDrawable as an indicator target on the marker AR.GeoObject. The direction indicator is displayed automatically when necessary. AR.Drawable subclasses (e.g. AR.Circle) can be used as direction indicators.
     */
     this.markerObject = new AR.GeoObject(markerLocation, {
         drawables: {
-            cam: [this.markerDrawable_idle, this.markerDrawable_selected, this.titleLabel, this.descriptionLabel],
+            cam: [this.markerDrawable_idle,
+            this.markerDrawable_selected,
+            this.titleLabel,
+            this.descriptionLabel],
             indicator: this.directionIndicatorDrawable
-            radar: this.radardrawables
+            //radar: this.radardrawables
         }
     });
 
@@ -179,7 +182,7 @@ Marker.prototype.setSelected = function(marker) {
     marker.directionIndicatorDrawable.enabled = true;
 
     //KR: radar
-    marker.markerObject.drawables.radar = marker.radardrawablesSelected;
+    //marker.markerObject.drawables.radar = marker.radardrawablesSelected;
 
     // starts the selected-state animation
     marker.animationGroup_selected.start();
@@ -188,6 +191,10 @@ Marker.prototype.setSelected = function(marker) {
 Marker.prototype.setDeselected = function(marker) {
 
     marker.isSelected = false;
+
+    //KR:radar
+    //marker.markerObject.drawables.radar = marker.radardrawables;
+
 
     if (marker.animationGroup_idle === null) {
 
