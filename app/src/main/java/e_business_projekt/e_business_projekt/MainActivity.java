@@ -193,20 +193,23 @@ public class MainActivity extends AppCompatActivity implements RouteListViewItem
         Intent intent;
         //kr: handle presses on the action menu items
         switch (item.getItemId()) {
-            case R.id.action_poi_list:
-                intent = new Intent(this, PoiListActivity.class);
-                break;
-            case R.id.action_map:
+//            case R.id.action_poi_list:
+//                intent = new Intent(this, PoiListActivity.class);
+//                break;
+//            case R.id.action_map:
+//                intent = new Intent(this, MapActivity.class);
+//                break;
+//            case R.id.action_cam:
+//                intent = new Intent(this, CamActivity.class);
+//                //intent.putExtra(EXTRAS_KEY_ACTIVITIES_ARCHITECT_WORLD_URLS_ARRAY, activityUrl);
+//                //intent.putExtra(EXTRAS_KEY_ACTIVITIES_CLASSNAMES_ARRAY, activityClasses);
+//                //intent.putExtra(EXTRAS_KEY_ACTIVITIES_TILES_ARRAY, activityTitles);
+//                //intent.putExtra(EXTRAS_KEY_ACTIVITY_TITLE_STRING, activityTitle);
+//                intent.putExtra(EXTRAS_KEY_ACTIVITY_IR, hasIr);
+//                intent.putExtra(EXTRAS_KEY_ACTIVITY_GEO, hasGeo);
+//                break;
+            case R.id.action_go_to_map:
                 intent = new Intent(this, MapActivity.class);
-                break;
-            case R.id.action_cam:
-                intent = new Intent(this, CamActivity.class);
-                //intent.putExtra(EXTRAS_KEY_ACTIVITIES_ARCHITECT_WORLD_URLS_ARRAY, activityUrl);
-                //intent.putExtra(EXTRAS_KEY_ACTIVITIES_CLASSNAMES_ARRAY, activityClasses);
-                //intent.putExtra(EXTRAS_KEY_ACTIVITIES_TILES_ARRAY, activityTitles);
-                //intent.putExtra(EXTRAS_KEY_ACTIVITY_TITLE_STRING, activityTitle);
-                intent.putExtra(EXTRAS_KEY_ACTIVITY_IR, hasIr);
-                intent.putExtra(EXTRAS_KEY_ACTIVITY_GEO, hasGeo);
                 break;
             default:
                 return super.onOptionsItemSelected(item);

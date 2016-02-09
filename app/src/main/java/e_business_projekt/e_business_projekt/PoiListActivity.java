@@ -196,7 +196,9 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_poi_list, menu);
+        //getMenuInflater().inflate(R.menu.menu_poi_list, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_map, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -208,20 +210,20 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         Intent intent;
         //kr: handle presses on the action menu items
         switch (item.getItemId()) {
-            case R.id.action_main:
-                intent = new Intent(this, MainActivity.class);
-                break;
-            case R.id.action_map:
-                intent = new Intent(this, MapActivity.class);
-                break;
-            case R.id.action_cam:
-                intent = new Intent(this, CamActivity.class);
-                break;
+//            case R.id.action_main:
+//                intent = new Intent(this, MainActivity.class);
+//                break;
+//            case R.id.action_map:
+//                intent = new Intent(this, MapActivity.class);
+//                break;
+//            case R.id.action_cam:
+//                intent = new Intent(this, CamActivity.class);
+//                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
-        startActivity(intent);
-        return true;
+        //startActivity(intent);
+        //return true;
     }
 
     @Override

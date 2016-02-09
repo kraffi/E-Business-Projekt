@@ -55,7 +55,7 @@
                 android:padding="10dp"
                 android:text="@string/loginText"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="#ffffff" />
+                android:textColor="#000000" />
 
         <com.google.android.gms.common.SignInButton
                 android:id="@+id/button_sign_in"
