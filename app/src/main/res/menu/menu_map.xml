@@ -6,7 +6,7 @@
 
     <!-- Share / will display always -->
     <item android:id="@+id/action_share"
-        android:icon="@drawable/share_24"
+        android:icon="@drawable/share_36"
         android:title="@string/action_share"
         app:showAsAction="always"/>
 
