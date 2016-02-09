@@ -45,7 +45,6 @@ function Marker(poiData) {
     });
 
     //KR: description will not be shown
-    /*
     // create an AR.Label for the marker's description
     this.descriptionLabel = new AR.Label(poiData.description.trunc(15), 0.8, {
         zOrder: 1,
@@ -54,7 +53,6 @@ function Marker(poiData) {
             textColor: '#FFFFFF'
         }
     });
-    */
 
     /*
         Create an AR.ImageDrawable using the AR.ImageResource for the direction indicator which was created in the World. Set options regarding the offset and anchor of the image so that it will be displayed correctly on the edge of the screen.

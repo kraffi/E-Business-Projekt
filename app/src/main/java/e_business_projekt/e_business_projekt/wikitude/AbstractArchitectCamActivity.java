@@ -426,7 +426,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
             // Use "AR.CONST.UNKNOWN_ALTITUDE" to tell ARchitect that altitude of places should be on user level. Be aware to handle altitude properly in locationManager in case you use valid POI altitude value (e.g. pass altitude only if GPS accuracy is <7m).
             poiInformation.put(ATTR_ALTITUDE, String.valueOf(UNKNOWN_ALTITUDE));
             poiInformation.put(ATTR_NAME, poi.getName());
-            poiInformation.put(ATTR_DESCRIPTION, "ohne gehts nicht");
+            poiInformation.put(ATTR_DESCRIPTION, "");
             pois.put(new JSONObject(poiInformation));
         }
         Log.d("EXPLOCITY", "AbstractCamActivity-getPoiInformatin-pois: " + pois);

@@ -40,10 +40,11 @@ var World = {
 		for (var currentPlaceNr = 0; currentPlaceNr < poiData.length; currentPlaceNr++) {
 			var singlePoi = {
 				"id": poiData[currentPlaceNr].id,
-				"latitude": parseFloat(poiData[currentPlaceNr].latitude),
-				"longitude": parseFloat(poiData[currentPlaceNr].longitude),
-				"altitude": parseFloat(poiData[currentPlaceNr].altitude),
-				"name": poiData[currentPlaceNr].name
+                "latitude": parseFloat(poiData[currentPlaceNr].latitude),
+                "longitude": parseFloat(poiData[currentPlaceNr].longitude),
+                "altitude": parseFloat(poiData[currentPlaceNr].altitude),
+                "title": poiData[currentPlaceNr].name,
+                "description": poiData[currentPlaceNr].description
 			};
 
 			World.markerList.push(new Marker(singlePoi));
