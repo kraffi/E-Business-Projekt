@@ -72,6 +72,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 guestSignIn();
             }
         });
+        guestSignInButton.setVisibility(View.INVISIBLE);
 
     }
 
