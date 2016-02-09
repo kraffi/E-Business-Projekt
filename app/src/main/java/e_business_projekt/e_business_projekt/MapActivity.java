@@ -2,9 +2,11 @@ package e_business_projekt.e_business_projekt;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +43,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import com.google.android.gms.plus.PlusShare;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -282,7 +285,27 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
         // Take appropriate action for each action item click
         switch (item.getItemId()) {
             case R.id.action_share:
-                // todo KR: implement sharing here
+                // Launch the Google+ share dialog with attribution to your app.
+                POIRouteProvider routeManager = POIRouteProvider.getInstance();
+                List<PointOfInterest> poiList = routeManager.getActivatedRoute().getPoiRoute();
+
+                String name = routeManager.getUserName();
+                String text = name + " hat heute folgende Orte mit ExploCity erkundet: \n\n";
+                String routes = "";
+                int index = 0;
+                for (PointOfInterest poi : poiList){
+                    index++;
+                    routes += index +". " + poi.getName() + "\n";
+                }
+
+                text += routes;
+
+                Intent shareIntent = new PlusShare.Builder(this)
+                        .setType("text/plain")
+                        .setText(text)
+                        .getIntent();
+
+                startActivityForResult(shareIntent, 0);
         }
         return true;
     }

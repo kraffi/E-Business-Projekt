@@ -30,4 +30,6 @@ public class WebViewActivity extends AppCompatActivity{
         webSettings.setJavaScriptEnabled(true);
     }
 
+    
+
 }
