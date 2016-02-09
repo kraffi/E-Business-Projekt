@@ -111,8 +111,6 @@ public class PlacesProvider {
 
                             poi.setDistance(currentLocation.distanceTo(poiLocation));
 
-                            // TODO GET WIKI LINK, Blocks filterin POIS?
-
                             if (matchFilter(poi)){
                                 poiList.add(poi);
                             }
@@ -126,15 +124,13 @@ public class PlacesProvider {
                                 return (int) (poi1.getDistance() - poi2.getDistance());
                             }
                         });
-                        new StartAsyncWikiQuery().execute();
-
                         ppc.placesProviderCallback(poiList);
                     }
                 });
             }
         } else {
             poiList.clear();
-            //ppc.placesProviderCallback(poiList);
+            ppc.placesProviderCallback(poiList);
         }
     }
 
@@ -179,50 +175,6 @@ public class PlacesProvider {
         }
     }
 
-    private String getWikiLink(String query, int position){
-
-        try {
-
-            URL url = new URL("https://de.wikipedia.org/w/api.php?action=opensearch&limit=1&namespace=0&format=json&search=" + query);
-            //Log.i(TAG, "Wikipedia Query " + query + " URL: " + url.toString());
-
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            InputStreamReader in = new InputStreamReader(connection.getInputStream(), "UTF-8");
-
-            BufferedReader br = new BufferedReader(in);
-            StringBuilder sb = new StringBuilder();
-
-            String line;
-            while ((line = br.readLine()) != null)
-            {
-                sb.append(line);
-            }
-
-            //Log.i(TAG, "GET: " + sb.toString());
-
-            JsonParser parser = new JsonParser();
-            JsonArray jsonArray = parser.parse(sb.toString()).getAsJsonArray();
-
-            String link = jsonArray.get(3).toString();
-
-            if (link.length() == 2 ){
-                link = "";
-            } else {
-                link = link.substring(2, link.length()-2);
-            }
-
-            Log.i(TAG, "Wikipedialink :" + link);
-            poiList.get(position).setWikiLink(link);
-
-        } catch (IOException e) {
-            Log.e(TAG, "Malformed URL Exception!");
-            throw new RuntimeException(e);
-        }
-
-        return "";
-    }
-
     private boolean matchFilter(PointOfInterest poi){
 
         if (poi.getDistance() <= filter.getRadius()){
@@ -260,40 +212,6 @@ public class PlacesProvider {
         @Override
         protected void onPostExecute(String s) {
             Log.i(TAG, "Get IDs from Places finished!");
-        }
-
-        @Override
-        protected void onPreExecute() {
-
-        }
-    }
-
-    private class StartAsyncWikiQuery extends AsyncTask<String, Void, String > {
-
-        @Override
-        protected String doInBackground(String... params) {
-            Log.i(TAG, "StartAsyncQuery()");
-
-            int poiListLength = poiList.size();
-            //Log.i(TAG,"POISIZE: " + poiListLength);
-
-            for (int i = 0; i < poiListLength; i++){
-                currentWikiQuery = poiList.get(i).getName();
-                getWikiLink(currentWikiQuery.replace(" ", "%20"), i);
-            }
-
-            return "StartAsyncQuery finished!";
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            Log.i(TAG, "Get WikiLinks finished!");
-            ppc.placesProviderCallback(poiList);
         }
 
         @Override

@@ -51,7 +51,6 @@ public class POIFilterListViewItemAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
-        Log.i("TEST:", "OLOLOLOLO");
         if (convertView == null){
 
             convertView = mInflater.inflate(R.layout.listview_item_filter_type, null);

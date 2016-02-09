@@ -10,9 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import android.widget.TextView;
+import android.widget.Toast;
+import e_business_projekt.e_business_projekt.PoiListActivity;
 import e_business_projekt.e_business_projekt.R;
 import e_business_projekt.e_business_projekt.WebViewActivity;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
+import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
+
+import java.util.List;
 
 public class POIDialog extends DialogFragment {
 
@@ -28,7 +33,7 @@ public class POIDialog extends DialogFragment {
 
         Bundle args = getArguments();
 
-        PointOfInterest poi = args.getParcelable("poi");
+        final PointOfInterest poi = args.getParcelable("poi");
 
         final String name ;
         final String address;
@@ -72,7 +77,7 @@ public class POIDialog extends DialogFragment {
         }
 
         TextView websiteText = (TextView) dialogView.findViewById(R.id.websiteTextView);
-        if (website.length() == 0){
+        if ((website.length() == 0) || website.equals("www.google.com")){
             websiteText.setVisibility(View.GONE);
             dialogView.findViewById(R.id.websiteImageView).setVisibility(View.GONE);
         } else {
@@ -96,7 +101,7 @@ public class POIDialog extends DialogFragment {
         builder.setView(dialogView);
         builder.setTitle(name);
         if (wikiLink.length() != 0){
-            builder.setPositiveButton("Wikipedia", new DialogInterface.OnClickListener() {
+            builder.setNeutralButton("Wikipedia", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
@@ -108,6 +113,31 @@ public class POIDialog extends DialogFragment {
                 }
             });
         }
+
+        if(getActivity() instanceof PoiListActivity){
+            builder.setPositiveButton("Add POI", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    POIRouteProvider routeManager = POIRouteProvider.getInstance();
+                    String routeName = routeManager.getActivatedRoute().getRouteName();
+                    List<PointOfInterest> poiList = routeManager.getActivatedRoute().getPoiRoute();
+                    boolean contains = false;
+                    for(PointOfInterest comparePoi: poiList){
+                        if (comparePoi.getId().equals(poi.getId())){
+                            contains = true;
+                            break;
+                        }
+                    }
+                    if (!contains){
+                        routeManager.addPoiToActiveRoute(poi);
+                        Toast.makeText(getActivity(), "Add " + poi.getName() + " to " + routeName , Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getActivity(), poi.getName() + " already exists in " + routeName, Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+
         builder.setNegativeButton("Back", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

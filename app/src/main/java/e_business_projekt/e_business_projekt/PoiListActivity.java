@@ -21,9 +21,7 @@ import e_business_projekt.e_business_projekt.poi_list.dialogs.POIDialog;
 import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
 import e_business_projekt.e_business_projekt.poi_list.dialogs.POIFilterDialog;
 import e_business_projekt.e_business_projekt.poi_list.dialogs.POIFilterDialogCallback;
-import e_business_projekt.e_business_projekt.poi_list.provider.POIFilter;
-import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProvider;
-import e_business_projekt.e_business_projekt.poi_list.provider.PlacesProviderCallback;
+import e_business_projekt.e_business_projekt.poi_list.provider.*;
 import e_business_projekt.e_business_projekt.route_list.POIRoute;
 import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 
@@ -31,7 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PoiListActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, PlacesProviderCallback, POIFilterDialogCallback {
+        GoogleApiClient.OnConnectionFailedListener, PlacesProviderCallback, POIFilterDialogCallback,
+        WikiLinksProviderCallback{
 
     private POIRouteProvider routeManager = POIRouteProvider.getInstance();
     private static final String TAG = "EBP.PoiListActivity";
@@ -147,97 +146,6 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
 
     }
 
-
-    //TODO: DEPRECATED
-    private void getPoiList() {
-        if (mGoogleApiClient != null) {
-
-//            create filter for results
-//            List<Integer> filterTypes = new ArrayList<>();
-//            filterTypes.add(Place.TYPE_ART_GALLERY);
-//            filterTypes.add(Place.TYPE_MUSEUM);
-//
-//            List<String> test = new ArrayList<>();
-//            test.add("ChIJre7qb9YjZUERKUDdeKxvZDI");
-//            PlaceFilter placeFilter = new PlaceFilter(false, test);
-//
-//            Test
-//            AutocompleteFilter autocompleteFilter = AutocompleteFilter.create(filterTypes);
-//            LatLng a = new LatLng(55.196354, 14.451385);
-//            LatLng b = new LatLng(46.866110, 4.409882);
-//            PendingResult<AutocompletePredictionBuffer> pendingResult = Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, "Brandenburger Tor", new LatLngBounds(b,a),autocompleteFilter );
-//            test END
-//
-//############AUTO COMPLETE PREDICTION##################################################################################
-//            pendingResult.setResultCallback(new ResultCallback<AutocompletePredictionBuffer>() {
-//                @Override
-//                public void onResult(AutocompletePredictionBuffer autocompletePredictions) {
-//
-//                    ArrayList<String> x = new ArrayList<>();
-//                    for (AutocompletePrediction predictions : autocompletePredictions){
-//                        x.add(predictions.getPlaceId());
-//                    }
-//                    String[] y = new String[x.size()];
-//                    y = x.toArray(y);
-//                    PendingResult<PlaceBuffer> z = Places.GeoDataApi.getPlaceById(mGoogleApiClient, y);
-//                    z.setResultCallback(new ResultCallback<PlaceBuffer>() {
-//                        @Override
-//                        public void onResult(PlaceBuffer places) {
-//                            for (Place p : places){
-//                                Log.d(TAG, "TESTI: " + p.getName());
-//                                Log.d(TAG, "TESTI: " + p.getId());
-//                            }
-//                        }
-//                    });
-//                }
-//            });
-//######################################################################################################################
-
-
-            // HTTP Request Test
-
-
-            // HTTP Request Test end
-            PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mGoogleApiClient, null);
-            result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-                @Override
-                public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-
-                    poiList.clear();
-                    Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-                    Log.i(TAG, "Getting results from GooglePlacesBuffer: " + likelyPlaces.toString());
-                    int i = 0;
-                    for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                        i++;
-                        //create new poi to add to POI list
-                        PointOfInterest poi = new PointOfInterest(placeLikelihood.getPlace());
-
-                        //determine distance to last location
-                        Location poiLocation = new Location("");
-                        poiLocation.setLatitude(poi.getLatLng().latitude);
-                        poiLocation.setLongitude(poi.getLatLng().longitude);
-                        poi.setDistance(lastLocation.distanceTo(poiLocation));
-
-                        // add POI to POI-List
-                        poiList.add(poi);
-                        Log.i(TAG, "Place: " + placeLikelihood.getPlace().getName() + " as number " + i + " added!");
-                    }
-                    likelyPlaces.release();
-
-                    if (poiList.isEmpty()) {
-                        Toast.makeText(getBaseContext(), "POI-List is empty!", Toast.LENGTH_LONG).show();
-                    }
-
-                    showCallbackToast(poiList);
-                    buildPOIList(poiList);
-                }
-            });
-        } else {
-            Toast.makeText(getBaseContext(), "No GoogleApiClient", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public void buildPOIList(final List<PointOfInterest> placesPOIList) {
         runOnUiThread(new Runnable() {
             @Override
@@ -254,12 +162,12 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
 
                             PointOfInterest poi = placesPOIList.get(position);
 
-                            Bundle args = new Bundle();
-                            args.putParcelable("poi", poi);
-
-                            POIDialog dialog = new POIDialog();
-                            dialog.setArguments(args);
-                            dialog.show(getFragmentManager(), "POI Dialog");
+                            if (poi.getWikiLink().length() == 0){
+                                WikiLinksProvider wikiLinksProvider = new WikiLinksProvider(PoiListActivity.this, poi);
+                                wikiLinksProvider.start();
+                            } else {
+                                openPoiDialog(poi);
+                            }
 
                             Log.i(TAG, "Called: onItemClick(): Item number " + position);
                         }
@@ -269,9 +177,15 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
                 }
             }
         });
+    }
 
+    public void openPoiDialog(PointOfInterest poi){
+        Bundle args = new Bundle();
+        args.putParcelable("poi", poi);
 
-
+        POIDialog dialog = new POIDialog();
+        dialog.setArguments(args);
+        dialog.show(getFragmentManager(), "POI Dialog");
     }
 
     public void showCallbackToast(List<PointOfInterest> poiList) {
@@ -350,6 +264,11 @@ public class PoiListActivity extends AppCompatActivity implements GoogleApiClien
         Log.i(TAG,"Callback Filter => Query: " + query + " | Types: "  + filterTypes.toString() + " | Radius: " + radius);
         filter = new POIFilter(query, filterTypes, radius);
         startProvider(filter);
+    }
+
+    @Override
+    public void wikiLinksProviderCallback(PointOfInterest poi) {
+        openPoiDialog(poi);
     }
 
     public void startProvider(POIFilter filter){

@@ -69,7 +69,8 @@ public class POIListViewItemAdapter extends BaseAdapter {
         //rn: TODO replace with Placeholder
         holder.img.setImageResource(poiList.get(position).getImg());
 
-        holder.getAddPoiButton().setOnClickListener(new View.OnClickListener() {
+        holder.getAddPoiButton().setVisibility(View.INVISIBLE);
+        /*.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 POIRouteProvider routeManager = POIRouteProvider.getInstance();
@@ -83,7 +84,7 @@ public class POIListViewItemAdapter extends BaseAdapter {
                     Toast.makeText(mInflater.getContext(), poi.getName() + " already exists in Route", Toast.LENGTH_LONG).show();
                 }
             }
-        });
+        });*/
 
         return convertView;
     }

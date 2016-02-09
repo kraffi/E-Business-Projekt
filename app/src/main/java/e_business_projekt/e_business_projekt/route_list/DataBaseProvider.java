@@ -123,12 +123,13 @@ public class DataBaseProvider {
         @Override
         protected void onPostExecute(String s) {
             Log.i(TAG, "Finish get Data, refresh RouteListView!");
+            POIRouteProvider.getInstance().setBlocked(false);
             callback.readDataBaseCallback();
         }
 
         @Override
         protected void onPreExecute() {
-            Log.i(TAG, "PRE EXECUTE!");
+            POIRouteProvider.getInstance().setBlocked(true);
         }
     }
 
