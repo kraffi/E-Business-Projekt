@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -120,7 +122,7 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
             public void onClick(View v) {
                 Log.i("EXPLOCITY", "start_wikitude");
 
-                //todo KR: 07.02.16: create JSON-string in .js file for wikitude
+                /*
                 int activated_route = POIRouteProvider.getInstance().getActivated();
                 POIList = POIRouteProvider.getInstance().getPOIRouteList().get(activated_route).getPoiRoute();
 
@@ -147,12 +149,11 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
                         json_route.accumulate("route", json_poi);
                     } catch (JSONException e) {
                         e.printStackTrace();
+
                     }
                 }
-
-
-
                 Log.d("EXPLOCITY", "json_route: " + json_route);
+                */
 
                 Intent intent;
                 intent = new Intent(MapActivity.this, CamActivity.class);
@@ -270,6 +271,23 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_map, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Take appropriate action for each action item click
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                // todo KR: implement sharing here
+        }
+        return true;
+    }
+
+    @Override
     public void onRoutingFailure() {
         // The Routing request failed
         progressDialog.dismiss();
@@ -378,29 +396,5 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
     @Override
     public void onConnectionSuspended(int i) {
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        Intent intent;
-        //kr: handle presses on the action menu items
-        switch (item.getItemId()) {
-            case R.id.action_main:
-                intent = new Intent(this, MainActivity.class);
-                break;
-            case R.id.action_poi_list:
-                intent = new Intent(this, PoiListActivity.class);
-                break;
-            case R.id.action_cam:
-                intent = new Intent(this, CamActivity.class);
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        startActivity(intent);
-        return true;
     }
 }

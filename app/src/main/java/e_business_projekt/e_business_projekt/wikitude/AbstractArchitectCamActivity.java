@@ -24,8 +24,11 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import e_business_projekt.e_business_projekt.R;
+import e_business_projekt.e_business_projekt.poi_list.PointOfInterest;
+import e_business_projekt.e_business_projekt.route_list.POIRouteProvider;
 
 /**
  * Abstract activity which handles live-cycle events.
@@ -52,7 +55,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	/**
 	 * sample location strategy, you may implement a more sophisticated approach too
 	 */
-	protected ILocationProvider				locationProvider;
+	protected ILocationProvider locationProvider;
 
 	/**
 	 * location listener receives location updates and must forward them to the architectView
@@ -68,11 +71,14 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 
 	protected boolean isLoading = false;
 
+    //KR:
+    protected List<PointOfInterest> POIList;
+
 	/** Called when the activity is first created. */
 	@SuppressLint("NewApi")
 	@Override
 	public void onCreate( final Bundle savedInstanceState ) {
-		super.onCreate( savedInstanceState );
+		super.onCreate(savedInstanceState);
 
 		/* pressing volume up/down should cause music volume changes */
 		this.setVolumeControlStream( AudioManager.STREAM_MUSIC );
@@ -174,7 +180,10 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 
 	@Override
 	protected void onPostCreate( final Bundle savedInstanceState ) {
-		super.onPostCreate( savedInstanceState );
+		super.onPostCreate(savedInstanceState);
+
+        Log.d("EXPLOCITY", "AbstractCam...: injectData() wird gestartet");
+        this.injectData();
 
 		if ( this.architectView != null ) {
 
@@ -183,7 +192,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 
 			try {
 				// load content via url in architectView, ensure '<script src="architect://architect.js"></script>' is part of this HTML file, have a look at wikitude.com's developer section for API references
-				this.architectView.load("file:///android_asset/5_Obtain$Poi$Data_2_From$Local$Resource/index.html");
+				this.architectView.load("file:///android_asset/5_Obtain$Poi$Data_1_From$Application$Model/index.html");
 
 				if (this.getInitialCullingDistanceMeters() != ArchitectViewHolderInterface.CULLING_DISTANCE_DEFAULT_METERS) {
 					// set the culling distance - meaning: the maximum distance to render geo-content
@@ -327,6 +336,8 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 				public void run() {
 
 					isLoading = true;
+                    int activated_route = POIRouteProvider.getInstance().getActivated();
+                    POIList = POIRouteProvider.getInstance().getPOIRouteList().get(activated_route).getPoiRoute();
 
 					final int WAIT_FOR_LOCATION_STEP_MS = 2000;
 
@@ -349,7 +360,9 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 
 					if (lastKnownLocaton!=null && !isFinishing()) {
 						// TODO: you may replace this dummy implementation and instead load POI information e.g. from your database
-						poiData = getPoiInformation(lastKnownLocaton, 20);
+						poiData = getPoiInformation(lastKnownLocaton, POIList);
+                        Log.d("EXPLOCITY", "AbstractCamActivity-lastKnownLocation: " + lastKnownLocaton);
+                        Log.d("EXPLOCITY", "AbstractCamActivity-injectData(): poiData: " + poiData);
 						callJavaScript("World.loadPoisFromJsonData", new String[] { poiData.toString() });
 					}
 
@@ -358,6 +371,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 			});
 			t.start();
 		}
+        Log.d("EXPLOCITY", "AbstractCamActivity-injectData");
 	}
 
 	/**
@@ -365,6 +379,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 	 * @param methodName
 	 * @param arguments
 	 */
+
 	private void callJavaScript(final String methodName, final String[] arguments) {
 		final StringBuilder argumentsString = new StringBuilder("");
 		for (int i= 0; i<arguments.length; i++) {
@@ -380,13 +395,14 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 		}
 	}
 
-	/**
+
+	 /**
 	 * loads poiInformation and returns them as JSONArray. Ensure attributeNames of JSON POIs are well known in JavaScript, so you can parse them easily
 	 * @param userLocation the location of the user
-	 * @param numberOfPlaces number of places to load (at max)
 	 * @return POI information in JSONArray
 	 */
-	public static JSONArray getPoiInformation(final Location userLocation, final int numberOfPlaces) {
+
+	public static JSONArray getPoiInformation(final Location userLocation, List<PointOfInterest>POIList) {
 
 		if (userLocation==null) {
 			return null;
@@ -395,28 +411,26 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 		final JSONArray pois = new JSONArray();
 
 		// ensure these attributes are also used in JavaScript when extracting POI data
-		final String ATTR_ID = "id";
-		final String ATTR_NAME = "name";
-		final String ATTR_DESCRIPTION = "description";
-		final String ATTR_LATITUDE = "latitude";
-		final String ATTR_LONGITUDE = "longitude";
-		final String ATTR_ALTITUDE = "altitude";
-
-		for (int i=1;i <= numberOfPlaces; i++) {
-			final HashMap<String, String> poiInformation = new HashMap<String, String>();
-			poiInformation.put(ATTR_ID, String.valueOf(i));
-			poiInformation.put(ATTR_NAME, "POI#" + i);
-			poiInformation.put(ATTR_DESCRIPTION, "This is the description of POI#" + i);
-			double[] poiLocationLatLon = getRandomLatLonNearby(userLocation.getLatitude(), userLocation.getLongitude());
-			poiInformation.put(ATTR_LATITUDE, String.valueOf(poiLocationLatLon[0]));
-			poiInformation.put(ATTR_LONGITUDE, String.valueOf(poiLocationLatLon[1]));
-			final float UNKNOWN_ALTITUDE = -32768f;  // equals "AR.CONST.UNKNOWN_ALTITUDE" in JavaScript (compare AR.GeoLocation specification)
-			// Use "AR.CONST.UNKNOWN_ALTITUDE" to tell ARchitect that altitude of places should be on user level. Be aware to handle altitude properly in locationManager in case you use valid POI altitude value (e.g. pass altitude only if GPS accuracy is <7m).
-			poiInformation.put(ATTR_ALTITUDE, String.valueOf(UNKNOWN_ALTITUDE));
-			pois.put(new JSONObject(poiInformation));
-		}
-
-		return pois;
+        final String ATTR_ID = "id";
+        final String ATTR_NAME = "name";
+        final String ATTR_LATITUDE = "latitude";
+        final String ATTR_LONGITUDE = "longitude";
+        final String ATTR_ALTITUDE = "altitude";
+        final String ATTR_DESCRIPTION = "description";
+        for (PointOfInterest poi : POIList) {
+            final HashMap<String, String> poiInformation = new HashMap<>();
+            poiInformation.put(ATTR_ID, poi.getId());
+            poiInformation.put(ATTR_LATITUDE, String.valueOf(poi.getLatLng().latitude));
+            poiInformation.put(ATTR_LONGITUDE, String.valueOf(poi.getLatLng().longitude));
+            final float UNKNOWN_ALTITUDE = 100;//-32768f;  // equals "AR.CONST.UNKNOWN_ALTITUDE" in JavaScript (compare AR.GeoLocation specification)
+            // Use "AR.CONST.UNKNOWN_ALTITUDE" to tell ARchitect that altitude of places should be on user level. Be aware to handle altitude properly in locationManager in case you use valid POI altitude value (e.g. pass altitude only if GPS accuracy is <7m).
+            poiInformation.put(ATTR_ALTITUDE, String.valueOf(UNKNOWN_ALTITUDE));
+            poiInformation.put(ATTR_NAME, poi.getName());
+            poiInformation.put(ATTR_DESCRIPTION, "");
+            pois.put(new JSONObject(poiInformation));
+        }
+        Log.d("EXPLOCITY", "AbstractCamActivity-getPoiInformatin-pois: " + pois);
+        return pois;
 	}
 
 	/**

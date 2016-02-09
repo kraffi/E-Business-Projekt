@@ -34,8 +34,8 @@ function Marker(poiData) {
         onClick: null
     });
 
-    // create an AR.Label for the marker's title
-    this.titleLabel = new AR.Label(poiData.name.trunc(10), 1, {
+    // create an AR.Label for the marker's title 
+    this.titleLabel = new AR.Label(poiData.title.trunc(10), 1, {
         zOrder: 1,
         offsetY: 0.55,
         style: {
@@ -44,7 +44,6 @@ function Marker(poiData) {
         }
     });
 
-    //KR: description will not be shown
     // create an AR.Label for the marker's description
     this.descriptionLabel = new AR.Label(poiData.description.trunc(15), 0.8, {
         zOrder: 1,
@@ -62,38 +61,13 @@ function Marker(poiData) {
         verticalAnchor: AR.CONST.VERTICAL_ANCHOR.TOP
     });
 
-    this.radarCircle = new AR.Circle(0.03, {
-            horizontalAnchor: AR.CONST.HORIZONTAL_ANCHOR.CENTER,
-            opacity: 0.8,
-            style: {
-                fillColor: "#ffffff"
-            }
-        });
-
-    this.radarCircleSelected = new AR.Circle(0.05, {
-        horizontalAnchor: AR.CONST.HORIZONTAL_ANCHOR.CENTER,
-        opacity: 0.8,
-        style: {
-            fillColor: "#0066ff"
-        }
-    });
-
-    this.radardrawables = [];
-    this.radardrawables.push(this.radarCircle);
-
-    this.radardrawablesSelected = [];
-    this.radardrawablesSelected.push(this.radarCircleSelected);
-
     /*
         Create the AR.GeoObject with the drawable objects and define the AR.ImageDrawable as an indicator target on the marker AR.GeoObject. The direction indicator is displayed automatically when necessary. AR.Drawable subclasses (e.g. AR.Circle) can be used as direction indicators.
     */
     this.markerObject = new AR.GeoObject(markerLocation, {
         drawables: {
-            cam: [this.markerDrawable_idle,
-                this.markerDrawable_selected,
-                this.titleLabel],
-            indicator: this.directionIndicatorDrawable,
-            radar: this.radardrawables
+            cam: [this.markerDrawable_idle, this.markerDrawable_selected, this.titleLabel, this.descriptionLabel],
+            indicator: this.directionIndicatorDrawable
         }
     });
 
@@ -178,10 +152,6 @@ Marker.prototype.setSelected = function(marker) {
 
     // enables the direction indicator drawable for the current marker
     marker.directionIndicatorDrawable.enabled = true;
-
-    //kr: highlight the selected marker object in the radar
-    marker.markerObject.drawables.radar = marker.radardrawablesSelected;
-
     // starts the selected-state animation
     marker.animationGroup_selected.start();
 };
@@ -189,8 +159,6 @@ Marker.prototype.setSelected = function(marker) {
 Marker.prototype.setDeselected = function(marker) {
 
     marker.isSelected = false;
-
-    marker.markerObject.drawables.radar = marker.radardrawables;
 
     if (marker.animationGroup_idle === null) {
 

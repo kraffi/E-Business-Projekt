@@ -54,6 +54,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="urllauncher_hint_textfield">http://</string>
+    <string name="action_share">menu_share</string>
 
     <string name="title_activity_login">XploCity</string>
     <string name="logout">Logout</string>
