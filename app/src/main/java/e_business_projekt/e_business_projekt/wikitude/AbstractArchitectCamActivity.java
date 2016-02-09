@@ -192,7 +192,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
 
 			try {
 				// load content via url in architectView, ensure '<script src="architect://architect.js"></script>' is part of this HTML file, have a look at wikitude.com's developer section for API references
-				this.architectView.load("file:///android_asset/5_Obtain$Poi$Data_2_From$Local$Resource/index.html");
+				this.architectView.load("file:///android_asset/5_Obtain$Poi$Data_1_From$Application$Model/index.html");
 
 				if (this.getInitialCullingDistanceMeters() != ArchitectViewHolderInterface.CULLING_DISTANCE_DEFAULT_METERS) {
 					// set the culling distance - meaning: the maximum distance to render geo-content
@@ -416,6 +416,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
         final String ATTR_LATITUDE = "latitude";
         final String ATTR_LONGITUDE = "longitude";
         final String ATTR_ALTITUDE = "altitude";
+        final String ATTR_DESCRIPTION = "description";
         for (PointOfInterest poi : POIList) {
             final HashMap<String, String> poiInformation = new HashMap<>();
             poiInformation.put(ATTR_ID, poi.getId());
@@ -425,6 +426,7 @@ public abstract class AbstractArchitectCamActivity extends Activity implements A
             // Use "AR.CONST.UNKNOWN_ALTITUDE" to tell ARchitect that altitude of places should be on user level. Be aware to handle altitude properly in locationManager in case you use valid POI altitude value (e.g. pass altitude only if GPS accuracy is <7m).
             poiInformation.put(ATTR_ALTITUDE, String.valueOf(UNKNOWN_ALTITUDE));
             poiInformation.put(ATTR_NAME, poi.getName());
+            poiInformation.put(ATTR_DESCRIPTION, "ohne gehts nicht");
             pois.put(new JSONObject(poiInformation));
         }
         Log.d("EXPLOCITY", "AbstractCamActivity-getPoiInformatin-pois: " + pois);
