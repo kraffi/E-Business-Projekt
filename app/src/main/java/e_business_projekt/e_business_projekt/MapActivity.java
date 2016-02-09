@@ -356,6 +356,7 @@ public class MapActivity extends AppCompatActivity implements RoutingListener, G
         }
 
         //set marker for all the POIs in the list
+        map.setMyLocationEnabled(true);
         for(LatLng poi : route1){
             MarkerOptions options = new MarkerOptions();
             options.position(poi);

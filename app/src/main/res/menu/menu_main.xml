@@ -3,7 +3,13 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".MainActivity">
-    <item
+    <!-- Share / will display always -->
+    <item android:id="@+id/action_go_to_map"
+          android:icon="@drawable/ic_map_white_48dp"
+          android:title="@string/action_map"
+          app:showAsAction="always"/>
+
+    <!--<item
             android:id="@+id/action_poi_list"
             android:title="@string/activity_poi_list"
             android:orderInCategory="100"
@@ -17,5 +23,5 @@
             android:id="@+id/action_cam"
             android:title="@string/activity_cam"
             android:orderInCategory="300"
-            app:showAsAction="never"/>
+            app:showAsAction="never"/>-->
 </menu>
